@@ -1,10 +1,14 @@
 package de.web.ngthi.palaver.model;
 
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public class LocalUser extends User {
 
@@ -45,6 +49,12 @@ public class LocalUser extends User {
         return contacts.keySet();
     }
 
+    public List<User> getSortedFriendList() {
+        List<User> friendList = Arrays.asList(contacts.keySet().toArray(new User[contacts.keySet().size()]));
+        Collections.sort(friendList);
+        return friendList;
+    }
+
     public void addMessage(Message m) {
         User other = m.getRecipient().equals(this) ? m.getSender() : m.getRecipient();
         if(!contacts.containsKey(other))
@@ -52,8 +62,10 @@ public class LocalUser extends User {
         contacts.get(other).add(m);
     }
 
-    public List<Message> getMessages(User friend) {
-        return contacts.get(friend);
+    public List<Message> getSortedMessages(User friend) {
+        List<Message> messages =  contacts.get(friend);
+        Collections.sort(messages);
+        return messages;
     }
 
 }

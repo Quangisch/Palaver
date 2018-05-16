@@ -5,14 +5,13 @@ import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.design.widget.Snackbar;
 import android.util.Log;
 import android.widget.TextView;
 
 import de.web.ngthi.palaver.R;
 import de.web.ngthi.palaver.presenter.LoginContract;
 import de.web.ngthi.palaver.presenter.LoginPresenter;
-import de.web.ngthi.palaver.view.MessageActivity;
+import de.web.ngthi.palaver.view.message.MessageActivity;
 
 public class LoginActivity extends Activity implements LoginContract.View,
         LoginPasswordFragment.PasswordInputListener,
@@ -116,7 +115,7 @@ public class LoginActivity extends Activity implements LoginContract.View,
 
     @Override
     public void showNotExistingUserError() {
-        currentFragment.setErrorField(getString(R.string.login_error_useralreadyexsists));
+        currentFragment.setErrorField(getString(R.string.login_error_unknownuser));
     }
 
     @Override

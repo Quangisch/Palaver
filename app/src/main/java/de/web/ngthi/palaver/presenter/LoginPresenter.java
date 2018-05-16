@@ -42,12 +42,12 @@ public class LoginPresenter extends BasePresenter<LoginContract.View> implements
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSuccess(u -> updateState(u, username, nextStateRequest))
                 .doOnError(u -> getView().showNetworkError())
-                .subscribe(System.out::println));
+                .subscribe());
 
     }
 
     private void updateState(ServerReply reply, String username, LoginActivity.State nextState) {
-        Log.d(TAG, String.format("updateState(%s, %s)", username, nextState.toString()));
+        Log.d(TAG, String.format("updateState(%s, %s, %s)", reply, username, nextState.toString()));
         if(nextState == LoginActivity.State.PASSWORD) {
             if(validator.isExistingUser(reply)) {
                 getView().switchState(nextState, username);
@@ -55,8 +55,7 @@ public class LoginPresenter extends BasePresenter<LoginContract.View> implements
             } else {
                 getView().showNotExistingUserError();
             }
-        }
-        if(nextState == LoginActivity.State.REGISTER) {
+        } else if(nextState == LoginActivity.State.REGISTER) {
             if(!validator.isExistingUser(reply)) {
                 getView().switchState(nextState, username);
                 this.username = username;
@@ -75,11 +74,11 @@ public class LoginPresenter extends BasePresenter<LoginContract.View> implements
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSuccess(u -> login(u, password))
                 .doOnError(u -> getView().showNetworkError())
-                .subscribe(System.out::println));
+                .subscribe());
     }
 
     private void login(ServerReply reply, String password) {
-        if(reply.getMsgType() == 0) {
+        if(reply.getMsgType() == 1) {
             getView().loginNow();
         } else {
             getView().showWrongPasswordError();
@@ -96,7 +95,7 @@ public class LoginPresenter extends BasePresenter<LoginContract.View> implements
                     .observeOn(AndroidSchedulers.mainThread())
                     .doOnSuccess(u -> login(u, password))
                     .doOnError(u -> getView().showNetworkError())
-                    .subscribe(System.out::println));
+                    .subscribe());
         }
         Log.d(TAG, String.format("onRegisterInput(%s)", password, passwordRepeat));
     }

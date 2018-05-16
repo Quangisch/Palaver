@@ -27,7 +27,9 @@
                 android:hint="@string/login_hint_username"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:maxLines="1"/>
+                android:maxLines="1"
+                android:lines="1"
+                android:inputType="textVisiblePassword"/>
 
             <include
                 android:id="@+id/textview_login_error"
