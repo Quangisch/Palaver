@@ -1,12 +1,8 @@
 package de.web.ngthi.palaver.view.login;
 
-import android.app.Activity;
 import android.app.Fragment;
-import android.os.Bundle;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -20,8 +16,6 @@ public abstract class LoginBaseFragment extends Fragment implements View.OnClick
     private EditText primaryField;
     private Button primaryButton;
     private TextView errorField;
-
-    private LoginActivity.State state;
 
     @Override
     public void onStart() {

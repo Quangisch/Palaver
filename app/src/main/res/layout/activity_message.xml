@@ -43,7 +43,7 @@
 
         <EditText
             android:id="@+id/edittext_message_sendtext"
-            android:hint="@string/message_hint_sendtext"
+            android:hint="@string/message_hint_sendText"
             android:maxLines="5"
             android:layout_width="0dp"
             android:layout_height="wrap_content"

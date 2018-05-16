@@ -14,7 +14,9 @@ import retrofit2.converter.jackson.JacksonConverterFactory;
 public class RestController {
 
     @Inject
-    public RestController() {}
+    public RestController() {
+
+    }
 
     @Provides
     @Singleton
@@ -41,7 +43,8 @@ public class RestController {
 
     @Provides
     @Singleton
-    public FriendService provideFriendService(Retrofit retrofit) {
-        return retrofit.create(FriendService.class);
+    public FriendsService provideFriendService(Retrofit retrofit) {
+        return retrofit.create(FriendsService.class);
     }
+
 }

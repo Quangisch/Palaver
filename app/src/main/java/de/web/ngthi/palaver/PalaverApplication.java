@@ -1,7 +1,10 @@
 package de.web.ngthi.palaver;
 
 import android.app.Application;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 
 import org.joda.time.DateTime;
 
@@ -9,6 +12,9 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 
+import javax.inject.Inject;
+
+import dagger.Module;
 import de.web.ngthi.palaver.model.LocalUser;
 import de.web.ngthi.palaver.model.Message;
 import de.web.ngthi.palaver.model.User;
@@ -17,18 +23,47 @@ import de.web.ngthi.palaver.view.message.MessageActivity;
 import lombok.Getter;
 import lombok.Setter;
 
-@Getter @Setter
+@Module
 public class PalaverApplication extends Application {
 
     private LocalUser localUser;
+    private SharedPreferences sharedPref;
+
+    @Inject
+    public PalaverApplication() {
+
+    }
 
     @Override
     public void onCreate() {
         super.onCreate();
         initData();
 
+        sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+
         Intent intent = new Intent(this, LoginActivity.class);
         startActivity(intent);
+    }
+
+    public void saveToSharedPreferences(String key, String value) {
+        sharedPref.edit().putString(key, value).apply();
+    }
+
+    public void removeFromSharedPreferences(String key) {
+        sharedPref.edit().remove(key).apply();
+    }
+
+
+    public String getFromSharedPreferences(String key) {
+        return sharedPref.getString(key, null);
+    }
+
+    public void setLocalUser(LocalUser localUser) {
+        this.localUser = localUser;
+    }
+
+    public LocalUser getLocalUser() {
+        return localUser;
     }
 
     private void initData() {

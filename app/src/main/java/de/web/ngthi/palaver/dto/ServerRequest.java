@@ -42,8 +42,7 @@ public class ServerRequest {
             return this;
         }
 
-        public Builder localUser(String username, String password) {
-            this.username = username;
+        public Builder password(String password) {
             this.password = password;
             return this;
         }

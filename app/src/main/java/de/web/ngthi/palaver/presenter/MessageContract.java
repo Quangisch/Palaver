@@ -14,7 +14,7 @@ public interface MessageContract {
         void scrollDown();
     }
 
-    interface Presenter {
+    interface Presenter extends BaseContract.Presenter<View> {
         void onBindRepositoryRowViewAtPosition(MessageRowView holder, int position);
         int getRepositoriesRowsCount();
         int getRepositoriesRowsType(int position);

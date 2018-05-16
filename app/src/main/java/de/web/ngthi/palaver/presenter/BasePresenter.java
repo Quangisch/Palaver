@@ -5,13 +5,13 @@ import android.support.annotation.NonNull;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 
-public abstract class BasePresenter<V> {
+public abstract class BasePresenter<V> implements BaseContract.Presenter<V> {
 
     private V view;
     private CompositeDisposable disposables;
 
     public BasePresenter(V view) {
-        this.view = view;
+        subscribe(view);
         this.disposables = new CompositeDisposable();
     }
 
@@ -27,7 +27,7 @@ public abstract class BasePresenter<V> {
         disposables.clear();
     }
 
-    public void subscribe(@NonNull V view) {
+    public void subscribe(V view) {
         this.view = view;
     }
 

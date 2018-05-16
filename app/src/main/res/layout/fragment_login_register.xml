@@ -33,7 +33,7 @@
 
             <EditText
                 android:id="@+id/edittext_login_secondary"
-                android:hint="@string/login_hint_password_repeat"
+                android:hint="@string/login_hint_passwordRepeat"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="textPassword"

@@ -1,11 +1,13 @@
 package de.web.ngthi.palaver.controller;
 
+import dagger.Module;
 import de.web.ngthi.palaver.dto.ServerReply;
 import de.web.ngthi.palaver.dto.ServerRequest;
 import retrofit2.http.Body;
 import retrofit2.http.POST;
 
-public interface FriendService {
+@Module
+public interface FriendsService {
 
     @POST("friends/add")
     ServerReply addFriend(@Body ServerRequest request);

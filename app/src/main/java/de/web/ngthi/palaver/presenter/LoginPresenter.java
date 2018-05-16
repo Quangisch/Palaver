@@ -11,30 +11,31 @@ import de.web.ngthi.palaver.di.DaggerRestComponent;
 import de.web.ngthi.palaver.di.DaggerValidatorComponent;
 import de.web.ngthi.palaver.dto.ServerReply;
 import de.web.ngthi.palaver.dto.ServerRequest;
-import de.web.ngthi.palaver.service.Validator;
-import de.web.ngthi.palaver.view.login.LoginActivity;
+import de.web.ngthi.palaver.repository.DataRepository;
+import de.web.ngthi.palaver.repository.Validator;
+import de.web.ngthi.palaver.view.login.LoginState;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
 public class LoginPresenter extends BasePresenter<LoginContract.View> implements LoginContract.Presenter {
 
-    private final String TAG = getClass().getSimpleName();
-
-    @Inject public RestController restController;
+    @Inject public DataRepository dataRepository;
+    @Inject public RestController controller;
     @Inject public Validator validator;
-    public UserService userService;
+    private UserService userService;
     private String username;
 
+    private final String TAG = getClass().getSimpleName();
 
     public LoginPresenter(LoginContract.View view) {
         super(view);
         DaggerRestComponent.builder().build().inject(this);
         DaggerValidatorComponent.builder().build().inject(this);
-        userService = restController.provideRetrofit().create(UserService.class);
+        userService = controller.provideRetrofit().create(UserService.class);
     }
 
     @Override
-    public void onUsernameInput(@NonNull String username, LoginActivity.State nextStateRequest) {
+    public void onUsernameInput(@NonNull String username, LoginState nextStateRequest) {
         Log.d(TAG, String.format("onUsernameInput(%s, %s)", username, nextStateRequest.toString()));
         if(userService != null)
             addDisposable(userService.validate(new ServerRequest.Builder().username(username).build())
@@ -46,16 +47,16 @@ public class LoginPresenter extends BasePresenter<LoginContract.View> implements
 
     }
 
-    private void updateState(ServerReply reply, String username, LoginActivity.State nextState) {
+    private void updateState(ServerReply reply, String username, LoginState nextState) {
         Log.d(TAG, String.format("updateState(%s, %s, %s)", reply, username, nextState.toString()));
-        if(nextState == LoginActivity.State.PASSWORD) {
+        if(nextState == LoginState.PASSWORD) {
             if(validator.isExistingUser(reply)) {
                 getView().switchState(nextState, username);
                 this.username = username;
             } else {
                 getView().showNotExistingUserError();
             }
-        } else if(nextState == LoginActivity.State.REGISTER) {
+        } else if(nextState == LoginState.REGISTER) {
             if(!validator.isExistingUser(reply)) {
                 getView().switchState(nextState, username);
                 this.username = username;
@@ -69,17 +70,20 @@ public class LoginPresenter extends BasePresenter<LoginContract.View> implements
     @Override
     public void onPasswordInput(@NonNull String password) {
         Log.d(TAG, String.format("onPasswordInput(%s)", password));
-        addDisposable(userService.validate(new ServerRequest.Builder().localUser(username, password).build())
+        addDisposable(userService.validate(new ServerRequest.Builder()
+                    .username(username)
+                    .password(password)
+                    .build())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .doOnSuccess(u -> login(u, password))
+                .doOnSuccess(u -> login(u, username, password))
                 .doOnError(u -> getView().showNetworkError())
                 .subscribe());
     }
 
-    private void login(ServerReply reply, String password) {
+    private void login(ServerReply reply, String username, String password) {
         if(reply.getMsgType() == 1) {
-            getView().loginNow();
+            getView().loginNow(username, password);
         } else {
             getView().showWrongPasswordError();
         }
@@ -87,17 +91,20 @@ public class LoginPresenter extends BasePresenter<LoginContract.View> implements
 
     @Override
     public void onRegisterInput(@NonNull String password, @NonNull String passwordRepeat) {
+        Log.d(TAG, String.format("onRegisterInput(%s, %s)", password, passwordRepeat));
         if(!password.equals(passwordRepeat))
             getView().showPasswordRepeatError();
         else {
-            addDisposable(userService.register(new ServerRequest.Builder().localUser(username, password).build())
+            addDisposable(userService.register(new ServerRequest.Builder()
+                        .username(username)
+                        .password(password)
+                        .build())
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
-                    .doOnSuccess(u -> login(u, password))
+                    .doOnSuccess(u -> login(u, username, password))
                     .doOnError(u -> getView().showNetworkError())
                     .subscribe());
         }
-        Log.d(TAG, String.format("onRegisterInput(%s)", password, passwordRepeat));
     }
 
 }

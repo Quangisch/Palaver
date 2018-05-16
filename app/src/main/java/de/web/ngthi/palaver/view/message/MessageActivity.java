@@ -11,8 +11,11 @@ import android.widget.TextView;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
 import de.web.ngthi.palaver.PalaverApplication;
 import de.web.ngthi.palaver.R;
+import de.web.ngthi.palaver.di.DaggerAppComponent;
 import de.web.ngthi.palaver.model.LocalUser;
 import de.web.ngthi.palaver.model.Message;
 import de.web.ngthi.palaver.presenter.MessageContract;
@@ -20,6 +23,8 @@ import de.web.ngthi.palaver.presenter.MessagePresenter;
 
 public class MessageActivity extends Activity implements MessageContract.View, View.OnClickListener {
 
+    @Inject
+    public PalaverApplication application;
     public MessageContract.Presenter presenter;
     private Button sendButton;
     private TextView friendNameField;
@@ -31,6 +36,8 @@ public class MessageActivity extends Activity implements MessageContract.View, V
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_message);
+
+        DaggerAppComponent.builder().build().inject(this);
 
         LocalUser localUser = ((PalaverApplication) getApplication()).getLocalUser();
         List<Message> messages = localUser.getSortedMessages(localUser.getSortedFriendList().get(0));
@@ -46,6 +53,12 @@ public class MessageActivity extends Activity implements MessageContract.View, V
         mMessageRecycler = findViewById(R.id.recyclerview_message);
         mMessageRecycler.setAdapter(mMessageAdapter);
         mMessageRecycler.setLayoutManager(new LinearLayoutManager(this));
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        presenter.dispose();
     }
 
     @Override

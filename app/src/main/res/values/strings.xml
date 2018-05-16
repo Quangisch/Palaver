@@ -1,27 +1,33 @@
 <resources>
     <string name="app_name">Palaver</string>
 
+    //saved
+    <string name="saved_username_key">username</string>
+    <string name="saved_password_key">password</string>
+
     //login
     <string name="login_welcome">Welcome</string>
     <string name="login_button_login">Login</string>
     <string name="login_button_register">Register</string>
     <string name="login_hint_username">Username</string>
     <string name="login_hint_password">Password</string>
-    <string name="login_hint_password_repeat">Repeat Password</string>
+    <string name="login_hint_passwordRepeat">Repeat Password</string>
 
     //login error
-    <string name="login_error_wrongpassword">Wrong Password</string>
-    <string name="login_error_unknownuser">Unknown Username</string>
-    <string name="login_error_useralreadyexsists">Username already exists</string>
-    <string name="login_error_wrongpasswordrepeat">Passwords don\'t match</string>
+    <string name="login_error_wrongPassword">Wrong Password</string>
+    <string name="login_error_unknownUser">Unknown Username</string>
+    <string name="login_error_userAlreadyExsists">Username already exists</string>
+    <string name="login_error_wrongPasswordRepeat">Passwords don\'t match</string>
     <string name="login_error_network">Network error</string>
 
     //friends
+    <string name="friends_button_addFriend">Add Friend</string>
+    <string name="friends_button_removeFriend">Remove Friend</string>
 
     //message
     <string name="message_button_send">Send</string>
-    <string name="message_hint_sendtext">Type message</string>
-    <string name="action_settings">Settings</string>
+    <string name="message_hint_sendText">Type message</string>
+    <string name="message_button_filterOffset">Filter offset</string>
 
 
     //mockup text

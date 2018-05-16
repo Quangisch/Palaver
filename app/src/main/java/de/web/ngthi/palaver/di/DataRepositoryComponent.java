@@ -1,7 +1,5 @@
 package de.web.ngthi.palaver.di;
 
-import android.app.Application;
-
 import javax.inject.Singleton;
 
 import dagger.Component;
@@ -14,13 +12,9 @@ import de.web.ngthi.palaver.repository.DataRepository;
 import retrofit2.Retrofit;
 
 @Singleton
-@Component(modules ={RestController.class})
-public interface RestComponent {
-    Retrofit retrofit();
-    UserService userService();
-
+@Component(modules ={DataRepository.class})
+public interface DataRepositoryComponent {
     void inject(LoginPresenter presenter);
     void inject(FriendsPresenter presenter);
     void inject(MessagePresenter presenter);
-    void inject(DataRepository dataRepository);
 }

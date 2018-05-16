@@ -1,18 +1,11 @@
-package de.web.ngthi.palaver.service;
+package de.web.ngthi.palaver.repository;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
-import de.web.ngthi.palaver.controller.UserService;
 import de.web.ngthi.palaver.dto.ServerReply;
-import de.web.ngthi.palaver.dto.ServerRequest;
-import io.reactivex.Scheduler;
-import io.reactivex.Single;
-import io.reactivex.SingleObserver;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.schedulers.Schedulers;
 
 @Module
 public class Validator {
@@ -21,7 +14,6 @@ public class Validator {
 
     @Inject
     public Validator() {}
-
 
     public boolean isExistingUser(ServerReply reply) {
         return reply.getMsgType() == 1 ||

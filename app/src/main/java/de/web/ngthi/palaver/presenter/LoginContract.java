@@ -2,22 +2,24 @@ package de.web.ngthi.palaver.presenter;
 
 import android.support.annotation.NonNull;
 
+import dagger.Module;
 import de.web.ngthi.palaver.view.login.LoginActivity;
+import de.web.ngthi.palaver.view.login.LoginState;
 
 public interface LoginContract {
 
     interface View {
-        void switchState(LoginActivity.State newState, String username);
+        void switchState(LoginState newState, String username);
         void showPasswordRepeatError();
         void showUserAlreadyExistsError();
         void showNotExistingUserError();
         void showNetworkError();
         void showWrongPasswordError();
-        void loginNow();
+        void loginNow(String username, String password);
     }
 
-    interface Presenter {
-        void onUsernameInput(String username, LoginActivity.State nextStateRequest);
+    interface Presenter extends BaseContract.Presenter<View>{
+        void onUsernameInput(String username, LoginState nextStateRequest);
         void onPasswordInput(String password);
         void onRegisterInput(String password, String passwordRepeat);
     }
