@@ -1,0 +1,64 @@
+package de.web.ngthi.palaver.view.login;
+
+import android.app.Activity;
+import android.app.Fragment;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
+
+import de.web.ngthi.palaver.R;
+
+public class LoginUserFragment extends LoginBaseFragment implements View.OnClickListener {
+
+    private final String TAG = getClass().getSimpleName();
+
+    private UserInputListener activityUserCallback;
+    private TextView registerField;
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        super.onCreateView(inflater, container, savedInstanceState);
+        Log.d(TAG, String.format("onCreateView(%s, %s, %s)", inflater, container, savedInstanceState));
+        View view = inflater.inflate(R.layout.fragment_login_user, container, false);
+        registerField = view.findViewById(R.id.textview_loginuser_register);
+        registerField.setOnClickListener(this);
+        setView(view);
+        return view;
+    }
+
+
+    @Override
+    public void onAttach(Activity activity) {
+        Log.d(TAG, String.format("onAttach(%s)", activity.toString()));
+        super.onAttach(activity);
+        try {
+            activityUserCallback = (UserInputListener) activity;
+        } catch(ClassCastException e) {
+            throw new ClassCastException(activity.toString()
+                    + " must implement " + UserInputListener.class.toString());
+        }
+    }
+
+    @Override
+    public void onClick(View v) {
+        Log.d("TAG", String.format("onClick(%s)", v.toString()));
+        if(v == getPrimaryButton()) {
+            Log.d("TAG", "primary");
+            activityUserCallback.onLoginInput(getPrimaryString());
+        } else if(v == registerField) {
+            Log.d("TAG", "secondary");
+            activityUserCallback.onRegisterInput(getPrimaryString());
+        }
+    }
+
+    interface UserInputListener {
+        void onLoginInput(String username);
+        void onRegisterInput(String username);
+    }
+}

@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "417389888074",
+    "firebase_url": "https://palaver-a5e14.firebaseio.com",
+    "project_id": "palaver-a5e14",
+    "storage_bucket": "palaver-a5e14.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:417389888074:android:0b6253c857390279",
+        "android_client_info": {
+          "package_name": "de.web.ngthi.palaver"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "417389888074-v3h881jnb458d4faqk7srm3dq292h39p.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "de.web.ngthi.palaver",
+            "certificate_hash": "745816e17ba7b97adc1b842f40e65806cb03af0d"
+          }
+        },
+        {
+          "client_id": "417389888074-q90qp90ndta7ulpma9e48nh8lk2oo2j4.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBcOzLaDJvTUGASyolf_NaKBikKzSYq8pw"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "417389888074-q90qp90ndta7ulpma9e48nh8lk2oo2j4.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

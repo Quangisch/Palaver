@@ -1,0 +1,13 @@
+<resources>
+    <dimen name="app_bar_height">180dp</dimen>
+    <dimen name="fab_margin">16dp</dimen>
+    <dimen name="text_margin">16dp</dimen>
+    <dimen name="small_margin">16dp</dimen>
+    <dimen name="border">2dp</dimen>
+    <dimen name="singleLine">48dp</dimen>
+    <dimen name="messageBoxWidth">256dp</dimen>
+    <dimen name="messageBoxCornerRadius">16dp</dimen>
+    <dimen name="fontSize_error">10sp</dimen>
+    <dimen name="fontSize_message">12sp</dimen>
+    <dimen name="fontSize_header">24sp</dimen>
+</resources>
