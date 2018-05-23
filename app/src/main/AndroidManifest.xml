@@ -38,7 +38,7 @@
             </intent-filter>
         </service>
 
-        <activity android:name=".view.FriendsActivity"></activity>
+        <activity android:name=".view.friends.FriendsActivity"></activity>
     </application>
 
 </manifest>

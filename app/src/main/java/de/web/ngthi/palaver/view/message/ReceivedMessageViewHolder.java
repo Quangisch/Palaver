@@ -4,8 +4,8 @@ import android.view.View;
 
 import de.web.ngthi.palaver.R;
 
-public class ReceivedMessageHolder extends MessageBaseRowView {
-    public ReceivedMessageHolder(View view) {
+public class ReceivedMessageViewHolder extends MessageViewHolder {
+    public ReceivedMessageViewHolder(View view) {
         super(view, R.id.text_message_body_received, R.id.text_message_time_received);
     }
 }

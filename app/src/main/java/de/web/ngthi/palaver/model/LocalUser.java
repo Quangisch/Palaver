@@ -1,14 +1,14 @@
 package de.web.ngthi.palaver.model;
 
+import android.util.Log;
+
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 public class LocalUser extends User {
 
@@ -34,7 +34,7 @@ public class LocalUser extends User {
     }
 
     public void addFriend(User friend) {
-        contacts.put(friend, new LinkedList<Message>());
+        contacts.put(friend, new LinkedList<>());
     }
 
     public boolean hasFriend(User friend) {
@@ -56,16 +56,25 @@ public class LocalUser extends User {
     }
 
     public void addMessage(Message m) {
-        User other = m.getRecipient().equals(this) ? m.getSender() : m.getRecipient();
-        if(!contacts.containsKey(other))
-            contacts.put(other, new LinkedList<Message>());
-        contacts.get(other).add(m);
+        User friend = m.getRecipient().equals(this) ? m.getSender() : m.getRecipient();
+        if(hasFriend(friend)) {
+            if(!contacts.containsKey(friend))
+                contacts.put(friend, new LinkedList<>());
+            contacts.get(friend).add(m);
+        }
     }
 
     public List<Message> getSortedMessages(User friend) {
-        List<Message> messages =  contacts.get(friend);
-        Collections.sort(messages);
+        List<Message> messages = new LinkedList<>();
+        if(hasFriend(friend)) {
+            messages.addAll(contacts.get(friend));
+            Collections.sort(messages);
+        }
         return messages;
+    }
+
+    public String toString() {
+        return String.format("%s,%s - %d", getUsername(), getPassword(), getFriends().size());
     }
 
 }

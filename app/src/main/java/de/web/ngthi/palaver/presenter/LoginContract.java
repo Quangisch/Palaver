@@ -16,15 +16,13 @@ public interface LoginContract {
         void showNetworkError();
         void showWrongPasswordError();
         void loginNow(String username, String password);
+
+        void onDestroy();
     }
 
     interface Presenter extends BaseContract.Presenter<View>{
         void onUsernameInput(String username, LoginState nextStateRequest);
         void onPasswordInput(String password);
         void onRegisterInput(String password, String passwordRepeat);
-    }
-
-    interface Model {
-        String provideUsername();
     }
 }

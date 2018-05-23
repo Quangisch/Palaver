@@ -1,12 +1,11 @@
 package de.web.ngthi.palaver.view.login;
 
-import android.app.Activity;
 import android.app.FragmentTransaction;
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.widget.TextView;
 
@@ -17,9 +16,9 @@ import de.web.ngthi.palaver.R;
 import de.web.ngthi.palaver.di.DaggerAppComponent;
 import de.web.ngthi.palaver.presenter.LoginContract;
 import de.web.ngthi.palaver.presenter.LoginPresenter;
-import de.web.ngthi.palaver.view.FriendsActivity;
+import de.web.ngthi.palaver.view.friends.FriendsActivity;
 
-public class LoginActivity extends Activity implements LoginContract.View,
+public class LoginActivity extends AppCompatActivity implements LoginContract.View,
         LoginPasswordFragment.PasswordInputListener,
         LoginRegisterFragment.RegisterInputListener,
         LoginUserFragment.UserInputListener{
@@ -34,6 +33,7 @@ public class LoginActivity extends Activity implements LoginContract.View,
     private LoginUserFragment userFragment;
     private LoginRegisterFragment registerFragment;
     private LoginPasswordFragment passwordFragment;
+    private Toolbar toolbar;
 
     private final String TAG = getClass().getSimpleName();
 
@@ -42,19 +42,22 @@ public class LoginActivity extends Activity implements LoginContract.View,
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+        toolbar = findViewById(R.id.toolbar_login);
+//        setSupportActionBar(toolbar);
+
         header = findViewById(R.id.textview_loginactivity_header);
         userFragment = new LoginUserFragment();
         registerFragment = new LoginRegisterFragment();
         passwordFragment = new LoginPasswordFragment();
 
-        DaggerAppComponent.builder().build().inject(this);
+        DaggerAppComponent.create().inject(this);
         presenter = new LoginPresenter(this);
 
         switchState(LoginState.USERNAME, "");
     }
 
     @Override
-    protected void onDestroy() {
+    public void onDestroy() {
         super.onDestroy();
         presenter.dispose();
     }

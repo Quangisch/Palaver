@@ -2,7 +2,7 @@ package de.web.ngthi.palaver.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import java.time.LocalDateTime;
+import org.joda.time.DateTime;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -15,5 +15,5 @@ public class ServerData {
     @JsonProperty("Recipient")  private String recipient;
     @JsonProperty("Mimetype")   private String mimetype;
     @JsonProperty("ServerData") private String serverData;
-    @JsonProperty("DateTime")   private LocalDateTime dateTime;
+    @JsonProperty("DateTime")   private DateTime dateTime;
 }

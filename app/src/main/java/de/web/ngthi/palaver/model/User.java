@@ -21,6 +21,10 @@ public class User implements Comparable<User>{
         return false;
     }
 
+    public int hashCode() {
+        return username.hashCode();
+    }
+
     public boolean equals(Object o) {
         if(o == null || !(o instanceof User))
             return false;

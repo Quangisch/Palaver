@@ -1,9 +1,6 @@
 package de.web.ngthi.palaver.dto;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
-
-import java.time.LocalDateTime;
 
 import lombok.Getter;
 
@@ -18,8 +15,8 @@ public class ServerRequest {
     @JsonProperty("ServerData") private String data;
     @JsonProperty("Friend")     private String friend;
     @JsonProperty("Recipient")  private String recipient;
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "uuuu-MM-dd'T'HH:mm:ss.SSSXXXX")
-    @JsonProperty("Offset")     private LocalDateTime offset;
+//    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "uuuu-MM-dd'T'HH:mm:ss.SSSXXXX")
+    @JsonProperty("Offset")     private String offset;
 
     private ServerRequest() {
         //user Builder
@@ -35,7 +32,7 @@ public class ServerRequest {
         private String data;
         private String friend;
         private String recipient;
-        private LocalDateTime offset;
+        private String offset;
 
         public Builder username(String username) {
             this.username = username;
@@ -77,7 +74,7 @@ public class ServerRequest {
             return this;
         }
 
-        public Builder offset(LocalDateTime offset) {
+        public Builder offset(String offset) {
             this.offset = offset;
             return this;
         }
@@ -98,19 +95,6 @@ public class ServerRequest {
 
     }
 
-    public enum Type {
-        USER_REGISTER,
-        USER_VALIDATE,
-        USER_PASSWORD,
-        USER_PUSHTOKEN,
 
-        MESSAGE_SEND,
-        MESSAGE_GET,
-        MESSAGE_GETOFFSET,
-
-        FRIENDS_ADD,
-        FRIENDS_REMOVE,
-        FRIENDS_GET;
-    }
 
 }
