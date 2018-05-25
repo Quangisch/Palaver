@@ -4,16 +4,14 @@ import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.widget.TextView;
 
-import javax.inject.Inject;
-
 import de.web.ngthi.palaver.PalaverApplication;
 import de.web.ngthi.palaver.R;
-import de.web.ngthi.palaver.di.DaggerAppComponent;
 import de.web.ngthi.palaver.presenter.LoginContract;
 import de.web.ngthi.palaver.presenter.LoginPresenter;
 import de.web.ngthi.palaver.view.friends.FriendsActivity;
@@ -23,7 +21,6 @@ public class LoginActivity extends AppCompatActivity implements LoginContract.Vi
         LoginRegisterFragment.RegisterInputListener,
         LoginUserFragment.UserInputListener{
 
-    @Inject
     public PalaverApplication application;
     private LoginContract.Presenter presenter;
 
@@ -33,7 +30,6 @@ public class LoginActivity extends AppCompatActivity implements LoginContract.Vi
     private LoginUserFragment userFragment;
     private LoginRegisterFragment registerFragment;
     private LoginPasswordFragment passwordFragment;
-    private Toolbar toolbar;
 
     private final String TAG = getClass().getSimpleName();
 
@@ -41,16 +37,18 @@ public class LoginActivity extends AppCompatActivity implements LoginContract.Vi
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        application = (PalaverApplication) getApplication();
+        application.clearLocalUser();
 
-        toolbar = findViewById(R.id.toolbar_login);
-//        setSupportActionBar(toolbar);
+
+        Toolbar toolbar = findViewById(R.id.toolbar_login);
+        toolbar.setTitle(R.string.app_name);
+        setSupportActionBar(toolbar);
 
         header = findViewById(R.id.textview_loginactivity_header);
         userFragment = new LoginUserFragment();
         registerFragment = new LoginRegisterFragment();
         passwordFragment = new LoginPasswordFragment();
-
-        DaggerAppComponent.create().inject(this);
         presenter = new LoginPresenter(this);
 
         switchState(LoginState.USERNAME, "");
@@ -101,11 +99,34 @@ public class LoginActivity extends AppCompatActivity implements LoginContract.Vi
 
     @Override
     public void loginNow(@NonNull String username, @NonNull String password) {
-        application.saveToSharedPreferences(getString(R.string.saved_username_key), username);
-        application.saveToSharedPreferences(getString(R.string.saved_password_key), password);
+        application.setLocalUser(username, password);
 
         Intent intent = new Intent(this, FriendsActivity.class);
         startActivity(intent);
+    }
+
+    private void makeSnack(int resId) {
+        Snackbar.make(findViewById(R.id.coordinatorlayout_login), resId, Snackbar.LENGTH_SHORT);
+    }
+
+    @Override
+    public void showPasswordTooShort() {
+        makeSnack(R.string.global_error_passwordShort);
+    }
+
+    @Override
+    public void showPasswordTooLong() {
+        makeSnack(R.string.global_error_passwordLong);
+    }
+
+    @Override
+    public void showUsernameTooShort() {
+        makeSnack(R.string.global_error_usernameShort);
+    }
+
+    @Override
+    public void showUsernameTooLong() {
+        makeSnack(R.string.global_error_usernameLong);
     }
 
     @Override

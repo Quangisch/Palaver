@@ -5,6 +5,7 @@ import android.util.Log;
 
 import javax.inject.Inject;
 
+import de.web.ngthi.palaver.Configuration;
 import de.web.ngthi.palaver.di.DaggerDataRepositoryComponent;
 import de.web.ngthi.palaver.repository.DataRepository;
 import de.web.ngthi.palaver.view.login.LoginState;
@@ -26,12 +27,17 @@ public class LoginPresenter extends BasePresenter<LoginContract.View> implements
     @Override
     public void onUsernameInput(@NonNull String username, LoginState nextStateRequest) {
         Log.d(TAG, String.format("onUsernameInput(%s, %s)", username, nextStateRequest.toString()));
-
-        addDisposable(dataRepository.isValidUser(username)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .doOnError(u -> getView().showNetworkError())
-                .subscribe(u -> updateState(u, username, nextStateRequest)));
+        if(username.length() < Configuration.MIN_USERNAME_LENGTH)
+            getView().showPasswordTooShort();
+        else if(username.length() > Configuration.MAX_USERNAME_LENGTH)
+            getView().showPasswordTooLong();
+        else {
+            addDisposable(dataRepository.isValidUser(username)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .doOnError(u -> getView().showNetworkError())
+                    .subscribe(u -> updateState(u, username, nextStateRequest)));
+        }
     }
 
     private void updateState(boolean existingUsername, String username, LoginState nextState) {
@@ -57,11 +63,17 @@ public class LoginPresenter extends BasePresenter<LoginContract.View> implements
     @Override
     public void onPasswordInput(@NonNull String password) {
         Log.d(TAG, String.format("onPasswordInput(%s)", password));
-        addDisposable(dataRepository.isValidUser(username, password)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .doOnError(u -> getView().showNetworkError())
-                .subscribe(u -> login(u, username, password)));
+        if(password.length() < Configuration.MIN_PASSWORD_LENGTH)
+            getView().showPasswordTooShort();
+        else if(password.length() > Configuration.MAX_PASSWORD_LENGTH)
+            getView().showPasswordTooLong();
+        else {
+            addDisposable(dataRepository.isValidUser(username, password)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .doOnError(u -> getView().showNetworkError())
+                    .subscribe(u -> login(u, username, password)));
+        }
     }
 
     private void login(boolean validLogin, String username, String password) {

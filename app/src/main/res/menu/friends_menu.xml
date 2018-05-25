@@ -1,0 +1,21 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+
+    <item android:id="@+id/action_friends_add"
+        android:title="@string/action_friends_addFriend"
+        app:showAsAction="never"/>
+
+    <item android:id="@+id/action_friends_remove"
+        android:title="@string/action_friends_removeFriend"
+        app:showAsAction="never"/>
+
+    <item android:id="@+id/action_friends_changePassword"
+        android:title="@string/action_friends_changePassword"
+        app:showAsAction="never"/>
+
+    <item android:id="@+id/action_friends_logOut"
+        android:title="@string/action_friends_logout"
+        app:showAsAction="never"/>
+
+</menu>

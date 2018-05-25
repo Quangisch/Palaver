@@ -5,8 +5,10 @@ import android.util.Log;
 import java.util.List;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
 import dagger.Module;
+import dagger.Provides;
 import de.web.ngthi.palaver.PalaverApplication;
 import de.web.ngthi.palaver.model.LocalUser;
 import de.web.ngthi.palaver.model.Message;
@@ -17,20 +19,26 @@ import io.reactivex.Single;
 @Module
 public class DataRepository implements IRepository {
 
-    private PalaverApplication application;
+
     private IRepository localRepository;
     private IRepository restRepository;
 
     @Inject
-    public DataRepository (PalaverApplication application, RestRepository restRepository, LocalRepository localRepository) {
-        this.application = application;
+    public DataRepository (RestRepository restRepository, LocalRepository localRepository) {
+        Log.d(getClass().getSimpleName(), "=========CONSTRUCTOR=========");
         this.restRepository = restRepository;
         this.localRepository = localRepository;
 
-        restRepository.setLocalUser(application.getLocalUser());
-        localRepository.setLocalUser(application.getLocalUser());
-        Log.d("=========", application.getLocalUser().toString());
+        LocalUser localUser = PalaverApplication.getInstance().getLocalUser();
+        restRepository.setLocalUser(localUser);
+        localRepository.setLocalUser(localUser);
     }
+
+//    @Singleton
+//    @Provides
+//    public DataRepository providesDataRepository(RestRepository restRepository, LocalRepository localRepository) {
+//        return new DataRepository(restRepository, localRepository);
+//    }
 
     //TODO
     private IRepository getDefaultRepository() {
@@ -51,6 +59,8 @@ public class DataRepository implements IRepository {
 
     @Override
     public Single<Boolean> isValidUser(String username, String password) {
+        if(username == null)
+            username = PalaverApplication.getInstance().getLocalUser().getUsername();
         return getDefaultRepository().isValidUser(username, password);
     }
 

@@ -1,12 +1,25 @@
 <resources>
     <string name="app_name">Palaver</string>
 
+    //global
+    <string name="global_error_usernameShort">Username is too short</string>
+    <string name="global_error_usernameLong">Username is too long</string>
+    <string name="global_error_passwordShort">Password is too short</string>
+    <string name="global_error_passwordLong">Password is too long</string>
+
     //saved
     <string name="saved_username_key">username</string>
     <string name="saved_password_key">password</string>
 
     //Intent navigation
     <string name="intent_friend_message">friend_message</string>
+
+    //menu
+    <string name="action_friends_changePassword">Change Password</string>
+    <string name="action_friends_addFriend">Add Friend</string>
+    <string name="action_friends_removeFriend">Remove Friend</string>
+    <string name="action_friends_logout">Log Out</string>
+    <string name="action_message_filter">Filter by Date</string>
 
     //login
     <string name="login_welcome">Welcome</string>
@@ -23,14 +36,40 @@
     <string name="login_error_wrongPasswordRepeat">Passwords don\'t match</string>
     <string name="login_error_network">Network error</string>
 
-    //friends
-    <string name="friends_button_addFriend">Add Friend</string>
-    <string name="friends_button_removeFriend">Remove Friend</string>
+    //friends dialog
+    <string name="friends_title_addFriend">Add Friend</string>
+    <string name="friends_title_removeFriend">Remove Friend</string>
+    <string name="friends_title_changePassword">Change Password</string>
+    <string name="friends_title_enterNewPassword">Enter your new Password</string>
+    <string name="friends_title_logOut">LogOut</string>
+
+    <string name="friends_button_addFriend">Add</string>
+    <string name="friends_button_removeFriend">Remove</string>
+    <string name="friends_button_changePassword">Change</string>
+    <string name="friends_button_logOut">Logout</string>
+    <string name="friends_button_cancel">Cancel</string>
+
+
+    <string name="friends_hint_oldPassword">Old Password</string>
+    <string name="friends_hint_newPassword">New Password</string>
+    <string name="friends_hint_newPasswordRepeat">Repeat new Password</string>
+
+    <string name="friends_error_unknownFriend">Unknown username</string>
+    <string name="friends_error_duplicateFriend">Friend already added</string>
+    <string name="friends_error_wrongOldPassword">Old Password not correct</string>
+    <string name="friends_error_wrongPasswordRepeat">Repeated Password not correct</string>
+    <string name="friends_text_changedSuccess">Password changed</string>
+    <string name="friends_text_logOut">Do you really want to log out?</string>
+
+
+
 
     //message
     <string name="message_button_send">Send</string>
     <string name="message_hint_sendText">Type message</string>
     <string name="message_button_filterOffset">Filter offset</string>
+    <string name="message_button_filter">Filter</string>
+    <string name="message_button_cancel">Cancel</string>
 
 
     //mockup text

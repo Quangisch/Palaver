@@ -1,7 +1,5 @@
 package de.web.ngthi.palaver.model;
 
-import android.util.Log;
-
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;

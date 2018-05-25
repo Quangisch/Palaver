@@ -22,7 +22,9 @@ public class User implements Comparable<User>{
     }
 
     public int hashCode() {
-        return username.hashCode();
+        if(username != null)
+            return username.hashCode();
+        return super.hashCode();
     }
 
     public boolean equals(Object o) {
@@ -37,6 +39,6 @@ public class User implements Comparable<User>{
 
     @Override
     public int compareTo(@NonNull User o) {
-        return username.compareTo(o.username);
+        return username.compareToIgnoreCase(o.username);
     }
 }

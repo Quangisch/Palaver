@@ -1,10 +1,15 @@
 package de.web.ngthi.palaver.repository;
 
+import android.util.Log;
+
 import java.util.List;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
 import dagger.Module;
+import dagger.Provides;
+import de.web.ngthi.palaver.PalaverApplication;
 import de.web.ngthi.palaver.controller.FriendsService;
 import de.web.ngthi.palaver.controller.MessageService;
 import de.web.ngthi.palaver.controller.RestController;
@@ -23,7 +28,7 @@ import retrofit2.Retrofit;
 @Module
 public class RestRepository implements IRepository {
 
-    private LocalUser user;
+//    private LocalUser user;
 
     private UserService userService;
     private FriendsService friendsService;
@@ -31,15 +36,26 @@ public class RestRepository implements IRepository {
 
     @Inject
     public RestRepository(RestController controller) {
+        Log.d(getClass().getSimpleName(), "=========CONSTRUCTOR=========");
         Retrofit retrofit = controller.provideRetrofit();
         userService = controller.provideUserService(retrofit);
         friendsService = controller.provideFriendService(retrofit);
         messageService = controller.provideMessageService(retrofit);
     }
 
+//    @Singleton
+//    @Provides
+//    public RestRepository provideRestRepository(RestController controller) {
+//        return new RestRepository(controller);
+//    }
+
     @Override
     public void setLocalUser(LocalUser user) {
-        this.user = user;
+//        this.user = user;
+    }
+
+    private LocalUser getUser() {
+        return PalaverApplication.getInstance().getLocalUser();
     }
 
     public Single<Boolean> isValidUser(String username) {
@@ -67,8 +83,8 @@ public class RestRepository implements IRepository {
 
     private ServerRequest.Builder localUser() {
         return new ServerRequest.Builder()
-                .username(user.getUsername())
-                .password(user.getPassword());
+                .username(getUser().getUsername())
+                .password(getUser().getPassword());
     }
 
     @Override

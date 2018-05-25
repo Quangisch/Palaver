@@ -9,6 +9,7 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
+import de.web.ngthi.palaver.Configuration;
 import de.web.ngthi.palaver.di.DaggerDataRepositoryComponent;
 import de.web.ngthi.palaver.model.Message;
 import de.web.ngthi.palaver.model.User;
@@ -21,7 +22,6 @@ public class FriendsPresenter extends BasePresenter<FriendsContract.View> implem
     @Inject
     public DataRepository dataRepository;
     private List<User> friends = new LinkedList<>();
-//    TODO Snippet message and dateTime?
     private Map<User, Message> friendsMap = new HashMap<>();
 
     public FriendsPresenter(FriendsContract.View view) {
@@ -35,6 +35,7 @@ public class FriendsPresenter extends BasePresenter<FriendsContract.View> implem
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(this::updateDataList));
+
     }
 
     private void updateDataList(List<User> friends) {
@@ -42,15 +43,38 @@ public class FriendsPresenter extends BasePresenter<FriendsContract.View> implem
         for(User u : friends)
             Log.d(getClass().getSimpleName(), "friend: " + u);
         this.friends = friends;
+
+        for(User friend : friends) {
+            addDisposable(dataRepository.getMessagesFrom(friend.getUsername())
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(m -> updateDataMap(friend, m)));
+        }
+
+        getView().notifyDataSetChanged();
+    }
+
+    private void updateDataMap(User friend, List<Message> messages) {
+        int lastIndex = messages.size() - 1;
+        Message lastMessage = null;
+        if(lastIndex >= 0)
+            lastMessage = messages.get(lastIndex);
+        friendsMap.put(friend, lastMessage);
+
         getView().notifyDataSetChanged();
     }
 
     @Override
     public void onBindRepositoryRowViewAtPosition(FriendsContract.FriendsViewable holder, int position) {
         String name = friends.get(position).getUsername();
-//        String message = friends.get(position)
-//        String datTime =
-        holder.bind(name, "...", "12:34");
+        Message m = friendsMap.get(new User(name));
+        String message = "";
+        String datTime = "";
+        if(m != null) {
+            message = m.getContent();
+            datTime = m.getDateTimeString();
+        }
+        holder.bind(name, message, datTime);
     }
 
     @Override
@@ -65,11 +89,62 @@ public class FriendsPresenter extends BasePresenter<FriendsContract.View> implem
 
     @Override
     public void onAddFriend(String friend) {
-
+        addDisposable(dataRepository.addFriend(friend)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(this::updateDataList));
     }
 
     @Override
-    public void onRemoveFriend(String friend) {
+    public void onRemoveFriend(List<Integer> friendIndex) {
+        for(int i : friendIndex) {
+            String friend = friends.get(i).getUsername();
 
+            addDisposable(dataRepository.removeFriend(friend)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(this::updateDataList));
+        }
     }
+
+    @Override
+    public String[] getFriends() {
+        List<String> friendNames = new LinkedList<>();
+        for(User u : friends)
+            friendNames.add(u.getUsername());
+        return friendNames.toArray(new String[friendNames.size()]);
+    }
+
+    @Override
+    public void onChangePassword(String oldPassword, String newPassword, String newPasswordRepeat) {
+        addDisposable(dataRepository.isValidUser(null, oldPassword)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(u -> checkOldPassword(u, newPassword, newPasswordRepeat)));
+    }
+
+    private void checkOldPassword(boolean valid, String newPassword, String newPasswordRepeat) {
+        Log.d(getClass().getSimpleName(), String.format("checkOldPassword(%b, %s, %s)", valid, newPassword, newPasswordRepeat));
+        Log.d(getClass().getSimpleName(), String.format("%d < %d < %d)", Configuration.MIN_PASSWORD_LENGTH, newPassword.length(), Configuration.MAX_PASSWORD_LENGTH));
+        if(valid) {
+            if(newPassword.equals(newPasswordRepeat)) {
+                if(newPassword.length() < Configuration.MIN_PASSWORD_LENGTH)
+                    getView().showPasswordTooShort();
+                else if(newPassword.length() > Configuration.MAX_PASSWORD_LENGTH)
+                    getView().showPasswordTooLong();
+                else {
+                    addDisposable(dataRepository.changePassword(newPassword)
+                            .subscribeOn(Schedulers.io())
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe(() -> getView().showChangedPassword()));
+                }
+            } else {
+                getView().showWrongPasswordRepeat();
+            }
+        } else {
+            getView().showWrongOldPassword();
+        }
+    }
+
+
 }
