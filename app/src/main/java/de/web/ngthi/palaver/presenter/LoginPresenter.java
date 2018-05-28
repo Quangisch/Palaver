@@ -3,25 +3,20 @@ package de.web.ngthi.palaver.presenter;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
-import javax.inject.Inject;
-
 import de.web.ngthi.palaver.Configuration;
-import de.web.ngthi.palaver.di.DaggerDataRepositoryComponent;
-import de.web.ngthi.palaver.repository.DataRepository;
+import de.web.ngthi.palaver.repository.IRepository;
 import de.web.ngthi.palaver.view.login.LoginState;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
 public class LoginPresenter extends BasePresenter<LoginContract.View> implements LoginContract.Presenter {
 
-    @Inject public DataRepository dataRepository;
     private String username;
 
     private final String TAG = getClass().getSimpleName();
 
-    public LoginPresenter(LoginContract.View view) {
-        super(view);
-        DaggerDataRepositoryComponent.create().inject(this);
+    public LoginPresenter(LoginContract.View view, IRepository repository) {
+        super(view, repository);
     }
 
     @Override
@@ -32,7 +27,7 @@ public class LoginPresenter extends BasePresenter<LoginContract.View> implements
         else if(username.length() > Configuration.MAX_USERNAME_LENGTH)
             getView().showPasswordTooLong();
         else {
-            addDisposable(dataRepository.isValidUser(username)
+            addDisposable(getRepository().isValidUser(username)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .doOnError(u -> getView().showNetworkError())
@@ -68,7 +63,7 @@ public class LoginPresenter extends BasePresenter<LoginContract.View> implements
         else if(password.length() > Configuration.MAX_PASSWORD_LENGTH)
             getView().showPasswordTooLong();
         else {
-            addDisposable(dataRepository.isValidUser(username, password)
+            addDisposable(getRepository().isValidUser(username, password)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .doOnError(u -> getView().showNetworkError())
@@ -78,6 +73,7 @@ public class LoginPresenter extends BasePresenter<LoginContract.View> implements
 
     private void login(boolean validLogin, String username, String password) {
         if(validLogin) {
+            getRepository().setLocalUser(username, password);
             getView().loginNow(username, password);
         } else {
             getView().showWrongPasswordError();
@@ -90,7 +86,7 @@ public class LoginPresenter extends BasePresenter<LoginContract.View> implements
         if(!password.equals(passwordRepeat))
             getView().showPasswordRepeatError();
         else {
-            addDisposable(dataRepository.isValidNewUser(username, password)
+            addDisposable(getRepository().isValidNewUser(username, password)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .doOnError(u -> getView().showNetworkError())

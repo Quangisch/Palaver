@@ -1,5 +1,8 @@
 package de.web.ngthi.palaver.dto;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import org.joda.time.DateTime;
 
 import java.util.LinkedList;
@@ -10,18 +13,20 @@ import de.web.ngthi.palaver.model.User;
 
 public class ServerDataMapper {
 
+
+    private static ObjectMapper mapper = new ObjectMapper();
+
     public static List<Message> mapToMessages(ServerReply reply) {
         List<Message> messages = new LinkedList<>();
         if(ServerReplyType.isType(ServerReplyType.MESSAGE_GET_OK, reply)
-                && reply.hasDataArray()) {
+                && reply.hasData()) {
 
-            ServerData[] data = (ServerData[]) reply.getData();
-
-            for(ServerData d: data) {
+            List<ServerData> data = mapper.convertValue(reply.getData(), new TypeReference<List<ServerData>>() { });
+            for(ServerData d : data) {
                 User sender = new User(d.getSender());
                 User recipient = new User(d.getRecipient());
                 String message = d.getServerData();
-                DateTime dateTime = d.getDateTime();
+                DateTime dateTime = DateTime.parse(d.getDateTime());
                 messages.add(new Message(sender, recipient, message, dateTime));
             }
         }
@@ -32,17 +37,15 @@ public class ServerDataMapper {
     public static List<User> mapToFriends(ServerReply reply) {
         List<User> friends = new LinkedList<>();
         if(ServerReplyType.isType(ServerReplyType.FRIENDS_GET, reply)
-                && reply.hasStringArray()) {
+                && reply.hasData()) {
 
-            String[] data = (String[]) reply.getData();
+            List<String> data = mapper.convertValue(reply.getData(), new TypeReference<List<String>>() { });
             for(String s : data) {
                 friends.add(new User(s));
             }
         }
+
         return friends;
     }
-
-
-
 
 }

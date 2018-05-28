@@ -18,17 +18,9 @@ public class ServerReply {
     private String info;
 
     @JsonProperty("Data")
-    private Object[] data;
+    private Object data;
 
-    private boolean hasData() {
+    public boolean hasData() {
         return data != null;
-    }
-
-    public boolean hasStringArray() {
-        return hasData() && data instanceof String[];
-    }
-
-    public boolean hasDataArray() {
-        return hasData() && data instanceof ServerData[];
     }
 }

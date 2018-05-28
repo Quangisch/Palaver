@@ -1,16 +1,13 @@
 package de.web.ngthi.palaver.repository;
 
+import android.support.annotation.NonNull;
 import android.util.Log;
 
 import java.util.List;
 
 import javax.inject.Inject;
-import javax.inject.Singleton;
 
 import dagger.Module;
-import dagger.Provides;
-import de.web.ngthi.palaver.PalaverApplication;
-import de.web.ngthi.palaver.model.LocalUser;
 import de.web.ngthi.palaver.model.Message;
 import de.web.ngthi.palaver.model.User;
 import io.reactivex.Completable;
@@ -19,58 +16,46 @@ import io.reactivex.Single;
 @Module
 public class DataRepository implements IRepository {
 
-
-    private IRepository localRepository;
-    private IRepository restRepository;
+    private RestRepository restRepository;
+    private LocalRepository localRepository;
 
     @Inject
     public DataRepository (RestRepository restRepository, LocalRepository localRepository) {
         Log.d(getClass().getSimpleName(), "=========CONSTRUCTOR=========");
         this.restRepository = restRepository;
         this.localRepository = localRepository;
-
-        LocalUser localUser = PalaverApplication.getInstance().getLocalUser();
-        restRepository.setLocalUser(localUser);
-        localRepository.setLocalUser(localUser);
     }
-
-//    @Singleton
-//    @Provides
-//    public DataRepository providesDataRepository(RestRepository restRepository, LocalRepository localRepository) {
-//        return new DataRepository(restRepository, localRepository);
-//    }
 
     //TODO
     private IRepository getDefaultRepository() {
-        return localRepository;
-    }
-
-
-    @Override
-    public void setLocalUser(LocalUser user) {
-        localRepository.setLocalUser(user);
-        restRepository.setLocalUser(user);
+        return restRepository;
     }
 
     @Override
-    public Single<Boolean> isValidUser(String username) {
+    public void setLocalUser(@NonNull String username, @NonNull String password) {
+        localRepository.setLocalUser(username, password);
+        restRepository.setLocalUser(username, password);
+//        TODO
+//        loadLocalUserData();
+    }
+
+    @Override
+    public Single<Boolean> isValidUser(@NonNull String username) {
         return getDefaultRepository().isValidUser(username);
     }
 
     @Override
-    public Single<Boolean> isValidUser(String username, String password) {
-        if(username == null)
-            username = PalaverApplication.getInstance().getLocalUser().getUsername();
+    public Single<Boolean> isValidUser(@NonNull String username, @NonNull String password) {
         return getDefaultRepository().isValidUser(username, password);
     }
 
     @Override
-    public Single<Boolean> isValidNewUser(String username, String password) {
+    public Single<Boolean> isValidNewUser(@NonNull String username, @NonNull String password) {
         return getDefaultRepository().isValidNewUser(username, password);
     }
 
     @Override
-    public Completable changePassword(String newPassword) {
+    public Completable changePassword(@NonNull String newPassword) {
         return getDefaultRepository().changePassword(newPassword);
     }
 
@@ -80,27 +65,27 @@ public class DataRepository implements IRepository {
     }
 
     @Override
-    public Completable sendMessage(String friend, String message) {
+    public Completable sendMessage(@NonNull String friend, @NonNull String message) {
         return getDefaultRepository().sendMessage(friend, message);
     }
 
     @Override
-    public Single<List<Message>> getMessagesFrom(String friend) {
+    public Single<List<Message>> getMessagesFrom(@NonNull String friend) {
         return getDefaultRepository().getMessagesFrom(friend);
     }
 
     @Override
-    public Single<List<Message>> getMessageFromOffset(String friend, String dateTime) {
+    public Single<List<Message>> getMessageFromOffset(@NonNull String friend, @NonNull String dateTime) {
         return getDefaultRepository().getMessageFromOffset(friend, dateTime);
     }
 
     @Override
-    public Completable addFriend(String friend) {
+    public Completable addFriend(@NonNull String friend) {
         return getDefaultRepository().addFriend(friend);
     }
 
     @Override
-    public Completable removeFriend(String friend) {
+    public Completable removeFriend(@NonNull String friend) {
         return getDefaultRepository().removeFriend(friend);
     }
 
@@ -108,4 +93,26 @@ public class DataRepository implements IRepository {
     public Single<List<User>> getFriendList() {
         return getDefaultRepository().getFriendList();
     }
+
+
+//    public void loadLocalUserData() {
+//        TODO
+//        if(getLocalUser() != null) {
+//            LocalUser user = getLocalUser();
+//            //addFriends
+//            getDefaultRepository().getFriendList()
+//                    .subscribeOn(Schedulers.computation())
+//                    .subscribe(user::addFriends)
+//                    .dispose();
+//
+//            List<User> friends = user.getSortedFriendList();
+//
+//            for(User u : friends) {
+//                getDefaultRepository().getMessagesFrom(u.getUsername())
+//                        .subscribeOn(Schedulers.computation())
+//                        .subscribe(m -> user.addMessages(u.getUsername(), m))
+//                        .dispose();
+//            }
+//        }
+//    }
 }

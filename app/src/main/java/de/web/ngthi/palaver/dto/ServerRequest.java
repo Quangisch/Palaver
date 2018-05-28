@@ -1,5 +1,7 @@
 package de.web.ngthi.palaver.dto;
 
+import android.util.Log;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.Getter;
@@ -12,14 +14,13 @@ public class ServerRequest {
     @JsonProperty("NewPassword")private String newPassword;
     @JsonProperty("PushToken")  private String pushToken;
     @JsonProperty("Mimetype")   private String mimetype;
-    @JsonProperty("ServerData") private String data;
+    @JsonProperty("Data")       private String data;
     @JsonProperty("Friend")     private String friend;
     @JsonProperty("Recipient")  private String recipient;
-//    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "uuuu-MM-dd'T'HH:mm:ss.SSSXXXX")
     @JsonProperty("Offset")     private String offset;
 
     private ServerRequest() {
-        //user Builder
+        //use Builder
     }
 
     public static class Builder {
@@ -49,8 +50,8 @@ public class ServerRequest {
             return this;
         }
 
-        public Builder token() {
-            pushToken = "TOKEN_HERE!";
+        public Builder token(String token) {
+            pushToken = token;
             return this;
         }
 
@@ -90,6 +91,9 @@ public class ServerRequest {
             request.friend = this.friend;
             request.recipient = this.recipient;
             request.offset = this.offset;
+
+            Log.d("___ServerRequest:", request.toString());
+
             return request;
         }
 

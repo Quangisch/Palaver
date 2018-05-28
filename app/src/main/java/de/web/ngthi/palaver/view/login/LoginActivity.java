@@ -35,10 +35,11 @@ public class LoginActivity extends AppCompatActivity implements LoginContract.Vi
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        setTheme(R.style.AppTheme_NoActionBar);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         application = (PalaverApplication) getApplication();
-        application.clearLocalUser();
+        application.clearLocalUserData();
 
 
         Toolbar toolbar = findViewById(R.id.toolbar_login);
@@ -49,7 +50,7 @@ public class LoginActivity extends AppCompatActivity implements LoginContract.Vi
         userFragment = new LoginUserFragment();
         registerFragment = new LoginRegisterFragment();
         passwordFragment = new LoginPasswordFragment();
-        presenter = new LoginPresenter(this);
+        presenter = new LoginPresenter(this, application.getRepository());
 
         switchState(LoginState.USERNAME, "");
     }
@@ -99,7 +100,7 @@ public class LoginActivity extends AppCompatActivity implements LoginContract.Vi
 
     @Override
     public void loginNow(@NonNull String username, @NonNull String password) {
-        application.setLocalUser(username, password);
+        application.saveLocalUserData(username, password);
 
         Intent intent = new Intent(this, FriendsActivity.class);
         startActivity(intent);

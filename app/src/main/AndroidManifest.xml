@@ -3,6 +3,8 @@
     package="de.web.ngthi.palaver">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.VIBRATE" />
 
     <application
         android:name=".PalaverApplication"
@@ -11,8 +13,19 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme.NoActionBar"
+        android:theme="@style/AppTheme.Launcher"
+        android:screenOrientation="portrait"
         android:windowSoftInputMode="adjustResize">
+
+
+        <activity
+            android:name=".view.friends.FriendsActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
 
         <activity
             android:name=".view.login.LoginActivity"
@@ -22,24 +35,14 @@
         <activity
             android:name=".view.message.MessageActivity"
             android:windowSoftInputMode="adjustResize">
+        </activity>
+
+
+        <service android:name=".service.MyFirebaseInstanceIDService">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-                <category android:name="android.intent.category.DEFAULT" />
+                <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
             </intent-filter>
-        </activity>
-
-        <activity
-            android:name=".view.friends.FriendsActivity">
-        </activity>
-
-        <!--<service android:name=".service.MyFirebaseInstanceIDService">-->
-            <!--<intent-filter>-->
-                <!--<action android:name="com.google.firebase.INSTANCE_ID_EVENT" />-->
-            <!--</intent-filter>-->
-        <!--</service>-->
-
-        <activity android:name=".view.friends.FriendsActivity"></activity>
+        </service>
     </application>
 
 </manifest>

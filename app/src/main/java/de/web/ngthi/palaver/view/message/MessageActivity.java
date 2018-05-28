@@ -13,6 +13,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+import de.web.ngthi.palaver.PalaverApplication;
 import de.web.ngthi.palaver.R;
 import de.web.ngthi.palaver.presenter.MessageContract;
 import de.web.ngthi.palaver.presenter.MessagePresenter;
@@ -26,15 +27,17 @@ public class MessageActivity extends AppCompatActivity implements MessageContrac
     private RecyclerView.Adapter mMessageAdapter;
     private RecyclerView mMessageRecycler;
     private Toolbar toolbar;
+    private PalaverApplication application;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        setTheme(R.style.AppTheme_NoActionBar);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_message);
-
+        application = (PalaverApplication) getApplication();
 
         String friendName = getIntent().getStringExtra(getString(R.string.intent_friend_message));
-        presenter = new MessagePresenter(this, friendName);
+        presenter = new MessagePresenter(this, application.getRepository(), friendName);
 
         toolbar = findViewById(R.id.toolbar_message);
         toolbar.setTitle(friendName);

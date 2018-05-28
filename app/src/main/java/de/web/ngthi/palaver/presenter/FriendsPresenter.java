@@ -7,35 +7,31 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import javax.inject.Inject;
-
 import de.web.ngthi.palaver.Configuration;
-import de.web.ngthi.palaver.di.DaggerDataRepositoryComponent;
 import de.web.ngthi.palaver.model.Message;
 import de.web.ngthi.palaver.model.User;
-import de.web.ngthi.palaver.repository.DataRepository;
+import de.web.ngthi.palaver.repository.IRepository;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
 public class FriendsPresenter extends BasePresenter<FriendsContract.View> implements FriendsContract.Presenter {
 
-    @Inject
-    public DataRepository dataRepository;
+
     private List<User> friends = new LinkedList<>();
     private Map<User, Message> friendsMap = new HashMap<>();
 
-    public FriendsPresenter(FriendsContract.View view) {
-        super(view);
-        DaggerDataRepositoryComponent.create().inject(this);
+    public FriendsPresenter(FriendsContract.View view, IRepository repository, String username, String password) {
+        super(view, repository);
+        getRepository().setLocalUser(username, password);
+        getRepository().refreshToken();
         updateDataList();
     }
 
     private void updateDataList() {
-        addDisposable(dataRepository.getFriendList()
+        addDisposable(getRepository().getFriendList()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(this::updateDataList));
-
     }
 
     private void updateDataList(List<User> friends) {
@@ -45,7 +41,7 @@ public class FriendsPresenter extends BasePresenter<FriendsContract.View> implem
         this.friends = friends;
 
         for(User friend : friends) {
-            addDisposable(dataRepository.getMessagesFrom(friend.getUsername())
+            addDisposable(getRepository().getMessagesFrom(friend.getUsername())
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(m -> updateDataMap(friend, m)));
@@ -89,7 +85,7 @@ public class FriendsPresenter extends BasePresenter<FriendsContract.View> implem
 
     @Override
     public void onAddFriend(String friend) {
-        addDisposable(dataRepository.addFriend(friend)
+        addDisposable(getRepository().addFriend(friend)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(this::updateDataList));
@@ -100,7 +96,7 @@ public class FriendsPresenter extends BasePresenter<FriendsContract.View> implem
         for(int i : friendIndex) {
             String friend = friends.get(i).getUsername();
 
-            addDisposable(dataRepository.removeFriend(friend)
+            addDisposable(getRepository().removeFriend(friend)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(this::updateDataList));
@@ -116,8 +112,8 @@ public class FriendsPresenter extends BasePresenter<FriendsContract.View> implem
     }
 
     @Override
-    public void onChangePassword(String oldPassword, String newPassword, String newPasswordRepeat) {
-        addDisposable(dataRepository.isValidUser(null, oldPassword)
+    public void onChangePassword(String username, String oldPassword, String newPassword, String newPasswordRepeat) {
+        addDisposable(getRepository().isValidUser(username, oldPassword)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(u -> checkOldPassword(u, newPassword, newPasswordRepeat)));
@@ -133,7 +129,7 @@ public class FriendsPresenter extends BasePresenter<FriendsContract.View> implem
                 else if(newPassword.length() > Configuration.MAX_PASSWORD_LENGTH)
                     getView().showPasswordTooLong();
                 else {
-                    addDisposable(dataRepository.changePassword(newPassword)
+                    addDisposable(getRepository().changePassword(newPassword)
                             .subscribeOn(Schedulers.io())
                             .observeOn(AndroidSchedulers.mainThread())
                             .subscribe(() -> getView().showChangedPassword()));

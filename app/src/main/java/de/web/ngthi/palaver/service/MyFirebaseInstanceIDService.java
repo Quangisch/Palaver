@@ -5,7 +5,7 @@ import android.util.Log;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.FirebaseInstanceIdService;
 
-public class MyFirebaseInstanceIDService { /*extends FirebaseInstanceIdService {
+public class MyFirebaseInstanceIDService extends FirebaseInstanceIdService {
 
     private String TAG = getClass().getName();
 
@@ -19,7 +19,6 @@ public class MyFirebaseInstanceIDService { /*extends FirebaseInstanceIdService {
         // manage this apps subscriptions on the server side, send the
         // Instance ID token to your app server.
 //        sendRegistrationToServer(refreshedToken);
-    }
-    */
 
+    }
 }

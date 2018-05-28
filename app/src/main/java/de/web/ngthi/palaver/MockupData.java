@@ -46,7 +46,7 @@ public class MockupData {
             int friendIndex = r.nextInt(friends.size());
             User friend = localUser.getSortedFriendList().get(friendIndex);
             Message m = new Message(user % 2 == 0 ? localUser : friend, user % 2 == 0 ? friend : localUser, textFragments[i].replaceAll("\\t\\n", ""), date);
-            localUser.addMessage(m);
+            localUser.addMessage(friend.getUsername(), m);
         }
     }
 

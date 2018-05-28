@@ -4,65 +4,86 @@ import android.app.Application;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
 import android.util.Log;
 
-import de.web.ngthi.palaver.model.LocalUser;
+import javax.inject.Inject;
+
+import de.web.ngthi.palaver.di.DaggerDataRepositoryComponent;
+import de.web.ngthi.palaver.repository.DataRepository;
+import de.web.ngthi.palaver.repository.IRepository;
 import de.web.ngthi.palaver.view.friends.FriendsActivity;
-import de.web.ngthi.palaver.view.message.MessageActivity;
+import de.web.ngthi.palaver.view.login.LoginActivity;
 
 public class PalaverApplication extends Application {
 
-    private static PalaverApplication instance;
-    private LocalUser localUser;
+    @Inject
+    public DataRepository repository;
     private SharedPreferences sharedPref;
 
-
     public PalaverApplication() {
-        setLocalUser(MockupData.getLocalUser());
         Log.d("APPLICATION CONSTRUCTOR", "==============constructor===============");
     }
 
     @Override
     public void onCreate() {
         super.onCreate();
-
-        instance = this;
-
+        DaggerDataRepositoryComponent.create().inject(this);
         sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
-        Class c = FriendsActivity.class;
+//        initLocalUser();
+        saveLocalUserData("Peter32", "pw31");
+
+
+        Class c = LoginActivity.class;
+        if(hasLocalUserData())
+            c = FriendsActivity.class;
+
+//        Testing
+//        c = MessageActivity.class;
+
         Intent intent = new Intent(this, c);
-        if(c == MessageActivity.class) {
-            String friendName = getLocalUser().getSortedFriendList().get(0).getUsername();
-            intent.putExtra(getString(R.string.intent_friend_message), friendName);
-        }
+
+//        intent.putExtra(getString(R.string.intent_friend_message), getLocalUser().getSortedFriendList().get(0).getUsername());
+//        intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+
 
         startActivity(intent);
+    }
+
+    public void initLocalUser() {
+        if(hasLocalUserData()) {
+            String username = sharedPref.getString(getString(R.string.saved_username_key), null);
+            String password = sharedPref.getString(getString(R.string.saved_password_key), null);
+            repository.setLocalUser(username, password);
+        }
+    }
+
+    public IRepository getRepository() {
+        return repository;
+    }
+
+    public String getLocalUsername() {
+        return sharedPref.getString(getString(R.string.saved_username_key), null);
+    }
+
+    public String getLocalPassword() {
+        return sharedPref.getString(getString(R.string.saved_password_key), null);
+    }
+
+    public boolean hasLocalUserData() {
+        return sharedPref.contains(getString(R.string.saved_username_key)) && sharedPref.contains(getString(R.string.saved_password_key));
     }
 
     public void saveToSharedPreferences(String key, String value) {
         sharedPref.edit().putString(key, value).apply();
     }
 
-    public void setLocalUser(LocalUser localUser) {
-        this.localUser = localUser;
-    }
-
-    public void setLocalUser(String username, String password) {
+    public void saveLocalUserData(@NonNull String username, @NonNull String password) {
         saveToSharedPreferences(getString(R.string.saved_username_key), username);
         saveToSharedPreferences(getString(R.string.saved_password_key), password);
-        setLocalUser(new LocalUser(username, password));
     }
 
-    public LocalUser getLocalUser() {
-        return localUser;
-    }
-
-    public void clearLocalUser() {
-        localUser = null;
-        sharedPref.edit().clear().commit();
-    }
-
-    public static PalaverApplication getInstance() {
-        return instance;
+    public void clearLocalUserData() {
+        sharedPref.edit().clear().apply();
     }
 }

@@ -1,6 +1,7 @@
 package de.web.ngthi.palaver.model;
 
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -35,7 +36,12 @@ public class LocalUser extends User {
         contacts.put(friend, new LinkedList<>());
     }
 
-    public boolean hasFriend(User friend) {
+    public void addFriends(Collection<User> friends) {
+        for(User u : friends)
+            addFriend(u);
+    }
+
+    private boolean hasFriend(User friend) {
         return contacts.containsKey(friend);
     }
 
@@ -53,12 +59,16 @@ public class LocalUser extends User {
         return friendList;
     }
 
-    public void addMessage(Message m) {
-        User friend = m.getRecipient().equals(this) ? m.getSender() : m.getRecipient();
-        if(hasFriend(friend)) {
-            if(!contacts.containsKey(friend))
-                contacts.put(friend, new LinkedList<>());
-            contacts.get(friend).add(m);
+    public void addMessage(String friend, Message m) {
+        addMessages(friend, Collections.singletonList(m));
+    }
+
+    public void addMessages(String friend, Collection<Message> messages) {
+        User u = new User(friend);
+        if(hasFriend(u)) {
+            if(!contacts.containsKey(u))
+                contacts.put(u, new LinkedList<>());
+            contacts.get(u).addAll(messages);
         }
     }
 

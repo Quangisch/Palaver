@@ -38,11 +38,12 @@ public class FriendsActivity extends AppCompatActivity
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        setTheme(R.style.AppTheme_NoActionBar);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_friends);
         application = (PalaverApplication) getApplication();
 
-        presenter = new FriendsPresenter(this);
+        presenter = new FriendsPresenter(this, application.getRepository(), application.getLocalUsername(), application.getLocalPassword());
 
         Toolbar toolbar = findViewById(R.id.toolbar_friends);
         toolbar.setTitle(R.string.app_name);
@@ -89,8 +90,10 @@ public class FriendsActivity extends AppCompatActivity
                         .setNegativeButton(R.string.friends_button_cancel, (DialogInterface dialog, int which) -> {})
                         .setPositiveButton(R.string.friends_button_logOut, (DialogInterface dialog, int which) -> {
                             Intent intent = new Intent(this, LoginActivity.class);
-                            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
                             startActivity(intent);
+                            finish();
                 }).create().show();
                 return true;
         }
@@ -188,7 +191,7 @@ public class FriendsActivity extends AppCompatActivity
 
     @Override
     public void onChangeDialogPositiveButton(String oldPassword, String newPassword, String newPasswordRepeat) {
-        presenter.onChangePassword(oldPassword, newPassword, newPasswordRepeat);
+        presenter.onChangePassword(application.getLocalUsername(), oldPassword, newPassword, newPasswordRepeat);
     }
 
     @Override
