@@ -4,6 +4,8 @@ import android.support.annotation.NonNull;
 
 import java.util.List;
 
+import de.web.ngthi.palaver.dto.ServerReply;
+import de.web.ngthi.palaver.dto.ServerReplyType;
 import de.web.ngthi.palaver.model.Message;
 import de.web.ngthi.palaver.model.User;
 import io.reactivex.Completable;
@@ -17,15 +19,15 @@ public interface IRepository {
     Single<Boolean> isValidUser(@NonNull String username);
     Single<Boolean> isValidUser(@NonNull String username, @NonNull String password);
     Single<Boolean> isValidNewUser(@NonNull String username, @NonNull String password);
-    Completable changePassword(@NonNull String newPassword);
-    Completable refreshToken();
+    Single<ServerReplyType> changePassword(@NonNull String newPassword);
+    Single<ServerReplyType> refreshToken(String token);
     //message
-    Completable sendMessage(@NonNull String friend, @NonNull String message);
+    Single<ServerReplyType> sendMessage(@NonNull String friend, @NonNull String message);
     Single<List<Message>> getMessagesFrom(@NonNull String friend);
     Single<List<Message>> getMessageFromOffset(@NonNull String friend, @NonNull String dateTime);
 
     //friend
-    Completable addFriend(@NonNull String friend);
-    Completable removeFriend(@NonNull String friend);
+    Single<ServerReplyType> addFriend(@NonNull String friend);
+    Single<ServerReplyType> removeFriend(@NonNull String friend);
     Single<List<User>> getFriendList();
 }

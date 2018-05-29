@@ -3,6 +3,8 @@ package de.web.ngthi.palaver.dto;
 import android.util.Log;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.Getter;
 
@@ -22,6 +24,15 @@ public class ServerRequest {
     private ServerRequest() {
         //use Builder
     }
+
+//    public String toString() {
+//        String result = "error";
+//        ObjectMapper mapper = new ObjectMapper();
+//        try {
+//            result = mapper.writeValueAsString(this);
+//        } catch(JsonProcessingException e) { }
+//        return result;
+//    }
 
     public static class Builder {
 
@@ -93,7 +104,6 @@ public class ServerRequest {
             request.offset = this.offset;
 
             Log.d("___ServerRequest:", request.toString());
-
             return request;
         }
 

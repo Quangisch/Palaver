@@ -27,15 +27,21 @@ public class Message implements Comparable<Message>{
     private static DateTimeFormatter dateFormatter = DateTimeFormat.forPattern("dd.MM.yyyy");
 
     public String getTimeString() {
-        return timeFormatter.print(dateTime);
+        if(dateTime != null)
+            return timeFormatter.print(dateTime);
+        return null;
     }
 
     public String getDateString() {
-        return dateFormatter.print(dateTime);
+        if(dateTime != null)
+            return dateFormatter.print(dateTime);
+        return null;
     }
 
     public String getDateTimeString() {
-        return getDateString() + ", " + getTimeString();
+        if(dateTime != null)
+            return getDateString() + ", " + getTimeString();
+        return null;
     }
 
     public String toString() {
@@ -46,11 +52,17 @@ public class Message implements Comparable<Message>{
         if(o == null || !(o instanceof Message))
             return false;
         Message m = (Message) o;
-        return sender.equals(m.sender) && recipient.equals(m.recipient) && dateTime.equals(m.dateTime);
+        return sender.equals(m.sender) && recipient.equals(m.recipient) && getDateTime().equals(m.getDateTime());
+    }
+
+    public DateTime getDateTime() {
+        if(dateTime != null)
+            return dateTime;
+        return DateTime.now();
     }
 
     @Override
     public int compareTo(@NonNull Message o) {
-        return dateTime.compareTo(o.dateTime);
+        return getDateTime().compareTo(o.getDateTime());
     }
 }

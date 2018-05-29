@@ -21,6 +21,8 @@ public class LoginActivity extends AppCompatActivity implements LoginContract.Vi
         LoginRegisterFragment.RegisterInputListener,
         LoginUserFragment.UserInputListener{
 
+    private final String TAG = "=="+getClass().getSimpleName()+"==";
+
     public PalaverApplication application;
     private LoginContract.Presenter presenter;
 
@@ -31,15 +33,13 @@ public class LoginActivity extends AppCompatActivity implements LoginContract.Vi
     private LoginRegisterFragment registerFragment;
     private LoginPasswordFragment passwordFragment;
 
-    private final String TAG = getClass().getSimpleName();
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         setTheme(R.style.AppTheme_NoActionBar);
         super.onCreate(savedInstanceState);
+        Log.d(TAG, "=====onCreate=====");
         setContentView(R.layout.activity_login);
         application = (PalaverApplication) getApplication();
-        application.clearLocalUserData();
 
 
         Toolbar toolbar = findViewById(R.id.toolbar_login);
@@ -107,7 +107,8 @@ public class LoginActivity extends AppCompatActivity implements LoginContract.Vi
     }
 
     private void makeSnack(int resId) {
-        Snackbar.make(findViewById(R.id.coordinatorlayout_login), resId, Snackbar.LENGTH_SHORT);
+        Log.d(TAG, "make Snack: "+ getString(resId));
+        Snackbar.make(findViewById(R.id.linearlayout_login), resId, Snackbar.LENGTH_SHORT);
     }
 
     @Override

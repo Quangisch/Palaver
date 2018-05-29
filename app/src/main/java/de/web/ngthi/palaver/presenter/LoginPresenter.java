@@ -13,7 +13,7 @@ public class LoginPresenter extends BasePresenter<LoginContract.View> implements
 
     private String username;
 
-    private final String TAG = getClass().getSimpleName();
+    private final String TAG = "=="+getClass().getSimpleName()+"==";
 
     public LoginPresenter(LoginContract.View view, IRepository repository) {
         super(view, repository);
@@ -23,14 +23,13 @@ public class LoginPresenter extends BasePresenter<LoginContract.View> implements
     public void onUsernameInput(@NonNull String username, LoginState nextStateRequest) {
         Log.d(TAG, String.format("onUsernameInput(%s, %s)", username, nextStateRequest.toString()));
         if(username.length() < Configuration.MIN_USERNAME_LENGTH)
-            getView().showPasswordTooShort();
+            getView().showUsernameTooShort();
         else if(username.length() > Configuration.MAX_USERNAME_LENGTH)
-            getView().showPasswordTooLong();
+            getView().showUsernameTooLong();
         else {
             addDisposable(getRepository().isValidUser(username)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
-                    .doOnError(u -> getView().showNetworkError())
                     .subscribe(u -> updateState(u, username, nextStateRequest)));
         }
     }
@@ -66,8 +65,7 @@ public class LoginPresenter extends BasePresenter<LoginContract.View> implements
             addDisposable(getRepository().isValidUser(username, password)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
-                    .doOnError(u -> getView().showNetworkError())
-                    .subscribe(u -> login(u, username, password)));
+                    .subscribe(u -> login(u, username, password), this::showNetworkError));
         }
     }
 
@@ -89,8 +87,7 @@ public class LoginPresenter extends BasePresenter<LoginContract.View> implements
             addDisposable(getRepository().isValidNewUser(username, password)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
-                    .doOnError(u -> getView().showNetworkError())
-                    .subscribe(u -> login(u, username, password)));
+                    .subscribe(u -> login(u, username, password), this::showNetworkError));
         }
     }
 

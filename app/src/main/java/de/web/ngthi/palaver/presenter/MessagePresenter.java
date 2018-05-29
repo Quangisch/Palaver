@@ -5,7 +5,9 @@ import android.util.Log;
 import java.util.LinkedList;
 import java.util.List;
 
+import de.web.ngthi.palaver.dto.ServerReplyType;
 import de.web.ngthi.palaver.model.Message;
+import de.web.ngthi.palaver.model.User;
 import de.web.ngthi.palaver.repository.IRepository;
 import de.web.ngthi.palaver.view.message.HolderType;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -27,7 +29,7 @@ public class MessagePresenter extends BasePresenter<MessageContract.View> implem
         addDisposable(getRepository().getMessagesFrom(friend)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(this::updateDataList));
+                .subscribe(this::updateDataList, this::showNetworkError));
     }
 
     private void updateDataList(List<Message> messages) {
@@ -35,6 +37,7 @@ public class MessagePresenter extends BasePresenter<MessageContract.View> implem
         this.messages = messages;
         getView().notifyDataSetChanged();
         getView().scrollDown();
+        getView().onSwipeRefreshEnd();
     }
 
     @Override
@@ -52,20 +55,30 @@ public class MessagePresenter extends BasePresenter<MessageContract.View> implem
     public int getRepositoriesRowsType(int position) {
         if(messages.get(position).getSender().getUsername().equals(friend))
             return HolderType.RECEIVED.ordinal();
-        else
+        else if(messages.get(position).getDateTime() != null)
             return HolderType.SENT.ordinal();
+        else
+            return HolderType.PENDING.ordinal();
     }
 
     @Override
     public void onMessageSend(String message) {
+        messages.add(new Message(null, new User(friend), message, null));
         addDisposable(getRepository().sendMessage(friend, message)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(this::updateDataList));
+            .subscribe(this::messageSend, this::showNetworkError));
     }
 
     @Override
-    public String getFriendName() {
-        return friend;
+    public void onSwipeRefreshStart() {
+        updateDataList();
+    }
+
+    private void messageSend(ServerReplyType type) {
+        switch (type) {
+            case MESSAGE_SEND_OK: updateDataList(); break;
+            case MESSAGE_GET_FAILED: getView().showNetworkError(); break;
+        }
     }
 }

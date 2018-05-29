@@ -2,52 +2,61 @@ package de.web.ngthi.palaver.presenter;
 
 import android.util.Log;
 
+import com.google.firebase.iid.FirebaseInstanceId;
+
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
 import de.web.ngthi.palaver.Configuration;
+import de.web.ngthi.palaver.dto.ServerReply;
+import de.web.ngthi.palaver.dto.ServerReplyType;
 import de.web.ngthi.palaver.model.Message;
 import de.web.ngthi.palaver.model.User;
 import de.web.ngthi.palaver.repository.IRepository;
+import io.reactivex.Scheduler;
+import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
 public class FriendsPresenter extends BasePresenter<FriendsContract.View> implements FriendsContract.Presenter {
 
+    private final String TAG = "==FriendsPresenter==";
 
     private List<User> friends = new LinkedList<>();
     private Map<User, Message> friendsMap = new HashMap<>();
 
     public FriendsPresenter(FriendsContract.View view, IRepository repository, String username, String password) {
         super(view, repository);
+        Log.d(TAG, "CONSTRUCTOR for "+username+","+password);
         getRepository().setLocalUser(username, password);
-        getRepository().refreshToken();
+        addDisposable(getRepository().refreshToken(FirebaseInstanceId.getInstance().getToken())
+                .subscribeOn(Schedulers.computation())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(this::logToken, this::showNetworkError));
         updateDataList();
+    }
+    private void logToken(ServerReplyType reply) {
+        Log.d(TAG, "TOKENREPLY: "+reply.toString());
     }
 
     private void updateDataList() {
         addDisposable(getRepository().getFriendList()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(this::updateDataList));
+                .subscribe(this::updateDataList, this::showNetworkError));
     }
 
     private void updateDataList(List<User> friends) {
-        Log.d(getClass().getSimpleName(), "updateDataList with friendsCount: " + friends.size());
-        for(User u : friends)
-            Log.d(getClass().getSimpleName(), "friend: " + u);
         this.friends = friends;
 
         for(User friend : friends) {
             addDisposable(getRepository().getMessagesFrom(friend.getUsername())
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(m -> updateDataMap(friend, m)));
+                    .subscribe(m -> updateDataMap(friend, m), this::showNetworkError));
         }
-
-        getView().notifyDataSetChanged();
     }
 
     private void updateDataMap(User friend, List<Message> messages) {
@@ -58,6 +67,7 @@ public class FriendsPresenter extends BasePresenter<FriendsContract.View> implem
         friendsMap.put(friend, lastMessage);
 
         getView().notifyDataSetChanged();
+        getView().onSwipeRefreshEnd();
     }
 
     @Override
@@ -88,7 +98,14 @@ public class FriendsPresenter extends BasePresenter<FriendsContract.View> implem
         addDisposable(getRepository().addFriend(friend)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(this::updateDataList));
+                .subscribe(this::addFriend, this::showNetworkError));
+    }
+
+    private void addFriend(ServerReplyType type) {
+        switch(type) {
+            case FRIENDS_ADD_OK: updateDataList(friends);break;
+            case FRIENDS_ADD_FAILED: getView().showDuplicateFriendError(); break;
+        }
     }
 
     @Override
@@ -99,7 +116,14 @@ public class FriendsPresenter extends BasePresenter<FriendsContract.View> implem
             addDisposable(getRepository().removeFriend(friend)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(this::updateDataList));
+                    .subscribe(this::removeFriend, this::showNetworkError));
+        }
+    }
+
+    private void removeFriend(ServerReplyType type) {
+        switch(type) {
+            case FRIENDS_REMOVE_OK: updateDataList(friends);break;
+            case FRIENDS_REMOVE_FAILED: getView().showUnkownFriendError(); break;
         }
     }
 
@@ -116,7 +140,12 @@ public class FriendsPresenter extends BasePresenter<FriendsContract.View> implem
         addDisposable(getRepository().isValidUser(username, oldPassword)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(u -> checkOldPassword(u, newPassword, newPasswordRepeat)));
+                .subscribe(u -> checkOldPassword(u, newPassword, newPasswordRepeat), this::showNetworkError));
+    }
+
+    @Override
+    public void onSwipeRefreshStart() {
+        updateDataList();
     }
 
     private void checkOldPassword(boolean valid, String newPassword, String newPasswordRepeat) {
@@ -132,7 +161,7 @@ public class FriendsPresenter extends BasePresenter<FriendsContract.View> implem
                     addDisposable(getRepository().changePassword(newPassword)
                             .subscribeOn(Schedulers.io())
                             .observeOn(AndroidSchedulers.mainThread())
-                            .subscribe(() -> getView().showChangedPassword()));
+                            .subscribe(u -> getView().showChangedPassword(), this::showNetworkError));
                 }
             } else {
                 getView().showWrongPasswordRepeat();

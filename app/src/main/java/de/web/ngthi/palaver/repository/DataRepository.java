@@ -8,20 +8,22 @@ import java.util.List;
 import javax.inject.Inject;
 
 import dagger.Module;
+import de.web.ngthi.palaver.dto.ServerReplyType;
 import de.web.ngthi.palaver.model.Message;
 import de.web.ngthi.palaver.model.User;
-import io.reactivex.Completable;
 import io.reactivex.Single;
 
 @Module
 public class DataRepository implements IRepository {
 
-    private RestRepository restRepository;
-    private LocalRepository localRepository;
+    private final String TAG = "=="+getClass().getSimpleName()+"==";
+
+    private IRepository restRepository;
+    private IRepository localRepository;
 
     @Inject
     public DataRepository (RestRepository restRepository, LocalRepository localRepository) {
-        Log.d(getClass().getSimpleName(), "=========CONSTRUCTOR=========");
+        Log.d(TAG, "=========CONSTRUCTOR=========");
         this.restRepository = restRepository;
         this.localRepository = localRepository;
     }
@@ -41,6 +43,7 @@ public class DataRepository implements IRepository {
 
     @Override
     public Single<Boolean> isValidUser(@NonNull String username) {
+        Log.d(TAG, "isValidUser("+username+")");
         return getDefaultRepository().isValidUser(username);
     }
 
@@ -55,17 +58,17 @@ public class DataRepository implements IRepository {
     }
 
     @Override
-    public Completable changePassword(@NonNull String newPassword) {
+    public Single<ServerReplyType> changePassword(@NonNull String newPassword) {
         return getDefaultRepository().changePassword(newPassword);
     }
 
     @Override
-    public Completable refreshToken() {
-        return getDefaultRepository().refreshToken();
+    public Single<ServerReplyType> refreshToken(String token) {
+        return restRepository.refreshToken(token);
     }
 
     @Override
-    public Completable sendMessage(@NonNull String friend, @NonNull String message) {
+    public Single<ServerReplyType> sendMessage(@NonNull String friend, @NonNull String message) {
         return getDefaultRepository().sendMessage(friend, message);
     }
 
@@ -80,12 +83,12 @@ public class DataRepository implements IRepository {
     }
 
     @Override
-    public Completable addFriend(@NonNull String friend) {
+    public Single<ServerReplyType> addFriend(@NonNull String friend) {
         return getDefaultRepository().addFriend(friend);
     }
 
     @Override
-    public Completable removeFriend(@NonNull String friend) {
+    public Single<ServerReplyType> removeFriend(@NonNull String friend) {
         return getDefaultRepository().removeFriend(friend);
     }
 

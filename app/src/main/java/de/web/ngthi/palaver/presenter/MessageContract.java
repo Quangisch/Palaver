@@ -2,11 +2,10 @@ package de.web.ngthi.palaver.presenter;
 
 public interface MessageContract {
 
-    interface View {
+    interface View extends BaseContract.View {
         void notifyDataSetChanged();
         void scrollDown();
-
-        void onDestroy();
+        void onSwipeRefreshEnd();
     }
 
     interface Presenter extends BaseContract.Presenter<View> {
@@ -14,7 +13,7 @@ public interface MessageContract {
         int getRepositoriesRowsCount();
         int getRepositoriesRowsType(int position);
         void onMessageSend(String message);
-        String getFriendName();
+        void onSwipeRefreshStart();
     }
 
     interface MessageViewable {

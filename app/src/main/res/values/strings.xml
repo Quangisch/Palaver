@@ -1,5 +1,7 @@
 <resources>
     <string name="app_name">Palaver</string>
+    <string name="app_channel_name">Palaver Message</string>
+    <string name="app_channel_description">Palaver Message Notification</string>
 
     //global
     <string name="global_error_usernameShort">Username is too short</string>

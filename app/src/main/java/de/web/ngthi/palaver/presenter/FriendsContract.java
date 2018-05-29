@@ -4,7 +4,7 @@ import java.util.List;
 
 public interface FriendsContract {
 
-    interface View {
+    interface View extends BaseContract.View {
         void onFriendClick(String friend);
         void notifyDataSetChanged();
         void showUnkownFriendError();
@@ -15,7 +15,7 @@ public interface FriendsContract {
         void showPasswordTooLong();
         void showChangedPassword();
 
-        void onDestroy();
+        void onSwipeRefreshEnd();
     }
 
     interface Presenter extends BaseContract.Presenter<View> {
@@ -27,6 +27,8 @@ public interface FriendsContract {
         void onRemoveFriend(List<Integer> friendIndex);
         String[] getFriends();
         void onChangePassword(String username, String oldPassword, String newPassword, String newPasswordRepeat);
+
+        void onSwipeRefreshStart();
 
     }
 

@@ -4,6 +4,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
@@ -31,17 +32,22 @@ public class FriendsActivity extends AppCompatActivity
         RemoveFriendsDialogFragment.InputListener,
         ChangePasswordDialogFragment.InputListener{
 
+    private final String TAG = "=="+getClass().getSimpleName()+"==";
+
     public PalaverApplication application;
     private FriendsContract.Presenter presenter;
     private RecyclerView.Adapter friendsAdapter;
     private ChangePasswordDialogFragment changeDialog;
+    private SwipeRefreshLayout swipeLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         setTheme(R.style.AppTheme_NoActionBar);
         super.onCreate(savedInstanceState);
+        Log.d(TAG, "=====onCreate=====");
         setContentView(R.layout.activity_friends);
         application = (PalaverApplication) getApplication();
+
 
         presenter = new FriendsPresenter(this, application.getRepository(), application.getLocalUsername(), application.getLocalPassword());
 
@@ -59,6 +65,13 @@ public class FriendsActivity extends AppCompatActivity
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(friendsRecycler.getContext(),
                 layoutManager.getOrientation());
         friendsRecycler.addItemDecoration(dividerItemDecoration);
+
+        swipeLayout = findViewById(R.id.swiperefresh_friends);
+        swipeLayout.setOnRefreshListener(() -> {
+            Log.d(TAG, "swipe refresh");
+            swipeLayout.setRefreshing(true);
+            presenter.onSwipeRefreshStart();
+        });
     }
 
     @Override
@@ -89,6 +102,7 @@ public class FriendsActivity extends AppCompatActivity
                         .setMessage(R.string.friends_text_logOut)
                         .setNegativeButton(R.string.friends_button_cancel, (DialogInterface dialog, int which) -> {})
                         .setPositiveButton(R.string.friends_button_logOut, (DialogInterface dialog, int which) -> {
+                            application.clearLocalUserData();
                             Intent intent = new Intent(this, LoginActivity.class);
                             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                             intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
@@ -155,6 +169,16 @@ public class FriendsActivity extends AppCompatActivity
     public void showChangedPassword() {
         mackSnack(R.string.action_friends_changePassword);
         changeDialog.dismiss();
+    }
+
+    @Override
+    public void onSwipeRefreshEnd() {
+        swipeLayout.setRefreshing(false);
+    }
+
+    @Override
+    public void showNetworkError() {
+        mackSnack(R.string.login_error_network);
     }
 
     @Override

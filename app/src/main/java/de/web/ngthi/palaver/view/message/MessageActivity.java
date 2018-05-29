@@ -2,10 +2,13 @@ package de.web.ngthi.palaver.view.message;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -21,6 +24,8 @@ import de.web.ngthi.palaver.view.friends.FriendsActivity;
 
 public class MessageActivity extends AppCompatActivity implements MessageContract.View, View.OnClickListener {
 
+    private final String TAG = "=="+getClass().getSimpleName()+"==";
+
     public MessageContract.Presenter presenter;
     private Button sendButton;
     private EditText messageField;
@@ -28,11 +33,13 @@ public class MessageActivity extends AppCompatActivity implements MessageContrac
     private RecyclerView mMessageRecycler;
     private Toolbar toolbar;
     private PalaverApplication application;
+    private SwipeRefreshLayout swipeLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         setTheme(R.style.AppTheme_NoActionBar);
         super.onCreate(savedInstanceState);
+        Log.d(TAG, "=====onCreate=====");
         setContentView(R.layout.activity_message);
         application = (PalaverApplication) getApplication();
 
@@ -53,7 +60,18 @@ public class MessageActivity extends AppCompatActivity implements MessageContrac
         mMessageAdapter = new MessageListAdapter(presenter);
         mMessageRecycler = findViewById(R.id.recyclerview_message);
         mMessageRecycler.setAdapter(mMessageAdapter);
+        mMessageRecycler.addOnLayoutChangeListener((v, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom) -> {
+            if ( bottom < oldBottom)
+                mMessageRecycler.postDelayed(() -> scrollDown(), 100);
+        });
         mMessageRecycler.setLayoutManager(new LinearLayoutManager(this));
+
+        swipeLayout = findViewById(R.id.swiperefresh_message);
+        swipeLayout.setOnRefreshListener(() -> {
+            Log.d(TAG, "refresh swipe");
+            swipeLayout.setRefreshing(true);
+            presenter.onSwipeRefreshStart();
+        });
     }
 
     @Override
@@ -67,7 +85,6 @@ public class MessageActivity extends AppCompatActivity implements MessageContrac
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
             case R.id.action_message_filter:
-
                 return true;
             case android.R.id.home:
                 onBackPressed();
@@ -105,6 +122,16 @@ public class MessageActivity extends AppCompatActivity implements MessageContrac
     public void scrollDown() {
         int lastMessageIndex = Math.max(presenter.getRepositoriesRowsCount() - 1, 0);
         mMessageRecycler.smoothScrollToPosition(lastMessageIndex);
+    }
+
+    @Override
+    public void onSwipeRefreshEnd() {
+        swipeLayout.setRefreshing(false);
+    }
+
+    @Override
+    public void showNetworkError() {
+        Snackbar.make(mMessageRecycler, R.string.login_error_network, Snackbar.LENGTH_LONG).show();
     }
 
     @Override

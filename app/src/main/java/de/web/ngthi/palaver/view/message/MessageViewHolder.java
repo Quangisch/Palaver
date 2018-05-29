@@ -20,6 +20,7 @@ public abstract class MessageViewHolder extends RecyclerView.ViewHolder implemen
     @Override
     public void bind(String messageContent, String dateTime) {
         messageText.setText(messageContent);
-        timeText.setText(dateTime);
+        if(dateTime != null)
+            timeText.setText(dateTime);
     }
 }

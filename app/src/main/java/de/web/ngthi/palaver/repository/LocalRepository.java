@@ -12,10 +12,10 @@ import javax.inject.Inject;
 
 import dagger.Module;
 import de.web.ngthi.palaver.MockupData;
+import de.web.ngthi.palaver.dto.ServerReplyType;
 import de.web.ngthi.palaver.model.LocalUser;
 import de.web.ngthi.palaver.model.Message;
 import de.web.ngthi.palaver.model.User;
-import io.reactivex.Completable;
 import io.reactivex.Single;
 
 @Module
@@ -56,20 +56,20 @@ public class LocalRepository implements IRepository {
     }
 
     @Override
-    public Completable changePassword(@NonNull String newPassword) {
-        return Completable.complete();
+    public Single<ServerReplyType> changePassword(@NonNull String newPassword) {
+        return Single.just(ServerReplyType.USER_PASSWORD_OK);
     }
 
     @Override
-    public Completable refreshToken() {
-        return Completable.complete();
+    public Single<ServerReplyType> refreshToken(String token) {
+        return Single.just(ServerReplyType.USER_PUSHTOKEN_OK);
     }
 
     @Override
-    public Completable sendMessage(@NonNull String friend, @NonNull String message) {
+    public Single<ServerReplyType> sendMessage(@NonNull String friend, @NonNull String message) {
         Message m = new Message(getLocalUser(), new User(friend), message, DateTime.now());
         getLocalUser().addMessage(friend, m);
-        return Completable.complete();
+        return Single.just(ServerReplyType.MESSAGE_SEND_OK);
     }
 
     @Override
@@ -89,15 +89,15 @@ public class LocalRepository implements IRepository {
     }
 
     @Override
-    public Completable addFriend(@NonNull String friend) {
+    public Single<ServerReplyType> addFriend(@NonNull String friend) {
         getLocalUser().addFriend(new User(friend));
-        return Completable.complete();
+        return Single.just(ServerReplyType.FRIENDS_ADD_OK);
     }
 
     @Override
-    public Completable removeFriend(@NonNull String friend) {
+    public Single<ServerReplyType> removeFriend(@NonNull String friend) {
         getLocalUser().removeFriend(new User(friend));
-        return Completable.complete();
+        return Single.just(ServerReplyType.FRIENDS_REMOVE_OK);
     }
 
     @Override

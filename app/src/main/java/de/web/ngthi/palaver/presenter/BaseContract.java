@@ -6,7 +6,12 @@ import io.reactivex.disposables.Disposable;
 
 public interface BaseContract {
 
-    interface Presenter<V> {
+    interface View {
+        void showNetworkError();
+        void onDestroy();
+    }
+
+    interface Presenter<V extends View > {
         V getView();
         void start();
         void stop();

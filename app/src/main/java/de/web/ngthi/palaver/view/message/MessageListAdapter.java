@@ -27,9 +27,12 @@ public class MessageListAdapter extends RecyclerView.Adapter {
                 messageView = LayoutInflater.from(parent.getContext()).inflate(R.layout.message_sent, parent, false);
                 return new SentMessageViewHolder(messageView);
             case RECEIVED:
-            default:
                 messageView = LayoutInflater.from(parent.getContext()).inflate(R.layout.message_received, parent, false);
                 return new ReceivedMessageViewHolder(messageView);
+            case PENDING:
+            default:
+                messageView = LayoutInflater.from(parent.getContext()).inflate(R.layout.message_sent_pending, parent, false);
+                return new SentMessageViewHolder(messageView);
         }
     }
 

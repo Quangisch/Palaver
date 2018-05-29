@@ -23,4 +23,8 @@ public class ServerReply {
     public boolean hasData() {
         return data != null;
     }
+
+//    public String toString() {
+//        return String.format("%d\n%s\n%s", msgType, info, data);
+//    }
 }

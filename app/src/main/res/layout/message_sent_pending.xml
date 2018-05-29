@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_margin="@dimen/border"
+    android:orientation="horizontal">
+
+    <View
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_weight="1"/>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingLeft="@dimen/small_margin"
+        android:paddingRight="@dimen/small_margin"
+        android:paddingBottom="@dimen/border"
+        android:paddingTop="@dimen/border"
+        android:background="@drawable/bubble_message_sent">
+
+
+        <TextView
+            android:id="@+id/text_message_body_sent"
+            android:text="@string/lorem_ipsum"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:maxWidth="@dimen/messageBoxWidth"
+            android:textColor="@color/colorMessageTextPending"
+            android:layout_columnSpan="2"/>
+
+        <TextView
+            android:id="@+id/text_message_time_sent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="pending"
+            android:textColor="@color/colorMessageTextPending"
+            android:textSize="@dimen/fontSize_message"
+            android:layout_gravity="right"/>
+
+
+    </LinearLayout>
+
+</LinearLayout>

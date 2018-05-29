@@ -20,7 +20,9 @@ public enum ServerReplyType {
     FRIENDS_ADD_FAILED(0, "Freund bereits auf der Liste"),
     FRIENDS_REMOVE_OK(1, "Freund entfernt"),
     FRIENDS_REMOVE_FAILED(0, "Freund nicht auf der Liste"),
-    FRIENDS_GET(1, "Freunde aufgelistet");
+    FRIENDS_GET(1, "Freunde aufgelistet"),
+
+    NETWORK_ERROR(0, "Netzwerkfehler");
 
     private final int MSGTYPE;
     private final String INFO;
@@ -40,5 +42,13 @@ public enum ServerReplyType {
 
     public static boolean isType(ServerReplyType type, ServerReply reply) {
         return type.getMsgType().equals(reply.getMsgType()) && type.getInfo().equals(reply.getInfo());
+    }
+
+    public static ServerReplyType getType(ServerReply reply) {
+        for(ServerReplyType type : ServerReplyType.values()) {
+            if(isType(type, reply))
+                return type;
+        }
+        return null;
     }
 }

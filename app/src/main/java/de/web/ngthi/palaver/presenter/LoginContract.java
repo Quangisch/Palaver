@@ -8,12 +8,11 @@ import de.web.ngthi.palaver.view.login.LoginState;
 
 public interface LoginContract {
 
-    interface View {
+    interface View extends BaseContract.View {
         void switchState(LoginState newState, String username);
         void showPasswordRepeatError();
         void showUserAlreadyExistsError();
         void showNotExistingUserError();
-        void showNetworkError();
         void showWrongPasswordError();
         void loginNow(String username, String password);
 
@@ -22,7 +21,6 @@ public interface LoginContract {
         void showUsernameTooShort();
         void showUsernameTooLong();
 
-        void onDestroy();
     }
 
     interface Presenter extends BaseContract.Presenter<View>{

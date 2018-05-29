@@ -1,13 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <color name="colorTitle">#E0EDFF</color>
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
     <color name="colorSentMessage">#A0DB8E</color>
     <color name="colorReceivedMessage">#FEFBAE</color>
     <color name="colorBorder">#999999</color>
+
     <color name="colorMessageText">#333333</color>
+    <color name="colorMessageTextPending">#b3b3b3</color>
     <color name="colorMessageTime">#999999</color>
+
     <color name="colorMessagesBackground">#E0EDFF</color>
     <color name="color_error">#FF0000</color>
 

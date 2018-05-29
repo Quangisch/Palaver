@@ -12,41 +12,40 @@ import javax.inject.Inject;
 import de.web.ngthi.palaver.di.DaggerDataRepositoryComponent;
 import de.web.ngthi.palaver.repository.DataRepository;
 import de.web.ngthi.palaver.repository.IRepository;
+import de.web.ngthi.palaver.view.SplashScreen;
 import de.web.ngthi.palaver.view.friends.FriendsActivity;
 import de.web.ngthi.palaver.view.login.LoginActivity;
 
 public class PalaverApplication extends Application {
 
+    private final String TAG = "=="+getClass().getSimpleName()+"==";
+
     @Inject
     public DataRepository repository;
     private SharedPreferences sharedPref;
+    private static PalaverApplication instance;
 
     public PalaverApplication() {
         Log.d("APPLICATION CONSTRUCTOR", "==============constructor===============");
+
     }
 
     @Override
     public void onCreate() {
         super.onCreate();
+        instance = this;
         DaggerDataRepositoryComponent.create().inject(this);
         sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+
+//        RxJavaPlugins.setErrorHandler(error -> {
+//            Log.d("RXJAVAPLUGINS===", error.getMessage());
+//        });
+//
 //        initLocalUser();
-        saveLocalUserData("Peter32", "pw31");
+//        saveLocalUserData("Lisa32", "pw32");
 
-
-        Class c = LoginActivity.class;
-        if(hasLocalUserData())
-            c = FriendsActivity.class;
-
-//        Testing
-//        c = MessageActivity.class;
-
-        Intent intent = new Intent(this, c);
-
-//        intent.putExtra(getString(R.string.intent_friend_message), getLocalUser().getSortedFriendList().get(0).getUsername());
-//        intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
-
-
+        Class startingActivity = SplashScreen.class;
+        Intent intent = new Intent(this, startingActivity);
         startActivity(intent);
     }
 
@@ -75,15 +74,21 @@ public class PalaverApplication extends Application {
     }
 
     public void saveToSharedPreferences(String key, String value) {
+        Log.d(TAG, String.format("savedToSharedPreferences->%s:%s", key, value));
         sharedPref.edit().putString(key, value).apply();
     }
 
     public void saveLocalUserData(@NonNull String username, @NonNull String password) {
         saveToSharedPreferences(getString(R.string.saved_username_key), username);
         saveToSharedPreferences(getString(R.string.saved_password_key), password);
+        initLocalUser();
     }
 
     public void clearLocalUserData() {
         sharedPref.edit().clear().apply();
+    }
+
+    public static PalaverApplication getInstance() {
+        return instance;
     }
 }
