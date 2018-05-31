@@ -1,4 +1,4 @@
-package de.web.ngthi.palaver.service;
+package de.web.ngthi.palaver.network.service;
 
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -23,7 +23,6 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
     private final String TAG = "==FIREBASE_MESSAGE==";
     private final String CHANNEL_ID = "Palaver Message Channel";
-    private NotificationManager notificationManager;
 
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
@@ -64,7 +63,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 .setSound(soundUri)
                 .setContentIntent(pendingIntent);
 
-        notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         if(notificationManager != null)
             notificationManager.notify(0, notificationBuilder.build());
     }

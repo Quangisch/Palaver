@@ -4,7 +4,7 @@ import android.support.annotation.NonNull;
 
 import java.util.List;
 
-import de.web.ngthi.palaver.dto.ServerReplyType;
+import de.web.ngthi.palaver.network.dto.ServerReplyType;
 import de.web.ngthi.palaver.mvp.model.Message;
 import de.web.ngthi.palaver.mvp.model.User;
 import io.reactivex.Single;

@@ -9,18 +9,18 @@ import android.view.ViewGroup;
 import de.web.ngthi.palaver.R;
 import de.web.ngthi.palaver.mvp.contracts.MessageContract;
 
-public class MessageListAdapter extends RecyclerView.Adapter {
+class MessageListAdapter extends RecyclerView.Adapter {
 
     private MessageContract.Presenter presenter;
 
-    public MessageListAdapter(MessageContract.Presenter presenter) {
+    MessageListAdapter(MessageContract.Presenter presenter) {
         this.presenter = presenter;
     }
 
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        HolderType type = HolderType.values()[viewType];
+        ViewHolderType type = ViewHolderType.values()[viewType];
         View messageView;
         switch(type) {
             case SENT:

@@ -1,5 +1,6 @@
 package de.web.ngthi.palaver.mvp.presenter;
 
+import android.support.annotation.NonNull;
 import android.util.Log;
 
 import de.web.ngthi.palaver.mvp.contracts.BaseContract;
@@ -14,7 +15,7 @@ public abstract class BasePresenter<V extends BaseContract.View> implements Base
     private CompositeDisposable disposables;
     private IRepository repository;
 
-    public BasePresenter(V view, IRepository repository) {
+    BasePresenter(V view, IRepository repository) {
         subscribe(view);
         this.disposables = new CompositeDisposable();
         this.repository = repository;
@@ -40,7 +41,7 @@ public abstract class BasePresenter<V extends BaseContract.View> implements Base
         disposables.clear();
     }
 
-    public void subscribe(V view) {
+    public void subscribe(@NonNull V view) {
         this.view = view;
     }
 

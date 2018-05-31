@@ -15,7 +15,7 @@ public class FriendsViewHolder extends RecyclerView.ViewHolder implements Friend
     private TextView timeText;
     private FriendsContract.Presenter presenter;
 
-    public FriendsViewHolder(View view, FriendsContract.Presenter presenter) {
+    FriendsViewHolder(View view, FriendsContract.Presenter presenter) {
         super(view);
         this.presenter = presenter;
         friendNameText = view.findViewById(R.id.textView_friend_name);

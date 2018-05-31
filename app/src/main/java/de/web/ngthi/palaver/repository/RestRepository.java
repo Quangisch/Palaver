@@ -8,14 +8,14 @@ import java.util.List;
 import javax.inject.Inject;
 
 import dagger.Module;
-import de.web.ngthi.palaver.controller.FriendsService;
-import de.web.ngthi.palaver.controller.MessageService;
-import de.web.ngthi.palaver.controller.RestController;
-import de.web.ngthi.palaver.controller.UserService;
-import de.web.ngthi.palaver.dto.ServerDataMapper;
-import de.web.ngthi.palaver.dto.ServerReply;
-import de.web.ngthi.palaver.dto.ServerReplyType;
-import de.web.ngthi.palaver.dto.ServerRequest;
+import de.web.ngthi.palaver.network.controller.FriendsService;
+import de.web.ngthi.palaver.network.controller.MessageService;
+import de.web.ngthi.palaver.network.controller.RestController;
+import de.web.ngthi.palaver.network.controller.UserService;
+import de.web.ngthi.palaver.network.dto.ServerDataMapper;
+import de.web.ngthi.palaver.network.dto.ServerReply;
+import de.web.ngthi.palaver.network.dto.ServerReplyType;
+import de.web.ngthi.palaver.network.dto.ServerRequest;
 import de.web.ngthi.palaver.mvp.model.Message;
 import de.web.ngthi.palaver.mvp.model.User;
 import io.reactivex.Single;
@@ -52,7 +52,6 @@ public class RestRepository implements IRepository {
         ServerRequest request = new ServerRequest.Builder()
                 .username(username)
                 .build();
-        Log.d(TAG, "isValidUser("+username+") with request: "+request.toString());
         return Single.fromCallable(() -> isExistingUser(userService.validate(request).blockingGet()));
     }
 
@@ -87,7 +86,6 @@ public class RestRepository implements IRepository {
     @Override
     public Single<ServerReplyType> refreshToken(String token) {
         ServerRequest request = localUser().token(token).build();
-        Log.d(TAG, "TOKENIS: " + token)
 ;        return Single.fromCallable(() -> ServerReplyType.getType(userService.refreshToken(request).blockingGet()));
     }
 
@@ -121,16 +119,10 @@ public class RestRepository implements IRepository {
 
     @Override
     public Single<ServerReplyType> addFriend(@NonNull String friend) {
-        Log.d(TAG, "addFriend: " + friend);
         ServerRequest request = localUser()
                 .friend(friend)
                 .build();
-        return Single.fromCallable(() -> {
-            Log.d(TAG, "START WITH REQUEST: " + request.toString());
-            ServerReplyType result = ServerReplyType.getType(friendsService.addFriend(request).blockingGet());
-            Log.d(TAG, "END WITH RESULT: " + result.toString());
-            return result;
-        });
+        return Single.fromCallable(() -> ServerReplyType.getType(friendsService.addFriend(request).blockingGet()));
     }
 
     @Override

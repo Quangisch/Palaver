@@ -7,12 +7,12 @@ import org.joda.time.DateTime;
 import java.util.LinkedList;
 import java.util.List;
 
-import de.web.ngthi.palaver.dto.ServerReplyType;
+import de.web.ngthi.palaver.network.dto.ServerReplyType;
 import de.web.ngthi.palaver.mvp.contracts.MessageContract;
 import de.web.ngthi.palaver.mvp.model.Message;
 import de.web.ngthi.palaver.mvp.model.LocalizedDateTime;
 import de.web.ngthi.palaver.mvp.model.User;
-import de.web.ngthi.palaver.mvp.view.message.HolderType;
+import de.web.ngthi.palaver.mvp.view.message.ViewHolderType;
 import de.web.ngthi.palaver.repository.IRepository;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
@@ -49,7 +49,7 @@ public class MessagePresenter extends BasePresenter<MessageContract.View> implem
     }
 
     private void updateDataList(List<Message> messages) {
-        Log.d(this.getClass().getSimpleName(), String.format("updateDataList: %s with %s messages", friend, messages.size()));
+        Log.d(this.getClass().getSimpleName(), String.format("updateDataList for %s with %s messages", friend, messages.size()));
         this.messages = messages;
         getView().notifyDataSetChanged();
         getView().onSwipeRefreshEnd();
@@ -79,11 +79,11 @@ public class MessagePresenter extends BasePresenter<MessageContract.View> implem
     @Override
     public int getRepositoriesRowsType(int position) {
         if(messages.get(position).getSender() == null)
-            return HolderType.PENDING.ordinal();
+            return ViewHolderType.PENDING.ordinal();
         else if(messages.get(position).getSender().getUsername().equals(friend))
-            return HolderType.RECEIVED.ordinal();
+            return ViewHolderType.RECEIVED.ordinal();
         else
-            return HolderType.SENT.ordinal();
+            return ViewHolderType.SENT.ordinal();
     }
 
     @Override

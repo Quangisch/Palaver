@@ -20,7 +20,9 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TimePicker;
 
-import org.joda.time.DateTime;
+import org.joda.time.IllegalFieldValueException;
+
+import java.util.Calendar;
 
 import de.web.ngthi.palaver.PalaverApplication;
 import de.web.ngthi.palaver.R;
@@ -37,8 +39,6 @@ public class MessageActivity extends AppCompatActivity implements MessageContrac
     private EditText messageField;
     private RecyclerView.Adapter mMessageAdapter;
     private RecyclerView mMessageRecycler;
-    private Toolbar toolbar;
-    private PalaverApplication application;
     private SwipeRefreshLayout swipeLayout;
     private Menu menu;
 
@@ -48,16 +48,17 @@ public class MessageActivity extends AppCompatActivity implements MessageContrac
         super.onCreate(savedInstanceState);
         Log.d(TAG, "=====onCreate=====");
         setContentView(R.layout.activity_message);
-        application = (PalaverApplication) getApplication();
 
+        PalaverApplication application = (PalaverApplication) getApplication();
         String friendName = getIntent().getStringExtra(getString(R.string.intent_friend_message));
         presenter = new MessagePresenter(this, application.getRepository(), friendName);
 
-        toolbar = findViewById(R.id.toolbar_message);
+        Toolbar toolbar = findViewById(R.id.toolbar_message);
         toolbar.setTitle(friendName);
         toolbar.setNavigationOnClickListener(new BackListener());
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        if(getSupportActionBar() != null)
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
 
         messageField = findViewById(R.id.edittext_message_sendtext);
@@ -69,7 +70,7 @@ public class MessageActivity extends AppCompatActivity implements MessageContrac
         mMessageRecycler.setAdapter(mMessageAdapter);
         mMessageRecycler.addOnLayoutChangeListener((v, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom) -> {
             if ( bottom < oldBottom)
-                mMessageRecycler.postDelayed(() -> scrollDown(), 100);
+                mMessageRecycler.postDelayed(this::scrollDown, 100);
         });
         mMessageRecycler.setLayoutManager(new LinearLayoutManager(this));
 
@@ -148,11 +149,16 @@ public class MessageActivity extends AppCompatActivity implements MessageContrac
     @Override
     public void showNetworkError() {
         onSwipeRefreshEnd();
-        Snackbar.make(mMessageRecycler, R.string.login_error_network, Snackbar.LENGTH_LONG).show();
+        makeSnack(R.string.error_network_message);
+    }
+
+    private void makeSnack(int resId) {
+        Snackbar.make(mMessageRecycler, getString(resId), Snackbar.LENGTH_LONG).show();
     }
 
     @Override
     public void onBackPressed() {
+        presenter.stop();
         new BackListener().onClick(null);
     }
 
@@ -167,26 +173,29 @@ public class MessageActivity extends AppCompatActivity implements MessageContrac
     }
 
     private void showDateTimePicker() {
-        final DateTime currentDateTime = DateTime.now();
+        final Calendar currentCalendar = Calendar.getInstance();
         new DatePickerDialog(
                 this,
-                (DatePicker view, int year, int monthOfYear, int dayOfMonth) -> showTimePicker(currentDateTime, year, monthOfYear, dayOfMonth),
-                currentDateTime.getYear(),
-                currentDateTime.getMonthOfYear(),
-                currentDateTime.getDayOfMonth()).show();
+                (DatePicker view, int year, int monthOfYear, int dayOfMonth) ->
+                        showTimePicker(currentCalendar, year, monthOfYear + 1, dayOfMonth), //monthOfYear + 1: JodaTime 1-12, Calendar 0-11
+                currentCalendar.get(Calendar.YEAR),
+                currentCalendar.get(Calendar.MONTH),
+                currentCalendar.get(Calendar.DAY_OF_MONTH))
+                .show();
     }
 
-    private void showTimePicker(final DateTime dateTime, final int year, final int monthOfYear, final int dayOfMonth) {
+    private void showTimePicker(final Calendar currentCalendar, final int year, final int monthOfYear, final int dayOfMonth) {
         new TimePickerDialog(
-                this,
-                (TimePicker view, int hourOfDay,int minute) -> {
-                    presenter.onAddFilterOffset(year, monthOfYear, dayOfMonth, hourOfDay, minute);
-                    menu.findItem(R.id.action_message_filter)
-                            .setTitle(getString(R.string.action_message_filter_activated) + ": " + presenter.getOffsetString());
-                },
-                dateTime.getHourOfDay(),
-                dateTime.getMinuteOfHour(),
-                true).show();
+                    this,
+                    (TimePicker view, int hourOfDay,int minute) -> {
+                        Log.d(TAG, String.format("showDateTimePicker: %d, %d, %d %d:%d", year, monthOfYear, dayOfMonth, hourOfDay, minute));
+                        presenter.onAddFilterOffset(year, monthOfYear, dayOfMonth, hourOfDay, minute);
+                        menu.findItem(R.id.action_message_filter)
+                                .setTitle(getString(R.string.action_message_filter_activated) + ": " + presenter.getOffsetString());},
+                    currentCalendar.get(Calendar.HOUR_OF_DAY),
+                    currentCalendar.get(Calendar.MINUTE),
+                    true)
+                .show();
     }
 
 }

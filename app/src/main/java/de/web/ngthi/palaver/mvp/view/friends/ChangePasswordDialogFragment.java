@@ -24,7 +24,6 @@ public class ChangePasswordDialogFragment extends DialogFragment {
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         LayoutInflater inflater = getActivity().getLayoutInflater();
-
         View view = inflater.inflate(R.layout.dialog_change_password, null);
 
         oldPassword = view.findViewById(R.id.edittext_friend_dialog_oldPassword);
@@ -34,10 +33,8 @@ public class ChangePasswordDialogFragment extends DialogFragment {
         builder.setTitle(R.string.friends_title_changePassword)
                 .setView(view)
                 .setPositiveButton(R.string.friends_button_changePassword, null)
-                .setNegativeButton(R.string.friends_button_cancel, (DialogInterface dialog, int which) -> {
-                    ChangePasswordDialogFragment.this.getDialog().cancel();
-                    listener.onChangeDialogNegativeButton();
-                });
+                .setNegativeButton(R.string.friends_button_cancel, (DialogInterface dialog, int which)
+                                -> ChangePasswordDialogFragment.this.getDialog().cancel());
 
         dialog = builder.create();
         dialog.setOnShowListener((DialogInterface d) -> dialog.getButton(DialogInterface.BUTTON_POSITIVE)
@@ -59,6 +56,5 @@ public class ChangePasswordDialogFragment extends DialogFragment {
 
     interface InputListener {
         void onChangeDialogPositiveButton(String oldPassword, String newPassword, String newPasswordRepeat);
-        void onChangeDialogNegativeButton();
     }
 }

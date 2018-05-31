@@ -13,8 +13,6 @@ import de.web.ngthi.palaver.di.DaggerDataRepositoryComponent;
 import de.web.ngthi.palaver.repository.DataRepository;
 import de.web.ngthi.palaver.repository.IRepository;
 import de.web.ngthi.palaver.mvp.view.SplashScreen;
-import de.web.ngthi.palaver.mvp.view.friends.FriendsActivity;
-import de.web.ngthi.palaver.mvp.view.login.LoginActivity;
 
 public class PalaverApplication extends Application {
 
@@ -36,13 +34,7 @@ public class PalaverApplication extends Application {
         instance = this;
         DaggerDataRepositoryComponent.create().inject(this);
         sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
-
-//        RxJavaPlugins.setErrorHandler(error -> {
-//            Log.d("RXJAVAPLUGINS===", error.getMessage());
-//        });
-//
-//        initLocalUser();
-//        saveLocalUserData("Lisa32", "pw32");
+        initLocalUser();
 
         Class startingActivity = SplashScreen.class;
         Intent intent = new Intent(this, startingActivity);

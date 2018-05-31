@@ -1,10 +1,10 @@
-package de.web.ngthi.palaver.dto;
+package de.web.ngthi.palaver.network.dto;
+
+import android.util.Log;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
-import org.joda.time.DateTime;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -24,7 +24,9 @@ public class ServerData {
         ObjectMapper mapper = new ObjectMapper();
         try {
             result = mapper.writeValueAsString(this);
-        } catch(JsonProcessingException e) { }
+        } catch(JsonProcessingException e) {
+            Log.e(this.getClass().getSimpleName(), e.getMessage(), e);
+        }
         return result;
     }
 }

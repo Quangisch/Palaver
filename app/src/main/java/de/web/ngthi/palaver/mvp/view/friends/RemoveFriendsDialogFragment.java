@@ -19,7 +19,8 @@ public class RemoveFriendsDialogFragment extends DialogFragment {
     private InputListener listener;
     private List<Integer> selectedFriends;
 
-    public Dialog onCreateDialog(@NonNull Bundle savedInstanceState) {
+    @Override
+    public Dialog onCreateDialog(Bundle savedInstanceState) {
         selectedFriends = new LinkedList<>();
 
         Log.d("======","===========");
@@ -39,10 +40,8 @@ public class RemoveFriendsDialogFragment extends DialogFragment {
                 .setPositiveButton(R.string.friends_button_removeFriend, (DialogInterface dialog, int which) -> {
                     //TODO get edittext
                     listener.onRemoveDialogPositiveButton(selectedFriends);
-                }).setNegativeButton(R.string.friends_button_cancel, (DialogInterface dialog, int which) -> {
-                    RemoveFriendsDialogFragment.this.getDialog().cancel();
-                    listener.onRemoveDialogNegativeButton();
-                });
+                }).setNegativeButton(R.string.friends_button_cancel, (DialogInterface dialog, int which) ->
+                        RemoveFriendsDialogFragment.this.getDialog().cancel());
 
         return builder.create();
     }
@@ -58,7 +57,6 @@ public class RemoveFriendsDialogFragment extends DialogFragment {
 
     interface InputListener {
         void onRemoveDialogPositiveButton(List<Integer> selectedFriendsIndex);
-        void onRemoveDialogNegativeButton();
         String[] getFriends();
     }
 }

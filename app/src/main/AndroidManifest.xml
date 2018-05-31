@@ -11,7 +11,7 @@
     <application
         android:name=".PalaverApplication"
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@drawable/palaver_icon"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
@@ -46,7 +46,7 @@
 
 
         <service
-            android:name=".service.MyFirebaseInstanceIDService"
+            android:name=".network.service.MyFirebaseInstanceIDService"
             android:enabled="true"
             android:exported="true">
             <intent-filter>
@@ -55,7 +55,7 @@
         </service>
 
         <service
-            android:name=".service.MyFirebaseMessagingService"
+            android:name=".network.service.MyFirebaseMessagingService"
             android:enabled="true"
             android:exported="true">
             <intent-filter>

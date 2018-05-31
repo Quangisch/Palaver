@@ -1,4 +1,4 @@
-package de.web.ngthi.palaver.dto;
+package de.web.ngthi.palaver.network.dto;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;

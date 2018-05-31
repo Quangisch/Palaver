@@ -13,7 +13,7 @@ public class FriendsListAdapter extends RecyclerView.Adapter<FriendsViewHolder> 
 
     private FriendsContract.Presenter presenter;
 
-    public FriendsListAdapter(FriendsContract.Presenter presenter) {
+    FriendsListAdapter(FriendsContract.Presenter presenter) {
         this.presenter = presenter;
     }
 

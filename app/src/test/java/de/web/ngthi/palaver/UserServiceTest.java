@@ -2,7 +2,7 @@ package de.web.ngthi.palaver;
 
 import junit.framework.TestCase;
 
-import de.web.ngthi.palaver.controller.RestController;
+import de.web.ngthi.palaver.network.controller.RestController;
 import de.web.ngthi.palaver.mvp.model.LocalUser;
 
 import static org.hamcrest.MatcherAssert.assertThat;

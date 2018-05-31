@@ -11,8 +11,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import dagger.Module;
-import de.web.ngthi.palaver.MockupData;
-import de.web.ngthi.palaver.dto.ServerReplyType;
+import de.web.ngthi.palaver.network.dto.ServerReplyType;
 import de.web.ngthi.palaver.mvp.model.LocalUser;
 import de.web.ngthi.palaver.mvp.model.Message;
 import de.web.ngthi.palaver.mvp.model.User;
@@ -21,11 +20,13 @@ import io.reactivex.Single;
 @Module
 public class LocalRepository implements IRepository {
 
+    //TODO: SQLITE synchronize
+    private final String TAG = "=="+getClass().getSimpleName()+"==";
     private LocalUser user;
 
     @Inject
     public LocalRepository() {
-        Log.d(getClass().getSimpleName(), "=========CONSTRUCTOR=========");
+        Log.d(TAG, "=========CONSTRUCTOR=========");
     }
 
     @Override
@@ -102,7 +103,7 @@ public class LocalRepository implements IRepository {
 
     @Override
     public Single<List<User>> getFriendList() {
-        List<User> friends = MockupData.getLocalUser().getSortedFriendList();
+        List<User> friends = getLocalUser().getSortedFriendList();
         return Single.just(friends);
     }
 }

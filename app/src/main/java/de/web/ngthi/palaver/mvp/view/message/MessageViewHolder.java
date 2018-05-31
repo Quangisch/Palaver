@@ -7,12 +7,12 @@ import android.widget.TextView;
 import de.web.ngthi.palaver.R;
 import de.web.ngthi.palaver.mvp.contracts.MessageContract;
 
-public abstract class MessageViewHolder extends RecyclerView.ViewHolder implements MessageContract.MessageViewable {
+abstract class MessageViewHolder extends RecyclerView.ViewHolder implements MessageContract.MessageViewable {
 
     private TextView messageText;
     private TextView timeText;
 
-    public MessageViewHolder(View view, int messageId, int timeId) {
+    MessageViewHolder(View view, int messageId, int timeId) {
         super(view);
         messageText = view.findViewById(messageId);
         timeText = view.findViewById(timeId);

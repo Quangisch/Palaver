@@ -4,7 +4,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
+import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
@@ -18,7 +18,8 @@ public class AddFriendDialogFragment extends DialogFragment {
 
     private InputListener listener;
 
-    public Dialog onCreateDialog(Bundle savedInstanceState) {
+    @Override
+    public Dialog onCreateDialog(@NonNull Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         LayoutInflater inflater = getActivity().getLayoutInflater();
 
@@ -38,12 +39,11 @@ public class AddFriendDialogFragment extends DialogFragment {
         try{
             listener = (InputListener) context;
         } catch(ClassCastException e) {
-            Log.d(getClass().getSimpleName(), e.getLocalizedMessage());
+            Log.d(getClass().getSimpleName(), e.getMessage());
         }
     }
 
     interface InputListener {
         void onAddDialogPositiveButton(String friend);
-        void onAddDialogNegativeButton();
     }
 }

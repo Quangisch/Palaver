@@ -9,7 +9,7 @@ import android.widget.TextView;
 
 import de.web.ngthi.palaver.R;
 
-public abstract class LoginBaseFragment extends Fragment implements View.OnClickListener {
+abstract class LoginBaseFragment extends Fragment implements View.OnClickListener {
 
     private final String TAG = getClass().getSimpleName();
     private View view;

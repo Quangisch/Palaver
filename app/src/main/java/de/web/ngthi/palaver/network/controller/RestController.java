@@ -1,4 +1,4 @@
-package de.web.ngthi.palaver.controller;
+package de.web.ngthi.palaver.network.controller;
 
 
 import javax.inject.Inject;

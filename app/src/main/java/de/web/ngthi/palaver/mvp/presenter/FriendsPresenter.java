@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Map;
 
 import de.web.ngthi.palaver.Configuration;
-import de.web.ngthi.palaver.dto.ServerReplyType;
+import de.web.ngthi.palaver.network.dto.ServerReplyType;
 import de.web.ngthi.palaver.mvp.contracts.FriendsContract;
 import de.web.ngthi.palaver.mvp.model.Message;
 import de.web.ngthi.palaver.mvp.model.User;

@@ -169,7 +169,7 @@ public class LoginActivity extends AppCompatActivity implements LoginContract.Vi
 
     @Override
     public void showNetworkError() {
-        currentFragment.setErrorField(getString(R.string.login_error_network));
+        currentFragment.setErrorField(getString(R.string.error_network_message));
     }
 
     @Override

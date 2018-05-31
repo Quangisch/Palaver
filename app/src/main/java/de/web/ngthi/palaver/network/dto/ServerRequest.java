@@ -1,4 +1,4 @@
-package de.web.ngthi.palaver.dto;
+package de.web.ngthi.palaver.network.dto;
 
 import android.util.Log;
 
@@ -19,7 +19,7 @@ public class ServerRequest {
     @JsonProperty("Data")       private String data;
     @JsonProperty("Friend")     private String friend;
     @JsonProperty("Recipient")  private String recipient;
-    @JsonProperty("LocalizedDateTime")     private String offset;
+    @JsonProperty("Offset")     private String offset;
 
     private ServerRequest() {
         //use Builder
@@ -31,7 +31,9 @@ public class ServerRequest {
         ObjectMapper mapper = new ObjectMapper();
         try {
             result = mapper.writeValueAsString(this);
-        } catch(JsonProcessingException e) { }
+        } catch(JsonProcessingException e) {
+            Log.e(this.getClass().getSimpleName(), e.getMessage(), e);
+        }
         return result;
     }
 
@@ -104,12 +106,8 @@ public class ServerRequest {
             request.recipient = this.recipient;
             request.offset = this.offset;
 
-            Log.d("___ServerRequest:", request.toString());
+            Log.d("_____ServerRequest_____", request.toString());
             return request;
         }
-
     }
-
-
-
 }

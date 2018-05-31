@@ -20,10 +20,6 @@ public class LocalUser extends User {
         this.contacts = new HashMap<>();
     }
 
-    public boolean isLocalUser() {
-        return true;
-    }
-
     public String getPassword() {
         return password;
     }

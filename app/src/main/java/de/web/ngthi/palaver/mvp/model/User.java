@@ -13,10 +13,6 @@ public class User implements Comparable<User>{
 
     private String username;
 
-    public boolean isLocalUser() {
-        return false;
-    }
-
     public int hashCode() {
         if(username != null)
             return username.hashCode();

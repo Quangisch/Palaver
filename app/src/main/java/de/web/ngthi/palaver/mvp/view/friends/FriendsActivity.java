@@ -121,6 +121,11 @@ public class FriendsActivity extends AppCompatActivity
         startActivity(intent);
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        presenter.stop();
+    }
 
     @Override
     public void notifyDataSetChanged() {
@@ -178,7 +183,7 @@ public class FriendsActivity extends AppCompatActivity
 
     @Override
     public void showNetworkError() {
-        mackSnack(R.string.login_error_network);
+        mackSnack(R.string.error_network_message);
     }
 
     @Override
@@ -193,18 +198,8 @@ public class FriendsActivity extends AppCompatActivity
     }
 
     @Override
-    public void onAddDialogNegativeButton() {
-
-    }
-
-    @Override
     public void onRemoveDialogPositiveButton(List<Integer> selectedFriendsIndex) {
         presenter.onRemoveFriend(selectedFriendsIndex);
-    }
-
-    @Override
-    public void onRemoveDialogNegativeButton() {
-
     }
 
     @Override
@@ -218,8 +213,4 @@ public class FriendsActivity extends AppCompatActivity
         presenter.onChangePassword(application.getLocalUsername(), oldPassword, newPassword, newPasswordRepeat);
     }
 
-    @Override
-    public void onChangeDialogNegativeButton() {
-
-    }
 }

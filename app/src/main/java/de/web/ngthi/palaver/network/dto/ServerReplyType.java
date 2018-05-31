@@ -1,4 +1,4 @@
-package de.web.ngthi.palaver.dto;
+package de.web.ngthi.palaver.network.dto;
 
 public enum ServerReplyType {
     USER_REGISTER_OK(1, "Benutzer erfolgreich angelegt"),

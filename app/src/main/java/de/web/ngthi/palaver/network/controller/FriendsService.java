@@ -1,8 +1,8 @@
-package de.web.ngthi.palaver.controller;
+package de.web.ngthi.palaver.network.controller;
 
 import dagger.Module;
-import de.web.ngthi.palaver.dto.ServerReply;
-import de.web.ngthi.palaver.dto.ServerRequest;
+import de.web.ngthi.palaver.network.dto.ServerReply;
+import de.web.ngthi.palaver.network.dto.ServerRequest;
 import io.reactivex.Single;
 import retrofit2.http.Body;
 import retrofit2.http.POST;
