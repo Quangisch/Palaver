@@ -19,7 +19,7 @@ import io.reactivex.schedulers.Schedulers;
 
 public class MessagePresenter extends BasePresenter<MessageContract.View> implements MessageContract.Presenter {
 
-    private final String TAG = "=="+getClass().getSimpleName()+"==";
+    private static final String TAG = MessagePresenter.class.getSimpleName();
 
     private String friend;
     private List<Message> messages = new LinkedList<>();
@@ -28,7 +28,8 @@ public class MessagePresenter extends BasePresenter<MessageContract.View> implem
     public MessagePresenter(MessageContract.View view, IRepository repository, String friend) {
         super(view, repository);
         this.friend = friend;
-        Log.d(getClass().getSimpleName(), "created Presenter for friend " + friend);
+        Log.d(TAG, "==============constructor==============");
+        Log.d(TAG, String.format("Presenter for friend %s", friend));
         updateDataList();
     }
 
@@ -49,7 +50,7 @@ public class MessagePresenter extends BasePresenter<MessageContract.View> implem
     }
 
     private void updateDataList(List<Message> messages) {
-        Log.d(this.getClass().getSimpleName(), String.format("updateDataList for %s with %s messages", friend, messages.size()));
+        Log.d(TAG, String.format("updateDataList for %s with %s messages", friend, messages.size()));
         this.messages = messages;
         getView().notifyDataSetChanged();
         getView().onSwipeRefreshEnd();

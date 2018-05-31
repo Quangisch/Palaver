@@ -21,26 +21,25 @@ import de.web.ngthi.palaver.mvp.view.friends.FriendsActivity;
 
 public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
-    private final String TAG = "==FIREBASE_MESSAGE==";
+    private final static String TAG = MyFirebaseMessagingService.class.getSimpleName();
     private final String CHANNEL_ID = "Palaver Message Channel";
 
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
-
-        Log.d(TAG, "remoteMessage: " + remoteMessage.toString());
+        Log.d(TAG, String.format("remoteMessage: %s", remoteMessage));
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
             setupChannels();
 
-        // Check if message contains a data payload.
-        if (remoteMessage.getData().size() > 0) {
+        if (remoteMessage.getData().size() > 0)
             sendMyNotification(remoteMessage);
-
-        }
-
     }
 
     private void sendMyNotification(RemoteMessage remoteMessage) {
-        Log.d(TAG, String.format("DATA:%s\nFROM:%s\nCOLLAPSEKEY:%s\nMESSAGEID:%s",
+        Log.d(TAG, String.format(
+                        "DATA: %s\n" +
+                        "FROM: %s\n" +
+                        "COLLAPSEKEY: %s\n" +
+                        "MESSAGEID: %s",
                 remoteMessage.getData(),
                 remoteMessage.getFrom(),
                 remoteMessage.getCollapseKey(),
@@ -48,8 +47,8 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
 
         Intent intent = new Intent(this, FriendsActivity.class);
-        //TODO
-        String messageFrom = "Peter32";
+
+        String messageFrom = "Peter32"; //TODO remoteMessage.getFrom() ?
         intent.putExtra(getString(R.string.intent_friend_message), messageFrom);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_ONE_SHOT);
@@ -90,7 +89,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
     @Override
     public void onDeletedMessages() {
-
+        super.onDeletedMessages();
     }
 
 

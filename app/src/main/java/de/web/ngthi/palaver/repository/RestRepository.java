@@ -24,7 +24,7 @@ import retrofit2.Retrofit;
 @Module
 public class RestRepository implements IRepository {
 
-    private final String TAG = "=="+getClass().getSimpleName()+"==";
+    private static final String TAG = RestRepository.class.getSimpleName();
 
     private String username;
     private String password;
@@ -35,7 +35,7 @@ public class RestRepository implements IRepository {
 
     @Inject
     public RestRepository(RestController controller) {
-        Log.d(TAG, "=========CONSTRUCTOR=========");
+        Log.d(TAG, "==============constructor==============");
         Retrofit retrofit = controller.provideRetrofit();
         userService = controller.provideUserService(retrofit);
         friendsService = controller.provideFriendService(retrofit);

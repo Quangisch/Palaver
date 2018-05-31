@@ -7,7 +7,7 @@ public interface FriendsContract {
     interface View extends BaseContract.View {
         void onFriendClick(String friend);
         void notifyDataSetChanged();
-        void showUnkownFriendError();
+        void showUnknownFriendError();
         void showDuplicateFriendError();
         void showWrongOldPassword();
         void showWrongPasswordRepeat();
@@ -24,7 +24,7 @@ public interface FriendsContract {
 
         void onFriendClick(String friend);
         void onAddFriend(String friend);
-        void onRemoveFriend(List<Integer> friendIndex);
+        void onRemoveFriend(List<String> friends);
         String[] getFriends();
         void onChangePassword(String username, String oldPassword, String newPassword, String newPasswordRepeat);
 

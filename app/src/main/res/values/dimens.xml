@@ -9,5 +9,6 @@
     <dimen name="messageBoxCornerRadius">16dp</dimen>
     <dimen name="fontSize_error">10sp</dimen>
     <dimen name="fontSize_message">12sp</dimen>
+    <dimen name="fontSize_header_small">16sp</dimen>
     <dimen name="fontSize_header">24sp</dimen>
 </resources>

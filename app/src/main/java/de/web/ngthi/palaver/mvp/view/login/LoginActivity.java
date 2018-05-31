@@ -21,7 +21,7 @@ public class LoginActivity extends AppCompatActivity implements LoginContract.Vi
         LoginRegisterFragment.RegisterInputListener,
         LoginUserFragment.UserInputListener{
 
-    private final String TAG = "=="+getClass().getSimpleName()+"==";
+    private static final String TAG = LoginActivity.class.getSimpleName();
 
     public PalaverApplication application;
     private LoginContract.Presenter presenter;
@@ -33,11 +33,14 @@ public class LoginActivity extends AppCompatActivity implements LoginContract.Vi
     private LoginRegisterFragment registerFragment;
     private LoginPasswordFragment passwordFragment;
 
+    public LoginActivity() {
+        Log.d(TAG, "==============constructor==============");
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         setTheme(R.style.AppTheme_NoActionBar);
         super.onCreate(savedInstanceState);
-        Log.d(TAG, "=====onCreate=====");
         setContentView(R.layout.activity_login);
         application = (PalaverApplication) getApplication();
 

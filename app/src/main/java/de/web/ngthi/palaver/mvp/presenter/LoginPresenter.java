@@ -5,19 +5,19 @@ import android.util.Log;
 
 import de.web.ngthi.palaver.Configuration;
 import de.web.ngthi.palaver.mvp.contracts.LoginContract;
-import de.web.ngthi.palaver.repository.IRepository;
 import de.web.ngthi.palaver.mvp.view.login.LoginState;
+import de.web.ngthi.palaver.repository.IRepository;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
 public class LoginPresenter extends BasePresenter<LoginContract.View> implements LoginContract.Presenter {
 
+    private static final String TAG = LoginPresenter.class.getSimpleName();
     private String username;
-
-    private final String TAG = "=="+getClass().getSimpleName()+"==";
 
     public LoginPresenter(LoginContract.View view, IRepository repository) {
         super(view, repository);
+        Log.d(TAG, "==============constructor==============");
     }
 
     @Override

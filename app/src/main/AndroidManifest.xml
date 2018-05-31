@@ -21,7 +21,8 @@
 
         <activity
             android:name=".mvp.view.SplashScreen"
-            android:theme="@style/AppTheme.Launcher">
+            android:theme="@style/AppTheme.Launcher"
+            android:noHistory="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -31,17 +32,20 @@
 
         <activity
             android:name=".mvp.view.friends.FriendsActivity"
-            android:windowSoftInputMode="adjustResize">
+            android:windowSoftInputMode="adjustResize"
+            android:noHistory="true">
         </activity>
 
         <activity
             android:name=".mvp.view.login.LoginActivity"
-            android:windowSoftInputMode="adjustResize">
+            android:windowSoftInputMode="adjustResize"
+            android:noHistory="true">
         </activity>
 
         <activity
             android:name=".mvp.view.message.MessageActivity"
-            android:windowSoftInputMode="adjustResize">
+            android:windowSoftInputMode="adjustResize"
+            android:noHistory="true">
         </activity>
 
 

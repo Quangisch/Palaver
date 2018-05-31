@@ -32,7 +32,7 @@ public class FriendsActivity extends AppCompatActivity
         RemoveFriendsDialogFragment.InputListener,
         ChangePasswordDialogFragment.InputListener{
 
-    private final String TAG = "=="+getClass().getSimpleName()+"==";
+    private static final String TAG = FriendsActivity.class.getSimpleName();
 
     public PalaverApplication application;
     private FriendsContract.Presenter presenter;
@@ -40,11 +40,14 @@ public class FriendsActivity extends AppCompatActivity
     private ChangePasswordDialogFragment changeDialog;
     private SwipeRefreshLayout swipeLayout;
 
+    public FriendsActivity() {
+        Log.d(TAG, "==============constructor==============");
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         setTheme(R.style.AppTheme_NoActionBar);
         super.onCreate(savedInstanceState);
-        Log.d(TAG, "=====onCreate=====");
         setContentView(R.layout.activity_friends);
         application = (PalaverApplication) getApplication();
 
@@ -129,7 +132,7 @@ public class FriendsActivity extends AppCompatActivity
 
     @Override
     public void notifyDataSetChanged() {
-        Log.d(getClass().getSimpleName(), "notifyDataSetChanged");
+        Log.d(TAG, "notifyDataSetChanged");
         friendsAdapter.notifyDataSetChanged();
     }
 
@@ -141,7 +144,7 @@ public class FriendsActivity extends AppCompatActivity
     }
 
     @Override
-    public void showUnkownFriendError() {
+    public void showUnknownFriendError() {
         mackSnack(R.string.friends_error_unknownFriend);
     }
 
@@ -172,7 +175,7 @@ public class FriendsActivity extends AppCompatActivity
 
     @Override
     public void showChangedPassword() {
-        mackSnack(R.string.action_friends_changePassword);
+        mackSnack(R.string.friends_snack_changedPassword);
         changeDialog.dismiss();
     }
 
@@ -198,8 +201,8 @@ public class FriendsActivity extends AppCompatActivity
     }
 
     @Override
-    public void onRemoveDialogPositiveButton(List<Integer> selectedFriendsIndex) {
-        presenter.onRemoveFriend(selectedFriendsIndex);
+    public void onRemoveDialogPositiveButton(List<String> selectedFriends) {
+        presenter.onRemoveFriend(selectedFriends);
     }
 
     @Override
@@ -211,6 +214,11 @@ public class FriendsActivity extends AppCompatActivity
     @Override
     public void onChangeDialogPositiveButton(String oldPassword, String newPassword, String newPasswordRepeat) {
         presenter.onChangePassword(application.getLocalUsername(), oldPassword, newPassword, newPasswordRepeat);
+    }
+
+    @Override
+    public String getUsername() {
+        return application.getLocalUsername();
     }
 
 }

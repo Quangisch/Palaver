@@ -4,7 +4,6 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
@@ -16,31 +15,31 @@ import de.web.ngthi.palaver.R;
 
 public class RemoveFriendsDialogFragment extends DialogFragment {
 
+    private static final String TAG = RemoveFriendsDialogFragment.class.getSimpleName();
+
     private InputListener listener;
-    private List<Integer> selectedFriends;
+    private List<String> selectedFriends;
+
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
+        final String[] friends = listener.getFriends();
         selectedFriends = new LinkedList<>();
-
-        Log.d("======","===========");
-        for(String s : listener.getFriends()) {
-            Log.d(getClass().getSimpleName(), s);
-        }
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
         builder.setTitle(R.string.friends_title_removeFriend)
                 //TODO setAdapter for asynchronous list backing
-                .setMultiChoiceItems(listener.getFriends(), null, (DialogInterface dialog, int which, boolean checked) -> {
-                    if(checked)
-                        selectedFriends.add(which);
-                    else
-                        selectedFriends.remove(Integer.valueOf(which));
+                .setMultiChoiceItems(friends, null, (DialogInterface dialog, int which, boolean checked) -> {
+                    Log.d(TAG, String.format("%s: %s", checked ? "checked" : "unchecked", friends[which]));
+                    if(checked) {
+                        selectedFriends.add(friends[which]);
+                    } else {
+                        selectedFriends.remove(friends[which]);
+                    }
                 })
-                .setPositiveButton(R.string.friends_button_removeFriend, (DialogInterface dialog, int which) -> {
-                    //TODO get edittext
-                    listener.onRemoveDialogPositiveButton(selectedFriends);
-                }).setNegativeButton(R.string.friends_button_cancel, (DialogInterface dialog, int which) ->
+                .setPositiveButton(R.string.friends_button_removeFriend, (DialogInterface dialog, int which) ->
+                        listener.onRemoveDialogPositiveButton(selectedFriends))
+                .setNegativeButton(R.string.friends_button_cancel, (DialogInterface dialog, int which) ->
                         RemoveFriendsDialogFragment.this.getDialog().cancel());
 
         return builder.create();
@@ -51,12 +50,12 @@ public class RemoveFriendsDialogFragment extends DialogFragment {
         try{
             listener = (InputListener) context;
         } catch(ClassCastException e) {
-            Log.d(getClass().getSimpleName(), e.getLocalizedMessage());
+            Log.d(TAG, e.getLocalizedMessage());
         }
     }
 
     interface InputListener {
-        void onRemoveDialogPositiveButton(List<Integer> selectedFriendsIndex);
+        void onRemoveDialogPositiveButton(List<String> selectedFriends);
         String[] getFriends();
     }
 }

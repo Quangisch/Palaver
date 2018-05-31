@@ -26,7 +26,6 @@ public class FriendsViewHolder extends RecyclerView.ViewHolder implements Friend
 
 
     public void bind(String friendName, String message, String dateTime) {
-        Log.d(getClass().getSimpleName(), String.format("bind(%s, %s, %s)", friendName, message, dateTime));
         friendNameText.setText(friendName);
         messageText.setText(message);
         timeText.setText(dateTime);

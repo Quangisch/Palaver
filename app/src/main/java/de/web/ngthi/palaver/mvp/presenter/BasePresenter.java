@@ -20,7 +20,7 @@ public abstract class BasePresenter<V extends BaseContract.View> implements Base
         this.disposables = new CompositeDisposable();
         this.repository = repository;
         RxJavaPlugins.setErrorHandler(error -> {
-            Log.e("===RXJAVAPLUGINS===", error.getMessage(), error);
+            Log.e("==RXJAVAPLUGINS.ERROR==", error.getMessage(), error);
             getView().showNetworkError();
         });
     }
@@ -60,7 +60,7 @@ public abstract class BasePresenter<V extends BaseContract.View> implements Base
     }
 
     public void showNetworkError(Throwable throwable) {
-        Log.d(getClass().getSimpleName()+"==", throwable.getMessage());
+        Log.e(this.getClass().getSimpleName(), throwable.getMessage());
         getView().showNetworkError();
 
     }

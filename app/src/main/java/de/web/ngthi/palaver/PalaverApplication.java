@@ -16,7 +16,7 @@ import de.web.ngthi.palaver.mvp.view.SplashScreen;
 
 public class PalaverApplication extends Application {
 
-    private final String TAG = "=="+getClass().getSimpleName()+"==";
+    private static final String TAG = PalaverApplication.class.getSimpleName();
 
     @Inject
     public DataRepository repository;
@@ -24,8 +24,7 @@ public class PalaverApplication extends Application {
     private static PalaverApplication instance;
 
     public PalaverApplication() {
-        Log.d("APPLICATION CONSTRUCTOR", "==============constructor===============");
-
+        Log.d(TAG, "==============constructor==============");
     }
 
     @Override

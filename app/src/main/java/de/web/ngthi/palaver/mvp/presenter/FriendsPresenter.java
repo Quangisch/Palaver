@@ -20,14 +20,15 @@ import io.reactivex.schedulers.Schedulers;
 
 public class FriendsPresenter extends BasePresenter<FriendsContract.View> implements FriendsContract.Presenter {
 
-    private final String TAG = "==FriendsPresenter==";
+    private static final String TAG = FriendsPresenter.class.getSimpleName();
 
     private List<User> friends = new LinkedList<>();
     private Map<User, Message> friendsMap = new HashMap<>();
 
     public FriendsPresenter(FriendsContract.View view, IRepository repository, String username, String password) {
         super(view, repository);
-        Log.d(TAG, "CONSTRUCTOR for "+username+","+password);
+        Log.d(TAG, "==============constructor==============");
+        Log.d(TAG, String.format("Presenter for username:\"%s\", \"%s\"", username, password));
         getRepository().setLocalUser(username, password);
         addDisposable(getRepository().refreshToken(FirebaseInstanceId.getInstance().getToken())
                 .subscribeOn(Schedulers.computation())
@@ -101,16 +102,16 @@ public class FriendsPresenter extends BasePresenter<FriendsContract.View> implem
 
     private void addFriend(ServerReplyType type) {
         switch(type) {
-            case FRIENDS_ADD_OK: updateDataList(friends);break;
-            case FRIENDS_ADD_FAILED: getView().showDuplicateFriendError(); break;
+            case FRIENDS_ADD_OK: updateDataList();
+                break;
+            case FRIENDS_ADD_FAILED: getView().showDuplicateFriendError();
+                break;
         }
     }
 
     @Override
-    public void onRemoveFriend(List<Integer> friendIndex) {
-        for(int i : friendIndex) {
-            String friend = friends.get(i).getUsername();
-
+    public void onRemoveFriend(List<String> friends) {
+        for(String friend : friends) {
             addDisposable(getRepository().removeFriend(friend)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
@@ -120,8 +121,12 @@ public class FriendsPresenter extends BasePresenter<FriendsContract.View> implem
 
     private void removeFriend(ServerReplyType type) {
         switch(type) {
-            case FRIENDS_REMOVE_OK: updateDataList(friends);break;
-            case FRIENDS_REMOVE_FAILED: getView().showUnkownFriendError(); break;
+            case FRIENDS_REMOVE_OK:
+                updateDataList();
+                break;
+            case FRIENDS_REMOVE_FAILED:
+                getView().showUnknownFriendError();
+                break;
         }
     }
 

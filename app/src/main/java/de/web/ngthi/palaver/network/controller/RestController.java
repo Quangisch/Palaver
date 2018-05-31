@@ -1,6 +1,8 @@
 package de.web.ngthi.palaver.network.controller;
 
 
+import android.util.Log;
+
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
@@ -15,9 +17,11 @@ import retrofit2.converter.jackson.JacksonConverterFactory;
 @Module
 public class RestController {
 
+    private static final String TAG = RestController.class.getSimpleName();
+
     @Inject
     public RestController() {
-
+        Log.d(TAG, "==============constructor==============");
     }
 
     @Provides

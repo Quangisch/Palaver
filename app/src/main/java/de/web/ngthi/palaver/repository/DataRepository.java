@@ -16,14 +16,14 @@ import io.reactivex.Single;
 @Module
 public class DataRepository implements IRepository {
 
-    private final String TAG = "=="+getClass().getSimpleName()+"==";
+    private static final String TAG = DataRepository.class.getSimpleName();
 
     private IRepository restRepository;
     private IRepository localRepository;
 
     @Inject
     public DataRepository (RestRepository restRepository, LocalRepository localRepository) {
-        Log.d(TAG, "=========CONSTRUCTOR=========");
+        Log.d(TAG, "==============constructor==============");
         this.restRepository = restRepository;
         this.localRepository = localRepository;
     }

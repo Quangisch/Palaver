@@ -106,7 +106,6 @@ public class ServerRequest {
             request.recipient = this.recipient;
             request.offset = this.offset;
 
-            Log.d("_____ServerRequest_____", request.toString());
             return request;
         }
     }

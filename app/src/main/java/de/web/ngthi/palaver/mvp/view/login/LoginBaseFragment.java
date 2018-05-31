@@ -11,7 +11,7 @@ import de.web.ngthi.palaver.R;
 
 abstract class LoginBaseFragment extends Fragment implements View.OnClickListener {
 
-    private final String TAG = getClass().getSimpleName();
+    private static final String TAG = LoginBaseFragment.class.getSimpleName();
     private View view;
     private EditText primaryField;
     private Button primaryButton;
@@ -20,7 +20,6 @@ abstract class LoginBaseFragment extends Fragment implements View.OnClickListene
     @Override
     public void onStart() {
         super.onStart();
-        Log.d(TAG, "onStart()");
 
         primaryField = view.findViewById(R.id.edittext_login_primary);
         primaryButton = view.findViewById(R.id.button_login_primary);
@@ -37,7 +36,6 @@ abstract class LoginBaseFragment extends Fragment implements View.OnClickListene
     public void onPause()  {
         super.onPause();
 
-        Log.d(TAG, "onPause()");
         clearPrimaryString();
         clearErrorField();
     }

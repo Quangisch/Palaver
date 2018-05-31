@@ -27,7 +27,7 @@ public class AddFriendDialogFragment extends DialogFragment {
         builder.setTitle(R.string.friends_title_addFriend)
                 .setView(view)
                 .setPositiveButton(R.string.friends_button_addFriend, (DialogInterface dialog, int which) -> {
-                    EditText newFriend = view.findViewById(R.id.edittext_friends_dialog);
+                    EditText newFriend = view.findViewById(R.id.edittext_friends_dialog_friend);
                     listener.onAddDialogPositiveButton(newFriend.getText().toString());
                 }).setNegativeButton(R.string.friends_button_cancel, (DialogInterface dialog, int which) -> this.dismiss());
 

@@ -40,6 +40,7 @@
     <string name="friends_title_addFriend">Add Friend</string>
     <string name="friends_title_removeFriend">Remove Friend</string>
     <string name="friends_title_changePassword">Change Password</string>
+    <string name="friends_snack_changedPassword">Changed Password</string>
     <string name="friends_title_enterNewPassword">Enter your new Password</string>
     <string name="friends_title_logOut">Logout</string>
     <string name="friends_button_addFriend">Add</string>
@@ -48,9 +49,10 @@
     <string name="friends_button_logOut">Logout</string>
     <string name="friends_button_cancel">Cancel</string>
 
+    <string name="friends_hint_friendname">Username of friend</string>
     <string name="friends_hint_oldPassword">Old Password</string>
     <string name="friends_hint_newPassword">New Password</string>
-    <string name="friends_hint_newPasswordRepeat">Repeat new Password</string>
+    <string name="friends_hint_newPasswordRepeat">Repeat New Password</string>
 
     <string name="friends_error_illegalDate">Wrong date format</string>
     <string name="friends_error_unknownFriend">Unknown username</string>

@@ -21,12 +21,12 @@ import io.reactivex.Single;
 public class LocalRepository implements IRepository {
 
     //TODO: SQLITE synchronize
-    private final String TAG = "=="+getClass().getSimpleName()+"==";
+    private static final String TAG = LocalRepository.class.getSimpleName();
     private LocalUser user;
 
     @Inject
     public LocalRepository() {
-        Log.d(TAG, "=========CONSTRUCTOR=========");
+        Log.d(TAG, "==============constructor==============");
     }
 
     @Override
@@ -34,7 +34,6 @@ public class LocalRepository implements IRepository {
         user = new LocalUser(username, password);
     }
 
-    //TODO mockupData
     private LocalUser getLocalUser() {
         return user;
     }

@@ -20,8 +20,6 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TimePicker;
 
-import org.joda.time.IllegalFieldValueException;
-
 import java.util.Calendar;
 
 import de.web.ngthi.palaver.PalaverApplication;
@@ -32,7 +30,7 @@ import de.web.ngthi.palaver.mvp.view.friends.FriendsActivity;
 
 public class MessageActivity extends AppCompatActivity implements MessageContract.View, View.OnClickListener {
 
-    private final String TAG = "=="+getClass().getSimpleName()+"==";
+    private final String TAG = MessageActivity.class.getSimpleName();
 
     public MessageContract.Presenter presenter;
     private Button sendButton;
@@ -42,11 +40,14 @@ public class MessageActivity extends AppCompatActivity implements MessageContrac
     private SwipeRefreshLayout swipeLayout;
     private Menu menu;
 
+    public MessageActivity() {
+        Log.d(TAG, "==============constructor==============");
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         setTheme(R.style.AppTheme_NoActionBar);
         super.onCreate(savedInstanceState);
-        Log.d(TAG, "=====onCreate=====");
         setContentView(R.layout.activity_message);
 
         PalaverApplication application = (PalaverApplication) getApplication();

@@ -12,7 +12,7 @@ import de.web.ngthi.palaver.R;
 
 public class LoginUserFragment extends LoginBaseFragment implements View.OnClickListener {
 
-    private final String TAG = getClass().getSimpleName();
+    private static final String TAG = LoginUserFragment.class.getSimpleName();
 
     private UserInputListener activityUserCallback;
     private TextView registerField;
@@ -21,7 +21,6 @@ public class LoginUserFragment extends LoginBaseFragment implements View.OnClick
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
-        Log.d(TAG, String.format("onCreateView(%s, %s, %s)", inflater, container, savedInstanceState));
         View view = inflater.inflate(R.layout.fragment_login_user, container, false);
         registerField = view.findViewById(R.id.textview_loginuser_register);
         registerField.setOnClickListener(this);
@@ -32,7 +31,6 @@ public class LoginUserFragment extends LoginBaseFragment implements View.OnClick
 
     @Override
     public void onAttach(Activity activity) {
-        Log.d(TAG, String.format("onAttach(%s)", activity.toString()));
         super.onAttach(activity);
         try {
             activityUserCallback = (UserInputListener) activity;
@@ -44,12 +42,10 @@ public class LoginUserFragment extends LoginBaseFragment implements View.OnClick
 
     @Override
     public void onClick(View v) {
-        Log.d("TAG", String.format("onClick(%s)", v.toString()));
+        Log.d(TAG, String.format("onClick(%s)", v.toString()));
         if(v == getPrimaryButton()) {
-            Log.d("TAG", "primary");
             activityUserCallback.onLoginInput(getPrimaryString());
         } else if(v == registerField) {
-            Log.d("TAG", "secondary");
             activityUserCallback.onRegisterInput(getPrimaryString());
         }
     }
