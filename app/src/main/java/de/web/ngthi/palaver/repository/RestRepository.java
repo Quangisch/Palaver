@@ -52,7 +52,7 @@ public class RestRepository implements IRepository {
         ServerRequest request = new ServerRequest.Builder()
                 .username(username)
                 .build();
-        return Single.fromCallable(() -> isExistingUser(userService.validate(request).blockingGet()));
+        return Single.fromCallable(() -> ServerReplyType.isType(ServerReplyType.USER_VALIDATE_FAILED_PASSWORD, userService.validate(request).blockingGet()));
     }
 
     public Single<Boolean> isValidUser(@NonNull String username, @NonNull String password) {
@@ -60,15 +60,15 @@ public class RestRepository implements IRepository {
                 .username(username)
                 .password(password)
                 .build();
-        return Single.fromCallable(() -> isValidUser(userService.validate(request).blockingGet()));
+        return Single.fromCallable(() -> ServerReplyType.isType(ServerReplyType.USER_VALIDATE_OK, userService.validate(request).blockingGet()));
     }
 
-    public Single<Boolean> isValidNewUser(@NonNull String username, @NonNull String password) {
+    public Single<Boolean> registerNewUser(@NonNull String username, @NonNull String password) {
         ServerRequest request = new ServerRequest.Builder()
                 .username(username)
                 .password(password)
                 .build();
-        return Single.fromCallable(() -> isExistingUser(userService.register(request).blockingGet()));
+        return Single.fromCallable(() -> ServerReplyType.isType(ServerReplyType.USER_REGISTER_OK, userService.register(request).blockingGet()));
     }
 
     private ServerRequest.Builder localUser() {
@@ -138,14 +138,5 @@ public class RestRepository implements IRepository {
 
         return Single.fromCallable(() -> ServerDataMapper.mapToFriends(friendsService.getFriends(request).blockingGet()));
 
-    }
-
-    private boolean isExistingUser(ServerReply reply) {
-        return ServerReplyType.isType(ServerReplyType.USER_VALIDATE_OK, reply)
-                || ServerReplyType.isType(ServerReplyType.USER_VALIDATE_FAILED_PASSWORD, reply);
-    }
-
-    private boolean isValidUser(ServerReply reply) {
-        return ServerReplyType.isType(ServerReplyType.USER_VALIDATE_OK, reply);
     }
 }

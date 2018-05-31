@@ -11,7 +11,7 @@ import java.util.Map;
 
 import de.web.ngthi.palaver.Configuration;
 import de.web.ngthi.palaver.network.dto.ServerReplyType;
-import de.web.ngthi.palaver.mvp.contracts.FriendsContract;
+import de.web.ngthi.palaver.mvp.contract.FriendsContract;
 import de.web.ngthi.palaver.mvp.model.Message;
 import de.web.ngthi.palaver.mvp.model.User;
 import de.web.ngthi.palaver.repository.IRepository;
@@ -37,7 +37,7 @@ public class FriendsPresenter extends BasePresenter<FriendsContract.View> implem
         updateDataList();
     }
     private void logToken(ServerReplyType reply) {
-        Log.d(TAG, "TOKENREPLY: "+reply.toString());
+        Log.d(TAG, reply.toString());
     }
 
     private void updateDataList() {
@@ -56,6 +56,9 @@ public class FriendsPresenter extends BasePresenter<FriendsContract.View> implem
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(m -> updateDataMap(friend, m), this::showNetworkError));
         }
+
+        if(friends.size() == 0)
+            onDataRefreshed();
     }
 
     private void updateDataMap(User friend, List<Message> messages) {
@@ -64,7 +67,10 @@ public class FriendsPresenter extends BasePresenter<FriendsContract.View> implem
         if(lastIndex >= 0)
             lastMessage = messages.get(lastIndex);
         friendsMap.put(friend, lastMessage);
+        onDataRefreshed();
+    }
 
+    private void onDataRefreshed() {
         getView().notifyDataSetChanged();
         getView().onSwipeRefreshEnd();
     }

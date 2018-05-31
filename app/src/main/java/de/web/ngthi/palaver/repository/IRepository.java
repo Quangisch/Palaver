@@ -16,7 +16,7 @@ public interface IRepository {
     //user
     Single<Boolean> isValidUser(@NonNull String username);
     Single<Boolean> isValidUser(@NonNull String username, @NonNull String password);
-    Single<Boolean> isValidNewUser(@NonNull String username, @NonNull String password);
+    Single<Boolean> registerNewUser(@NonNull String username, @NonNull String password);
     Single<ServerReplyType> changePassword(@NonNull String newPassword);
     Single<ServerReplyType> refreshToken(String token);
     //message

@@ -7,7 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import de.web.ngthi.palaver.R;
-import de.web.ngthi.palaver.mvp.contracts.FriendsContract;
+import de.web.ngthi.palaver.mvp.contract.FriendsContract;
 
 public class FriendsListAdapter extends RecyclerView.Adapter<FriendsViewHolder> {
 

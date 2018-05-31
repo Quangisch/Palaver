@@ -24,7 +24,7 @@ import java.util.Calendar;
 
 import de.web.ngthi.palaver.PalaverApplication;
 import de.web.ngthi.palaver.R;
-import de.web.ngthi.palaver.mvp.contracts.MessageContract;
+import de.web.ngthi.palaver.mvp.contract.MessageContract;
 import de.web.ngthi.palaver.mvp.presenter.MessagePresenter;
 import de.web.ngthi.palaver.mvp.view.friends.FriendsActivity;
 
@@ -70,7 +70,7 @@ public class MessageActivity extends AppCompatActivity implements MessageContrac
         mMessageRecycler = findViewById(R.id.recyclerview_message);
         mMessageRecycler.setAdapter(mMessageAdapter);
         mMessageRecycler.addOnLayoutChangeListener((v, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom) -> {
-            if ( bottom < oldBottom)
+            if (bottom < oldBottom)
                 mMessageRecycler.postDelayed(this::scrollDown, 100);
         });
         mMessageRecycler.setLayoutManager(new LinearLayoutManager(this));

@@ -7,7 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import de.web.ngthi.palaver.R;
-import de.web.ngthi.palaver.mvp.contracts.MessageContract;
+import de.web.ngthi.palaver.mvp.contract.MessageContract;
 
 class MessageListAdapter extends RecyclerView.Adapter {
 

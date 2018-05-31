@@ -39,6 +39,12 @@ public class LoginRegisterFragment extends LoginBaseFragment implements View.OnC
     }
 
     @Override
+    public void onPause() {
+        super.onPause();
+        passwordRepeatField.setText("");
+    }
+
+    @Override
     public void onClick(View v) {
         activityRegisterCallback.onRegisterInput(getPrimaryString(), passwordRepeatField.getText().toString());
     }

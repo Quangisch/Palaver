@@ -4,7 +4,7 @@ import android.support.annotation.NonNull;
 import android.util.Log;
 
 import de.web.ngthi.palaver.Configuration;
-import de.web.ngthi.palaver.mvp.contracts.LoginContract;
+import de.web.ngthi.palaver.mvp.contract.LoginContract;
 import de.web.ngthi.palaver.mvp.view.login.LoginState;
 import de.web.ngthi.palaver.repository.IRepository;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -85,7 +85,7 @@ public class LoginPresenter extends BasePresenter<LoginContract.View> implements
         if(!password.equals(passwordRepeat))
             getView().showPasswordRepeatError();
         else {
-            addDisposable(getRepository().isValidNewUser(username, password)
+            addDisposable(getRepository().registerNewUser(username, password)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(u -> login(u, username, password), this::showNetworkError));

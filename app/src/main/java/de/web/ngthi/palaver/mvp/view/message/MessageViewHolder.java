@@ -5,7 +5,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import de.web.ngthi.palaver.R;
-import de.web.ngthi.palaver.mvp.contracts.MessageContract;
+import de.web.ngthi.palaver.mvp.contract.MessageContract;
 
 abstract class MessageViewHolder extends RecyclerView.ViewHolder implements MessageContract.MessageViewable {
 

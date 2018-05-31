@@ -51,7 +51,7 @@ public class LocalRepository implements IRepository {
     }
 
     @Override
-    public Single<Boolean> isValidNewUser(@NonNull String username, @NonNull String password) {
+    public Single<Boolean> registerNewUser(@NonNull String username, @NonNull String password) {
         return Single.just(false);
     }
 

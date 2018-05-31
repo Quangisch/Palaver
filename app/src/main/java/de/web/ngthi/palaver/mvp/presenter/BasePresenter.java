@@ -3,7 +3,7 @@ package de.web.ngthi.palaver.mvp.presenter;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
-import de.web.ngthi.palaver.mvp.contracts.BaseContract;
+import de.web.ngthi.palaver.mvp.contract.BaseContract;
 import de.web.ngthi.palaver.repository.IRepository;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
@@ -21,7 +21,8 @@ public abstract class BasePresenter<V extends BaseContract.View> implements Base
         this.repository = repository;
         RxJavaPlugins.setErrorHandler(error -> {
             Log.e("==RXJAVAPLUGINS.ERROR==", error.getMessage(), error);
-            getView().showNetworkError();
+            if(getView() != null)
+                getView().showNetworkError();
         });
     }
 
@@ -62,7 +63,6 @@ public abstract class BasePresenter<V extends BaseContract.View> implements Base
     public void showNetworkError(Throwable throwable) {
         Log.e(this.getClass().getSimpleName(), throwable.getMessage());
         getView().showNetworkError();
-
     }
 
     public void dispose() {

@@ -1,4 +1,4 @@
-package de.web.ngthi.palaver.mvp.contracts;
+package de.web.ngthi.palaver.mvp.contract;
 
 import android.support.annotation.NonNull;
 

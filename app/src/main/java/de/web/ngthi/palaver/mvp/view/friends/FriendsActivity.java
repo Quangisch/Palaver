@@ -21,7 +21,7 @@ import java.util.List;
 
 import de.web.ngthi.palaver.PalaverApplication;
 import de.web.ngthi.palaver.R;
-import de.web.ngthi.palaver.mvp.contracts.FriendsContract;
+import de.web.ngthi.palaver.mvp.contract.FriendsContract;
 import de.web.ngthi.palaver.mvp.presenter.FriendsPresenter;
 import de.web.ngthi.palaver.mvp.view.login.LoginActivity;
 import de.web.ngthi.palaver.mvp.view.message.MessageActivity;

@@ -8,7 +8,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import de.web.ngthi.palaver.network.dto.ServerReplyType;
-import de.web.ngthi.palaver.mvp.contracts.MessageContract;
+import de.web.ngthi.palaver.mvp.contract.MessageContract;
 import de.web.ngthi.palaver.mvp.model.Message;
 import de.web.ngthi.palaver.mvp.model.LocalizedDateTime;
 import de.web.ngthi.palaver.mvp.model.User;

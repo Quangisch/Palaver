@@ -12,7 +12,7 @@ import android.widget.TextView;
 
 import de.web.ngthi.palaver.PalaverApplication;
 import de.web.ngthi.palaver.R;
-import de.web.ngthi.palaver.mvp.contracts.LoginContract;
+import de.web.ngthi.palaver.mvp.contract.LoginContract;
 import de.web.ngthi.palaver.mvp.presenter.LoginPresenter;
 import de.web.ngthi.palaver.mvp.view.friends.FriendsActivity;
 

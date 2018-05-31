@@ -1,12 +1,11 @@
 package de.web.ngthi.palaver.mvp.view.friends;
 
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
 import de.web.ngthi.palaver.R;
-import de.web.ngthi.palaver.mvp.contracts.FriendsContract;
+import de.web.ngthi.palaver.mvp.contract.FriendsContract;
 
 public class FriendsViewHolder extends RecyclerView.ViewHolder implements FriendsContract.FriendsViewable, View.OnClickListener {
 

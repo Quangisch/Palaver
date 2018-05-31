@@ -55,9 +55,9 @@ public class DataRepository implements IRepository {
     }
 
     @Override
-    public Single<Boolean> isValidNewUser(@NonNull String username, @NonNull String password) {
-        Log.d(TAG, String.format("isValidNewUser(%s, %s)", username, password));
-        return getDefaultRepository().isValidNewUser(username, password);
+    public Single<Boolean> registerNewUser(@NonNull String username, @NonNull String password) {
+        Log.d(TAG, String.format("registerNewUser(%s, %s)", username, password));
+        return getDefaultRepository().registerNewUser(username, password);
     }
 
     @Override
