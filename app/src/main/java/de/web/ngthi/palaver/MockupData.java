@@ -1,16 +1,14 @@
 package de.web.ngthi.palaver;
 
-import android.util.Log;
-
 import org.joda.time.DateTime;
 
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 
-import de.web.ngthi.palaver.model.LocalUser;
-import de.web.ngthi.palaver.model.Message;
-import de.web.ngthi.palaver.model.User;
+import de.web.ngthi.palaver.mvp.model.LocalUser;
+import de.web.ngthi.palaver.mvp.model.Message;
+import de.web.ngthi.palaver.mvp.model.User;
 
 public class MockupData {
 
@@ -45,7 +43,7 @@ public class MockupData {
             date = date.minus(offset);
             int friendIndex = r.nextInt(friends.size());
             User friend = localUser.getSortedFriendList().get(friendIndex);
-            Message m = new Message(user % 2 == 0 ? localUser : friend, user % 2 == 0 ? friend : localUser, textFragments[i].replaceAll("\\t\\n", ""), date);
+            Message m = new Message(user % 2 == 0 ? localUser : friend, user % 2 == 0 ? friend : localUser, textFragments[i].replaceAll("\\t\\n", ""), date, Message.Status.SENT);
             localUser.addMessage(friend.getUsername(), m);
         }
     }

@@ -19,20 +19,21 @@ public class ServerRequest {
     @JsonProperty("Data")       private String data;
     @JsonProperty("Friend")     private String friend;
     @JsonProperty("Recipient")  private String recipient;
-    @JsonProperty("Offset")     private String offset;
+    @JsonProperty("LocalizedDateTime")     private String offset;
 
     private ServerRequest() {
         //use Builder
     }
 
-//    public String toString() {
-//        String result = "error";
-//        ObjectMapper mapper = new ObjectMapper();
-//        try {
-//            result = mapper.writeValueAsString(this);
-//        } catch(JsonProcessingException e) { }
-//        return result;
-//    }
+    @Override
+    public String toString() {
+        String result = "error";
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            result = mapper.writeValueAsString(this);
+        } catch(JsonProcessingException e) { }
+        return result;
+    }
 
     public static class Builder {
 

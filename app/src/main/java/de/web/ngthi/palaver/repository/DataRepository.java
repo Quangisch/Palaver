@@ -9,8 +9,8 @@ import javax.inject.Inject;
 
 import dagger.Module;
 import de.web.ngthi.palaver.dto.ServerReplyType;
-import de.web.ngthi.palaver.model.Message;
-import de.web.ngthi.palaver.model.User;
+import de.web.ngthi.palaver.mvp.model.Message;
+import de.web.ngthi.palaver.mvp.model.User;
 import io.reactivex.Single;
 
 @Module
@@ -84,6 +84,7 @@ public class DataRepository implements IRepository {
 
     @Override
     public Single<ServerReplyType> addFriend(@NonNull String friend) {
+        Log.d(TAG, "addFriend:" + friend);
         return getDefaultRepository().addFriend(friend);
     }
 

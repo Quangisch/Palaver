@@ -12,9 +12,9 @@ import javax.inject.Inject;
 import de.web.ngthi.palaver.di.DaggerDataRepositoryComponent;
 import de.web.ngthi.palaver.repository.DataRepository;
 import de.web.ngthi.palaver.repository.IRepository;
-import de.web.ngthi.palaver.view.SplashScreen;
-import de.web.ngthi.palaver.view.friends.FriendsActivity;
-import de.web.ngthi.palaver.view.login.LoginActivity;
+import de.web.ngthi.palaver.mvp.view.SplashScreen;
+import de.web.ngthi.palaver.mvp.view.friends.FriendsActivity;
+import de.web.ngthi.palaver.mvp.view.login.LoginActivity;
 
 public class PalaverApplication extends Application {
 

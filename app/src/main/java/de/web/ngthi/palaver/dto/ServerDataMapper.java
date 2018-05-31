@@ -8,8 +8,8 @@ import org.joda.time.DateTime;
 import java.util.LinkedList;
 import java.util.List;
 
-import de.web.ngthi.palaver.model.Message;
-import de.web.ngthi.palaver.model.User;
+import de.web.ngthi.palaver.mvp.model.Message;
+import de.web.ngthi.palaver.mvp.model.User;
 
 public class ServerDataMapper {
 
@@ -27,7 +27,7 @@ public class ServerDataMapper {
                 User recipient = new User(d.getRecipient());
                 String message = d.getServerData();
                 DateTime dateTime = DateTime.parse(d.getDateTime());
-                messages.add(new Message(sender, recipient, message, dateTime));
+                messages.add(new Message(sender, recipient, message, dateTime, Message.Status.SENT));
             }
         }
 

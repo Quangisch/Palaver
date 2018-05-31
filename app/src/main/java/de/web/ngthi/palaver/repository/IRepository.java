@@ -4,11 +4,9 @@ import android.support.annotation.NonNull;
 
 import java.util.List;
 
-import de.web.ngthi.palaver.dto.ServerReply;
 import de.web.ngthi.palaver.dto.ServerReplyType;
-import de.web.ngthi.palaver.model.Message;
-import de.web.ngthi.palaver.model.User;
-import io.reactivex.Completable;
+import de.web.ngthi.palaver.mvp.model.Message;
+import de.web.ngthi.palaver.mvp.model.User;
 import io.reactivex.Single;
 
 public interface IRepository {

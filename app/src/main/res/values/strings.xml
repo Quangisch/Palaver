@@ -21,7 +21,8 @@
     <string name="action_friends_addFriend">Add Friend</string>
     <string name="action_friends_removeFriend">Remove Friend</string>
     <string name="action_friends_logout">Log Out</string>
-    <string name="action_message_filter">Filter by Date</string>
+    <string name="action_message_filter_deactivated">Filter by Date</string>
+    <string name="action_message_filter_activated">Remove Filter</string>
 
     //login
     <string name="login_welcome">Welcome</string>
@@ -72,6 +73,9 @@
     <string name="message_button_filterOffset">Filter offset</string>
     <string name="message_button_filter">Filter</string>
     <string name="message_button_cancel">Cancel</string>
+
+    <string name="message_info_sentPending">Pending</string>
+    <string name="message_info_sentFailed">Failed to send</string>
 
 
     //mockup text

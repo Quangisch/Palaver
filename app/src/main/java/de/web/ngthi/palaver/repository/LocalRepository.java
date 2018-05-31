@@ -13,9 +13,9 @@ import javax.inject.Inject;
 import dagger.Module;
 import de.web.ngthi.palaver.MockupData;
 import de.web.ngthi.palaver.dto.ServerReplyType;
-import de.web.ngthi.palaver.model.LocalUser;
-import de.web.ngthi.palaver.model.Message;
-import de.web.ngthi.palaver.model.User;
+import de.web.ngthi.palaver.mvp.model.LocalUser;
+import de.web.ngthi.palaver.mvp.model.Message;
+import de.web.ngthi.palaver.mvp.model.User;
 import io.reactivex.Single;
 
 @Module
@@ -67,7 +67,7 @@ public class LocalRepository implements IRepository {
 
     @Override
     public Single<ServerReplyType> sendMessage(@NonNull String friend, @NonNull String message) {
-        Message m = new Message(getLocalUser(), new User(friend), message, DateTime.now());
+        Message m = new Message(getLocalUser(), new User(friend), message, DateTime.now(), Message.Status.PENDING);
         getLocalUser().addMessage(friend, m);
         return Single.just(ServerReplyType.MESSAGE_SEND_OK);
     }
@@ -79,7 +79,7 @@ public class LocalRepository implements IRepository {
 
     @Override
     public Single<List<Message>> getMessageFromOffset(@NonNull String friend, @NonNull String dateTime) {
-        Message dtm = new Message(null, null, null, DateTime.parse(dateTime));
+        Message dtm = new Message(null, null, null, DateTime.parse(dateTime), Message.Status.SENT);
         List<Message> messages = getLocalUser().getSortedMessages(new User(friend));
         List<Message> messagesOffset = new LinkedList<>();
         for(Message m : messages)

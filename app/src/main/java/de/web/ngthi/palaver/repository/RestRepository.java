@@ -16,8 +16,8 @@ import de.web.ngthi.palaver.dto.ServerDataMapper;
 import de.web.ngthi.palaver.dto.ServerReply;
 import de.web.ngthi.palaver.dto.ServerReplyType;
 import de.web.ngthi.palaver.dto.ServerRequest;
-import de.web.ngthi.palaver.model.Message;
-import de.web.ngthi.palaver.model.User;
+import de.web.ngthi.palaver.mvp.model.Message;
+import de.web.ngthi.palaver.mvp.model.User;
 import io.reactivex.Single;
 import retrofit2.Retrofit;
 
@@ -87,7 +87,8 @@ public class RestRepository implements IRepository {
     @Override
     public Single<ServerReplyType> refreshToken(String token) {
         ServerRequest request = localUser().token(token).build();
-        return Single.fromCallable(() -> ServerReplyType.getType(userService.refreshToken(request).blockingGet()));
+        Log.d(TAG, "TOKENIS: " + token)
+;        return Single.fromCallable(() -> ServerReplyType.getType(userService.refreshToken(request).blockingGet()));
     }
 
     @Override
@@ -114,16 +115,22 @@ public class RestRepository implements IRepository {
                 .recipient(recipient)
                 .offset(offset)
                 .build();
-        return Single.fromCallable(() -> ServerDataMapper.mapToMessages(messageService.getMessages(request).blockingGet()));
+        return Single.fromCallable(() -> ServerDataMapper.mapToMessages(messageService.getMessagesOffset(request).blockingGet()));
 
     }
 
     @Override
     public Single<ServerReplyType> addFriend(@NonNull String friend) {
+        Log.d(TAG, "addFriend: " + friend);
         ServerRequest request = localUser()
                 .friend(friend)
                 .build();
-        return Single.fromCallable(() -> ServerReplyType.getType(friendsService.addFriend(request).blockingGet()));
+        return Single.fromCallable(() -> {
+            Log.d(TAG, "START WITH REQUEST: " + request.toString());
+            ServerReplyType result = ServerReplyType.getType(friendsService.addFriend(request).blockingGet());
+            Log.d(TAG, "END WITH RESULT: " + result.toString());
+            return result;
+        });
     }
 
     @Override

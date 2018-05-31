@@ -3,7 +3,7 @@
 
 
     <item android:id="@+id/action_message_filter"
-        android:title="@string/action_message_filter"
+        android:title="@string/action_message_filter_deactivated"
         app:showAsAction="ifRoom"/>
 
 </menu>

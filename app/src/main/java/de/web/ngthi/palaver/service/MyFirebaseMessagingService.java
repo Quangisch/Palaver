@@ -17,7 +17,7 @@ import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
 import de.web.ngthi.palaver.R;
-import de.web.ngthi.palaver.view.friends.FriendsActivity;
+import de.web.ngthi.palaver.mvp.view.friends.FriendsActivity;
 
 public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
@@ -49,7 +49,9 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
 
         Intent intent = new Intent(this, FriendsActivity.class);
-        intent.putExtra(getString(R.string.intent_friend_message), "Peter32");
+        //TODO
+        String messageFrom = "Peter32";
+        intent.putExtra(getString(R.string.intent_friend_message), messageFrom);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_ONE_SHOT);
 
