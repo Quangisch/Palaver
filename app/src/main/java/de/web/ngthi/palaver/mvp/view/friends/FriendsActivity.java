@@ -118,6 +118,30 @@ public class FriendsActivity extends AppCompatActivity
     }
 
     @Override
+    public void onDestroy() {
+        onStop();
+        super.onDestroy();
+    }
+
+    @Override
+    public void onStop() {
+        presenter.dispose();
+        super.onStop();
+    }
+
+    @Override
+    public void onRestart() {
+        super.onRestart();
+        notifyDataSetChanged();
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        presenter.onStop();
+    }
+
+    @Override
     public void onFriendClick(String friend) {
         Intent intent = new Intent(this, MessageActivity.class);
         intent.putExtra(getString(R.string.intent_friend_message), friend);
@@ -125,9 +149,8 @@ public class FriendsActivity extends AppCompatActivity
     }
 
     @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        presenter.stop();
+    public void onSwipeRefreshEnd() {
+        swipeLayout.setRefreshing(false);
     }
 
     @Override
@@ -179,20 +202,10 @@ public class FriendsActivity extends AppCompatActivity
         changeDialog.dismiss();
     }
 
-    @Override
-    public void onSwipeRefreshEnd() {
-        swipeLayout.setRefreshing(false);
-    }
 
     @Override
     public void showNetworkError() {
         mackSnack(R.string.error_network_message);
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        presenter.dispose();
     }
 
     @Override
@@ -206,12 +219,6 @@ public class FriendsActivity extends AppCompatActivity
     }
 
     @Override
-    public String[] getFriends() {
-        return presenter.getFriends();
-    }
-
-
-    @Override
     public void onChangeDialogPositiveButton(String oldPassword, String newPassword, String newPasswordRepeat) {
         presenter.onChangePassword(application.getLocalUsername(), oldPassword, newPassword, newPasswordRepeat);
     }
@@ -219,6 +226,11 @@ public class FriendsActivity extends AppCompatActivity
     @Override
     public String getUsername() {
         return application.getLocalUsername();
+    }
+
+    @Override
+    public String[] getFriends() {
+        return presenter.getFriends();
     }
 
 }

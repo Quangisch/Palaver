@@ -60,8 +60,14 @@ public class LoginActivity extends AppCompatActivity implements LoginContract.Vi
 
     @Override
     public void onDestroy() {
+        onStop();
         super.onDestroy();
+    }
+
+    @Override
+    public void onStop() {
         presenter.dispose();
+        super.onStop();
     }
 
     @Override

@@ -112,14 +112,26 @@ public class MessageActivity extends AppCompatActivity implements MessageContrac
 
     @Override
     public void onDestroy() {
+        onStop();
         super.onDestroy();
+    }
+
+    @Override
+    public void onStop() {
         presenter.dispose();
+        super.onStop();
     }
 
     @Override
     public void onRestart() {
         super.onRestart();
         notifyDataSetChanged();
+    }
+
+    @Override
+    public void onBackPressed() {
+        presenter.onStop();
+        new BackListener().onClick(null);
     }
 
     @Override
@@ -147,30 +159,14 @@ public class MessageActivity extends AppCompatActivity implements MessageContrac
             swipeLayout.setRefreshing(false);
     }
 
-    @Override
-    public void showNetworkError() {
-        onSwipeRefreshEnd();
-        makeSnack(R.string.error_network_message);
-    }
-
     private void makeSnack(int resId) {
         Snackbar.make(mMessageRecycler, getString(resId), Snackbar.LENGTH_LONG).show();
     }
 
     @Override
-    public void onBackPressed() {
-        presenter.stop();
-        new BackListener().onClick(null);
-    }
-
-    private class BackListener implements View.OnClickListener {
-
-        @Override
-        public void onClick(View v) {
-            Intent intent = new Intent(MessageActivity.this, FriendsActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            startActivity(intent);
-        }
+    public void showNetworkError() {
+        onSwipeRefreshEnd();
+        makeSnack(R.string.error_network_message);
     }
 
     private void showDateTimePicker() {
@@ -197,6 +193,15 @@ public class MessageActivity extends AppCompatActivity implements MessageContrac
                     currentCalendar.get(Calendar.MINUTE),
                     true)
                 .show();
+    }
+
+    private class BackListener implements View.OnClickListener {
+        @Override
+        public void onClick(View v) {
+            Intent intent = new Intent(MessageActivity.this, FriendsActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(intent);
+        }
     }
 
 }

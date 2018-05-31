@@ -29,7 +29,7 @@ public abstract class BasePresenter<V extends BaseContract.View> implements Base
         return view;
     }
 
-    public void start() {
+    public void onStart() {
 
     }
 
@@ -37,7 +37,7 @@ public abstract class BasePresenter<V extends BaseContract.View> implements Base
         return repository;
     }
 
-    public void stop() {
+    public void onStop() {
         disposables.clear();
     }
 
@@ -66,7 +66,7 @@ public abstract class BasePresenter<V extends BaseContract.View> implements Base
     }
 
     public void dispose() {
-        stop();
+        onStop();
         unsubscribe();
     }
 
