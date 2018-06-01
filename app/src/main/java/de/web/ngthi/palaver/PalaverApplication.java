@@ -1,10 +1,9 @@
 package de.web.ngthi.palaver;
 
-import android.app.Application;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
+import android.support.multidex.MultiDexApplication;
 import android.util.Log;
 
 import javax.inject.Inject;
@@ -12,9 +11,8 @@ import javax.inject.Inject;
 import de.web.ngthi.palaver.di.DaggerDataRepositoryComponent;
 import de.web.ngthi.palaver.repository.DataRepository;
 import de.web.ngthi.palaver.repository.IRepository;
-import de.web.ngthi.palaver.mvp.view.SplashScreen;
 
-public class PalaverApplication extends Application {
+public class PalaverApplication extends MultiDexApplication {
 
     private static final String TAG = PalaverApplication.class.getSimpleName();
 
@@ -34,17 +32,14 @@ public class PalaverApplication extends Application {
         DaggerDataRepositoryComponent.create().inject(this);
         sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
         initLocalUser();
-
-        Class startingActivity = SplashScreen.class;
-        Intent intent = new Intent(this, startingActivity);
-        startActivity(intent);
     }
 
     public void initLocalUser() {
         if(hasLocalUserData()) {
             String username = sharedPref.getString(getString(R.string.saved_username_key), null);
             String password = sharedPref.getString(getString(R.string.saved_password_key), null);
-            repository.setLocalUser(username, password);
+            if(username != null && password != null)
+                repository.setLocalUser(username, password);
         }
     }
 
@@ -79,6 +74,7 @@ public class PalaverApplication extends Application {
         sharedPref.edit().clear().apply();
     }
 
+    //usage in network/service/MyFirebaseInstanceIDService.class -> Dagger Injection?
     public static PalaverApplication getInstance() {
         return instance;
     }

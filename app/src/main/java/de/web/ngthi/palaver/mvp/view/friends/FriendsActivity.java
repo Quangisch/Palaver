@@ -131,14 +131,15 @@ public class FriendsActivity extends AppCompatActivity
 
     @Override
     public void onRestart() {
-        super.onRestart();
+        presenter.subscribe(this);
         notifyDataSetChanged();
+        super.onRestart();
     }
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
         presenter.onStop();
+        super.onBackPressed();
     }
 
     @Override

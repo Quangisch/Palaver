@@ -21,8 +21,13 @@ public abstract class BasePresenter<V extends BaseContract.View> implements Base
         this.repository = repository;
         RxJavaPlugins.setErrorHandler(error -> {
             Log.e("==RXJAVAPLUGINS.ERROR==", error.getMessage(), error);
-            if(getView() != null)
-                getView().showNetworkError();
+            try {
+                if(getView() != null)
+                    getView().showNetworkError();
+            } catch(Exception e) {
+                Log.e("==VIEW.EXCEPTION==", e.getMessage(), e);
+            }
+
         });
     }
 
@@ -39,6 +44,7 @@ public abstract class BasePresenter<V extends BaseContract.View> implements Base
     }
 
     public void onStop() {
+        Log.d(getClass().getSimpleName(), "clear disposables");
         disposables.clear();
     }
 

@@ -17,7 +17,8 @@ public enum ServerReplyType {
     MESSAGE_GET_FAILED(0, "Empfänger unbekannt"),
 
     FRIENDS_ADD_OK(1, "Freund hinzugefügt"),
-    FRIENDS_ADD_FAILED(0, "Freund bereits auf der Liste"),
+    FRIENDS_ADD_FAILED_ALREADY_ADDED(0, "Freund bereits auf der Liste"),
+    FRIENDS_ADD_FAILED_UNKNOWN(0, "Freund dem System nicht bekannt"),
     FRIENDS_REMOVE_OK(1, "Freund entfernt"),
     FRIENDS_REMOVE_FAILED(0, "Freund nicht auf der Liste"),
     FRIENDS_GET(1, "Freunde aufgelistet"),

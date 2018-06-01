@@ -2,75 +2,75 @@
 
     //global
     <string name="app_name">Palaver</string>
-    <string name="app_channel_name">Palaver Message</string>
-    <string name="app_channel_description">Palaver Message Notification</string>
+    <string name="app_channel_name">Palaver Nachricht</string>
+    <string name="app_channel_description">Palaver Benachrichtigung</string>
     <string name="saved_username_key">username</string>
     <string name="saved_password_key">password</string>
     <string name="intent_friend_message">friend_message</string>
 
-    <string name="global_error_usernameShort">Username is too short</string>
-    <string name="global_error_usernameLong">Username is too long</string>
-    <string name="global_error_passwordShort">Password is too short</string>
-    <string name="global_error_passwordLong">Password is too long</string>
+    <string name="global_error_usernameShort">Benutzername ist zu kurz</string>
+    <string name="global_error_usernameLong">Benutzername ist zu lang</string>
+    <string name="global_error_passwordShort">Passwort ist zu kurz</string>
+    <string name="global_error_passwordLong">Passwort ist zu lang</string>
 
     //login
-    <string name="login_welcome">Welcome</string>
-    <string name="login_button_login">Login</string>
-    <string name="login_button_register">Register</string>
-    <string name="login_hint_username">Username</string>
-    <string name="login_hint_password">Password</string>
-    <string name="login_hint_passwordRepeat">Repeat Password</string>
+    <string name="login_welcome">Willkommen</string>
+    <string name="login_button_login">Anmelden</string>
+    <string name="login_button_register">Registrieren</string>
+    <string name="login_hint_username">Benutzername</string>
+    <string name="login_hint_password">Passwort</string>
+    <string name="login_hint_passwordRepeat">Passwort wiederholen</string>
 
     //login error
-    <string name="login_error_wrongPassword">Wrong Password</string>
-    <string name="login_error_unknownUser">Unknown Username</string>
-    <string name="login_error_userAlreadyExsists">Username already exists</string>
-    <string name="login_error_wrongPasswordRepeat">Passwords don\'t match</string>
-    <string name="error_network_message">Network error</string>
+    <string name="login_error_wrongPassword">Falsches Passwort</string>
+    <string name="login_error_unknownUser">Unbekannter Benutzername</string>
+    <string name="login_error_userAlreadyExsists">Benutzername bereits vergeben</string>
+    <string name="login_error_wrongPasswordRepeat">Passwörter stimmen nicht überein</string>
+    <string name="error_network_message">Netzwerk Fehler</string>
 
     //menu
     <string name="action_friends_addFriend">@string/friends_title_addFriend</string>
     <string name="action_friends_removeFriend">@string/friends_title_removeFriend</string>
     <string name="action_friends_changePassword">@string/friends_title_changePassword</string>
     <string name="action_friends_logout">@string/friends_title_logOut</string>
-    <string name="action_message_filter_deactivated">Filter by Date</string>
-    <string name="action_message_filter_activated">Remove Filter</string>
+    <string name="action_message_filter_deactivated">Filter Nachrichten</string>
+    <string name="action_message_filter_activated">Entferne Filter</string>
 
     //friends dialog
-    <string name="friends_title_addFriend">Add Friend</string>
-    <string name="friends_title_removeFriend">Remove Friend</string>
-    <string name="friends_title_changePassword">Change Password</string>
-    <string name="friends_snack_changedPassword">Changed Password</string>
-    <string name="friends_title_enterNewPassword">Enter your new Password</string>
-    <string name="friends_title_logOut">Logout</string>
-    <string name="friends_button_addFriend">Add</string>
-    <string name="friends_button_removeFriend">Remove</string>
-    <string name="friends_button_changePassword">Change</string>
-    <string name="friends_button_logOut">@string/friends_title_logOut</string>
-    <string name="friends_button_cancel">Cancel</string>
+    <string name="friends_title_addFriend">Freund hinzufügen</string>
+    <string name="friends_title_removeFriend">Freund entfernen</string>
+    <string name="friends_title_changePassword">Passwort ändern</string>
+    <string name="friends_snack_changedPassword">Passwort geändert</string>
+    <string name="friends_title_enterNewPassword">Gebe dein neues Passwort ein</string>
+    <string name="friends_title_logOut">Abmelden</string>
+    <string name="friends_button_addFriend">Hinzufügen</string>
+    <string name="friends_button_removeFriend">Entfernen</string>
+    <string name="friends_button_changePassword">Ändern</string>
+    <string name="friends_button_logOut">@string/friends_button_addFriend</string>
+    <string name="friends_button_cancel">Abbrechen</string>
 
     <string name="friends_hint_friendname">@string/login_hint_username</string>
-    <string name="friends_hint_oldPassword">Old Password</string>
-    <string name="friends_hint_newPassword">New Password</string>
-    <string name="friends_hint_newPasswordRepeat">Repeat New Password</string>
+    <string name="friends_hint_oldPassword">Altes Passwort</string>
+    <string name="friends_hint_newPassword">Neues Passwort</string>
+    <string name="friends_hint_newPasswordRepeat">Neues Passwort wiederholen</string>
 
-    <string name="friends_error_illegalDate">Wrong date format</string>
+    <string name="friends_error_illegalDate">Falsches Datumsformat</string>
     <string name="friends_error_unknownFriend">@string/login_error_unknownUser</string>
-    <string name="friends_error_duplicateFriend">Friend already added</string>
-    <string name="friends_error_wrongOldPassword">Old Password not correct</string>
-    <string name="friends_error_wrongPasswordRepeat">Repeated Password not correct</string>
-    <string name="friends_text_changedSuccess">Password changed</string>
-    <string name="friends_text_logOut">Do you really want to log out?</string>
+    <string name="friends_error_duplicateFriend">Freund bereits hinzugefügt</string>
+    <string name="friends_error_wrongOldPassword">Altes Passwort ist nicht korrekt</string>
+    <string name="friends_error_wrongPasswordRepeat">Neue Passwörter stimmen nicht überein</string>
+    <string name="friends_text_changedSuccess">Passwort geändert</string>
+    <string name="friends_text_logOut">Möchtest du dich wirklich abmelden?</string>
 
     //message
-    <string name="message_button_send">Send</string>
-    <string name="message_hint_sendText">Type message</string>
-    <string name="message_button_filterOffset">Filter offset</string>
+    <string name="message_button_send">Senden</string>
+    <string name="message_hint_sendText">Deine Nachricht</string>
+    <string name="message_button_filterOffset">Filtern</string>
     <string name="message_button_filter">Filter</string>
     <string name="message_button_cancel">@string/friends_button_cancel</string>
 
-    <string name="message_info_sentPending">Pending</string>
-    <string name="message_info_sentFailed">Failed to send</string>
+    <string name="message_info_sentPending">Warte</string>
+    <string name="message_info_sentFailed">Senden fehlgeschlagen</string>
 
 
     //====================mockup text================================

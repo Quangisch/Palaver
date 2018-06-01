@@ -11,10 +11,13 @@ import java.util.List;
 import de.web.ngthi.palaver.mvp.model.Message;
 import de.web.ngthi.palaver.mvp.model.User;
 
-public class ServerDataMapper {
-
+public final class ServerDataMapper {
 
     private static ObjectMapper mapper = new ObjectMapper();
+
+    private ServerDataMapper() {
+        //static helper class
+    }
 
     public static List<Message> mapToMessages(ServerReply reply) {
         List<Message> messages = new LinkedList<>();

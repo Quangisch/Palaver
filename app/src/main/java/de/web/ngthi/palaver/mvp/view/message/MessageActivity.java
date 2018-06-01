@@ -124,8 +124,9 @@ public class MessageActivity extends AppCompatActivity implements MessageContrac
 
     @Override
     public void onRestart() {
-        super.onRestart();
+        presenter.subscribe(this);
         notifyDataSetChanged();
+        super.onRestart();
     }
 
     @Override

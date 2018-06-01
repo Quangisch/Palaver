@@ -29,9 +29,9 @@ public class LoginActivity extends AppCompatActivity implements LoginContract.Vi
     private TextView header;
     private LoginState state;
     private LoginBaseFragment currentFragment;
-    private LoginUserFragment userFragment;
-    private LoginRegisterFragment registerFragment;
-    private LoginPasswordFragment passwordFragment;
+    private LoginBaseFragment userFragment;
+    private LoginBaseFragment registerFragment;
+    private LoginBaseFragment passwordFragment;
 
     public LoginActivity() {
         Log.d(TAG, "==============constructor==============");
@@ -68,6 +68,12 @@ public class LoginActivity extends AppCompatActivity implements LoginContract.Vi
     public void onStop() {
         presenter.dispose();
         super.onStop();
+    }
+
+    @Override
+    public void onRestart() {
+        presenter.subscribe(this);
+        super.onRestart();
     }
 
     @Override

@@ -46,7 +46,7 @@ dependencies {
     //google
     implementation 'com.google.firebase:firebase-messaging:15.0.2'
     implementation 'com.google.firebase:firebase-core:15.0.2'
-    api group: 'com.android.support', name: 'multidex', version: '1.0.3'
+    implementation 'com.android.support:multidex:1.0.3'
 
     //helper
     api 'com.fasterxml.jackson.core:jackson-core:2.9.5'

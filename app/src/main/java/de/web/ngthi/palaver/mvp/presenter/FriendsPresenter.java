@@ -110,7 +110,9 @@ public class FriendsPresenter extends BasePresenter<FriendsContract.View> implem
         switch(type) {
             case FRIENDS_ADD_OK: updateDataList();
                 break;
-            case FRIENDS_ADD_FAILED: getView().showDuplicateFriendError();
+            case FRIENDS_ADD_FAILED_ALREADY_ADDED: getView().showDuplicateFriendError();
+                break;
+            case FRIENDS_ADD_FAILED_UNKNOWN: getView().showUnknownFriendError();
                 break;
         }
     }
