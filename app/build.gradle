@@ -51,6 +51,7 @@ dependencies {
     //helper
     api 'com.fasterxml.jackson.core:jackson-core:2.9.5'
     api 'joda-time:joda-time:2.9.9'
+    api group: 'com.jakewharton', name: 'butterknife', version: '8.8.1'
     compileOnly 'org.projectlombok:lombok:1.16.20'
     annotationProcessor 'org.projectlombok:lombok:1.16.20'
 

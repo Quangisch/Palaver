@@ -9,7 +9,7 @@ import android.widget.Toast;
 import de.web.ngthi.palaver.R;
 import de.web.ngthi.palaver.mvp.contract.BaseContract;
 
-public abstract class BaseActivity<P extends BaseContract.Presenter> extends AppCompatActivity implements BaseContract.View {
+public abstract class BaseActivity<P extends BaseContract.Presenter<BaseContract.View>> extends AppCompatActivity implements BaseContract.View {
 
     private P presenter;
     private ProgressBar progressBar;
