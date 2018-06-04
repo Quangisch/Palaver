@@ -17,7 +17,6 @@ import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
 import de.web.ngthi.palaver.R;
-import de.web.ngthi.palaver.mvp.view.friends.FriendsActivity;
 import de.web.ngthi.palaver.mvp.view.message.MessageActivity;
 
 public class MyFirebaseMessagingService extends FirebaseMessagingService {

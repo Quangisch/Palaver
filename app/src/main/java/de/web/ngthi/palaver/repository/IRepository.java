@@ -14,9 +14,9 @@ public interface IRepository {
     void setLocalUser(@NonNull String username, @NonNull String password);
 
     //user
-    Single<Boolean> isValidUser(@NonNull String username);
-    Single<Boolean> isValidUser(@NonNull String username, @NonNull String password);
-    Single<Boolean> registerNewUser(@NonNull String username, @NonNull String password);
+    Single<ServerReplyType> isValidUser(@NonNull String username);
+    Single<ServerReplyType> isValidUser(@NonNull String username, @NonNull String password);
+    Single<ServerReplyType> registerNewUser(@NonNull String username, @NonNull String password);
     Single<ServerReplyType> changePassword(@NonNull String newPassword);
     Single<ServerReplyType> refreshToken(String token);
     //message

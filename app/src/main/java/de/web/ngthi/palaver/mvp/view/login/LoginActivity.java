@@ -8,6 +8,8 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.widget.TextView;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import de.web.ngthi.palaver.PalaverApplication;
 import de.web.ngthi.palaver.R;
 import de.web.ngthi.palaver.mvp.contract.LoginContract;
@@ -24,7 +26,8 @@ public class LoginActivity extends BaseActivity<LoginContract.Presenter> impleme
 
     public PalaverApplication application;
 
-    private TextView header;
+    @BindView(R.id.toolbar_login) Toolbar toolbar;
+    @BindView(R.id.textview_loginactivity_header) TextView header;
     private LoginState state;
     private LoginBaseFragment currentFragment;
     private LoginBaseFragment userFragment;
@@ -40,16 +43,14 @@ public class LoginActivity extends BaseActivity<LoginContract.Presenter> impleme
         setTheme(R.style.AppTheme_NoActionBar);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        setViewGroup(findViewById(R.id.linearlayout_login));
-        setProgressBar(findViewById(R.id.progressbar_login));
+        ButterKnife.bind(this);
 
         application = (PalaverApplication) getApplication();
         setPresenter(new LoginPresenter(this, application.getRepository()));
-        Toolbar toolbar = findViewById(R.id.toolbar_login);
+
         toolbar.setTitle(R.string.app_name);
         setSupportActionBar(toolbar);
 
-        header = findViewById(R.id.textview_loginactivity_header);
         userFragment = new LoginUserFragment();
         registerFragment = new LoginRegisterFragment();
         passwordFragment = new LoginPasswordFragment();
@@ -116,18 +117,8 @@ public class LoginActivity extends BaseActivity<LoginContract.Presenter> impleme
     }
 
     @Override
-    public void showPasswordTooLong() {
-        currentFragment.makeSnack(R.string.global_error_passwordLong);
-    }
-
-    @Override
     public void showUsernameTooShort() {
         currentFragment.makeSnack(R.string.global_error_usernameShort);
-    }
-
-    @Override
-    public void showUsernameTooLong() {
-        currentFragment.makeSnack(R.string.global_error_usernameLong);
     }
 
     @Override

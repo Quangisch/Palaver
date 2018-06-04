@@ -20,6 +20,8 @@ import android.widget.TimePicker;
 
 import java.util.Calendar;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import de.web.ngthi.palaver.PalaverApplication;
 import de.web.ngthi.palaver.R;
 import de.web.ngthi.palaver.mvp.contract.MessageContract;
@@ -31,11 +33,13 @@ public class MessageActivity extends BaseActivity<MessageContract.Presenter> imp
 
     private final String TAG = MessageActivity.class.getSimpleName();
 
-    private Button sendButton;
-    private EditText messageField;
+    @BindView(R.id.button_message_send) Button sendButton;
+    @BindView(R.id.edittext_message_sendtext) EditText messageField;
+    @BindView(R.id.recyclerview_message) RecyclerView mMessageRecycler;
+    @BindView(R.id.swiperefresh_message) SwipeRefreshLayout swipeLayout;
+    @BindView(R.id.toolbar_message) Toolbar toolbar;
+
     private RecyclerView.Adapter mMessageAdapter;
-    private RecyclerView mMessageRecycler;
-    private SwipeRefreshLayout swipeLayout;
     private Menu menu;
 
     public MessageActivity() {
@@ -47,14 +51,12 @@ public class MessageActivity extends BaseActivity<MessageContract.Presenter> imp
         setTheme(R.style.AppTheme_NoActionBar);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_message);
-        setViewGroup(findViewById(R.id.coordinatorlayout_message));
-        setProgressBar(findViewById(R.id.progressbar_message));
+        ButterKnife.bind(this);
 
         String friendName = getIntent().getStringExtra(getString(R.string.intent_friend_message));
         PalaverApplication application = (PalaverApplication) getApplication();
         setPresenter(new MessagePresenter(this, application.getRepository(), friendName));
 
-        Toolbar toolbar = findViewById(R.id.toolbar_message);
         toolbar.setTitle(friendName);
         toolbar.setNavigationOnClickListener(new BackListener());
         setSupportActionBar(toolbar);
@@ -62,12 +64,9 @@ public class MessageActivity extends BaseActivity<MessageContract.Presenter> imp
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
 
-        messageField = findViewById(R.id.edittext_message_sendtext);
-        sendButton = findViewById(R.id.button_message_send);
         sendButton.setOnClickListener(this);
 
         mMessageAdapter = new MessageListAdapter(getPresenter());
-        mMessageRecycler = findViewById(R.id.recyclerview_message);
         mMessageRecycler.setAdapter(mMessageAdapter);
         mMessageRecycler.addOnLayoutChangeListener((v, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom) -> {
             if (bottom < oldBottom)
@@ -75,7 +74,6 @@ public class MessageActivity extends BaseActivity<MessageContract.Presenter> imp
         });
         mMessageRecycler.setLayoutManager(new LinearLayoutManager(this));
 
-        swipeLayout = findViewById(R.id.swiperefresh_message);
         swipeLayout.setOnRefreshListener(() -> {
             Log.d(TAG, "refresh swipe");
             swipeLayout.setRefreshing(true);

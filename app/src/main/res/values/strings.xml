@@ -8,10 +8,9 @@
     <string name="saved_password_key">password</string>
     <string name="intent_friend_message">friend_message</string>
 
-    <string name="global_error_usernameShort">Username is too short</string>
-    <string name="global_error_usernameLong">Username is too long</string>
-    <string name="global_error_passwordShort">Password is too short</string>
-    <string name="global_error_passwordLong">Password is too long</string>
+    <string name="global_error_usernamePasswordShort">Username and password must be at least 3 characters long</string>
+    <string name="global_error_passwordShort">Password must be at least 3 characters long</string>
+    <string name="global_error_usernameShort">Username must be at least 3 characters long</string>
 
     //login
     <string name="login_welcome">Welcome</string>

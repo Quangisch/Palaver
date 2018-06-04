@@ -13,9 +13,7 @@ public interface LoginContract {
         void loginNow(String username, String password);
 
         void showPasswordTooShort();
-        void showPasswordTooLong();
         void showUsernameTooShort();
-        void showUsernameTooLong();
 
     }
 

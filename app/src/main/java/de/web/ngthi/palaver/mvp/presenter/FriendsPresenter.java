@@ -9,7 +9,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import de.web.ngthi.palaver.Configuration;
 import de.web.ngthi.palaver.mvp.contract.FriendsContract;
 import de.web.ngthi.palaver.mvp.model.Message;
 import de.web.ngthi.palaver.mvp.model.User;
@@ -158,25 +157,34 @@ public class FriendsPresenter extends BasePresenter<FriendsContract.View> implem
         updateDataList();
     }
 
-    private void checkOldPassword(boolean valid, String newPassword, String newPasswordRepeat) {
-        Log.d(getClass().getSimpleName(), String.format("checkOldPassword(%b, %s, %s)", valid, newPassword, newPasswordRepeat));
-        Log.d(getClass().getSimpleName(), String.format("%d < %d < %d)", Configuration.MIN_PASSWORD_LENGTH, newPassword.length(), Configuration.MAX_PASSWORD_LENGTH));
-        if(valid) {
-            if(newPassword.equals(newPasswordRepeat)) {
-                if(newPassword.length() < Configuration.MIN_PASSWORD_LENGTH)
-                    getView().showPasswordTooShort();
-                else if(newPassword.length() > Configuration.MAX_PASSWORD_LENGTH)
-                    getView().showPasswordTooLong();
-                else {
+    private void checkOldPassword(ServerReplyType replyType, String newPassword, String newPasswordRepeat) {
+        Log.d(getClass().getSimpleName(), String.format("checkOldPassword(%b, %s, %s)", replyType, newPassword, newPasswordRepeat));
+        switch(replyType) {
+            default:
+            case USER_PASSWORD_FAILED:
+                getView().showWrongOldPassword();
+                break;
+
+            case USER_PASSWORD_OK:
+                if(!newPassword.equals(newPasswordRepeat)) {
+                    getView().showWrongPasswordRepeat();
+                } else {
                     addDisposable(getRepository().changePassword(newPassword)
                             .compose(applySchedulers())
-                            .subscribe(u -> getView().showChangedPassword(), this::showNetworkError));
+                            .subscribe(this::checkNewPassword, this::showNetworkError));
                 }
-            } else {
-                getView().showWrongPasswordRepeat();
-            }
-        } else {
-            getView().showWrongOldPassword();
+                break;
+        }
+    }
+
+    private void checkNewPassword(ServerReplyType replyType) {
+        switch(replyType) {
+            case USER_VALIDATE_FAILED_SHORT:
+                getView().showPasswordTooShort();
+                break;
+            case USER_PASSWORD_OK:
+                getView().showChangedPassword();
+                break;
         }
     }
 

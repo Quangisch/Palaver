@@ -8,16 +8,15 @@ import java.util.List;
 import javax.inject.Inject;
 
 import dagger.Module;
+import de.web.ngthi.palaver.mvp.model.Message;
+import de.web.ngthi.palaver.mvp.model.User;
 import de.web.ngthi.palaver.network.controller.FriendsService;
 import de.web.ngthi.palaver.network.controller.MessageService;
 import de.web.ngthi.palaver.network.controller.RestController;
 import de.web.ngthi.palaver.network.controller.UserService;
 import de.web.ngthi.palaver.network.dto.ServerDataMapper;
-import de.web.ngthi.palaver.network.dto.ServerReply;
 import de.web.ngthi.palaver.network.dto.ServerReplyType;
 import de.web.ngthi.palaver.network.dto.ServerRequest;
-import de.web.ngthi.palaver.mvp.model.Message;
-import de.web.ngthi.palaver.mvp.model.User;
 import io.reactivex.Single;
 import retrofit2.Retrofit;
 
@@ -48,33 +47,33 @@ public class RestRepository implements IRepository {
         this.password = password;
     }
 
-    public Single<Boolean> isValidUser(@NonNull String username) {
-        ServerRequest request = new ServerRequest.Builder()
-                .username(username)
-                .build();
-        return Single.fromCallable(() -> ServerReplyType.isType(ServerReplyType.USER_VALIDATE_FAILED_PASSWORD, userService.validate(request).blockingGet()));
-    }
-
-    public Single<Boolean> isValidUser(@NonNull String username, @NonNull String password) {
-        ServerRequest request = new ServerRequest.Builder()
-                .username(username)
-                .password(password)
-                .build();
-        return Single.fromCallable(() -> ServerReplyType.isType(ServerReplyType.USER_VALIDATE_OK, userService.validate(request).blockingGet()));
-    }
-
-    public Single<Boolean> registerNewUser(@NonNull String username, @NonNull String password) {
-        ServerRequest request = new ServerRequest.Builder()
-                .username(username)
-                .password(password)
-                .build();
-        return Single.fromCallable(() -> ServerReplyType.isType(ServerReplyType.USER_REGISTER_OK, userService.register(request).blockingGet()));
-    }
-
     private ServerRequest.Builder localUser() {
         return new ServerRequest.Builder()
                 .username(username)
                 .password(password);
+    }
+
+    public Single<ServerReplyType> isValidUser(@NonNull String username) {
+        ServerRequest request = new ServerRequest.Builder()
+                .username(username)
+                .build();
+        return Single.fromCallable(() -> ServerReplyType.getType(userService.validate(request).blockingGet()));
+    }
+
+    public Single<ServerReplyType> isValidUser(@NonNull String username, @NonNull String password) {
+        ServerRequest request = new ServerRequest.Builder()
+                .username(username)
+                .password(password)
+                .build();
+        return Single.fromCallable(() -> ServerReplyType.getType(userService.validate(request).blockingGet()));
+    }
+
+    public Single<ServerReplyType> registerNewUser(@NonNull String username, @NonNull String password) {
+        ServerRequest request = new ServerRequest.Builder()
+                .username(username)
+                .password(password)
+                .build();
+        return Single.fromCallable(() -> ServerReplyType.getType(userService.register(request).blockingGet()));
     }
 
     @Override
@@ -86,7 +85,7 @@ public class RestRepository implements IRepository {
     @Override
     public Single<ServerReplyType> refreshToken(String token) {
         ServerRequest request = localUser().token(token).build();
-;        return Single.fromCallable(() -> ServerReplyType.getType(userService.refreshToken(request).blockingGet()));
+        return Single.fromCallable(() -> ServerReplyType.getType(userService.refreshToken(request).blockingGet()));
     }
 
     @Override
@@ -135,8 +134,6 @@ public class RestRepository implements IRepository {
 
     public Single<List<User>> getFriendList() {
         ServerRequest request = localUser().build();
-
         return Single.fromCallable(() -> ServerDataMapper.mapToFriends(friendsService.getFriends(request).blockingGet()));
-
     }
 }

@@ -7,6 +7,7 @@ public enum ServerReplyType {
     //VALIDATION
     USER_VALIDATE_FAILED_PASSWORD(0, "Passwort nicht korrekt"),
     USER_VALIDATE_FAILED_USERNAME(0, "Benutzer existiert nicht"),
+    USER_VALIDATE_FAILED_SHORT(0, "Benutzer und Passwort müssen mindestens 3 Zeichen lang sein"),
     USER_PASSWORD_OK(1, "Passwort erfolgreich aktualisiert"),
     USER_PASSWORD_FAILED(0, "Altes Passwort nicht korrekt"),
     USER_PUSHTOKEN_OK(1, "PushToken erfolgreich aktualisiert"),

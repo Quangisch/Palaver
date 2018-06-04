@@ -3,9 +3,9 @@ package de.web.ngthi.palaver.mvp.presenter;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
-import de.web.ngthi.palaver.Configuration;
 import de.web.ngthi.palaver.mvp.contract.LoginContract;
 import de.web.ngthi.palaver.mvp.view.login.LoginState;
+import de.web.ngthi.palaver.network.dto.ServerReplyType;
 import de.web.ngthi.palaver.repository.IRepository;
 
 public class LoginPresenter extends BasePresenter<LoginContract.View> implements LoginContract.Presenter {
@@ -21,57 +21,68 @@ public class LoginPresenter extends BasePresenter<LoginContract.View> implements
     @Override
     public void onUsernameInput(@NonNull String username, LoginState nextStateRequest) {
         Log.d(TAG, String.format("onUsernameInput(%s, %s)", username, nextStateRequest.toString()));
-        if(username.length() < Configuration.MIN_USERNAME_LENGTH)
-            getView().showUsernameTooShort();
-        else if(username.length() > Configuration.MAX_USERNAME_LENGTH)
-            getView().showUsernameTooLong();
-        else {
-            addDisposable(getRepository().isValidUser(username)
-                    .compose(applySchedulers())
-                    .subscribe(u -> updateState(u, username, nextStateRequest)));
-        }
+        addDisposable(getRepository().isValidUser(username)
+                .compose(applySchedulers())
+                .subscribe(u -> updateState(u, username, nextStateRequest)));
     }
 
-    private void updateState(boolean existingUsername, String username, LoginState nextState) {
-        Log.d(TAG, String.format("updateState(%b, %s, %s)", existingUsername, username, nextState.toString()));
-        if(nextState == LoginState.PASSWORD) {
-            if(existingUsername) {
-                getView().switchState(nextState, username);
-                this.username = username;
-            } else {
-                getView().showNotExistingUserError();
-            }
-        } else if(nextState == LoginState.REGISTER) {
-            if(!existingUsername) {
-                getView().switchState(nextState, username);
-                this.username = username;
-            } else {
-                getView().showUserAlreadyExistsError();
+    private void updateState(ServerReplyType replyType, String username, LoginState nextState) {
+        Log.d(TAG, String.format("updateState(%b, %s, %s)", replyType, username, nextState.toString()));
+        if(username.length() < 3) {
+            getView().showUsernameTooShort();
+        } else {
+            switch(replyType) {
+                case USER_VALIDATE_FAILED_USERNAME:
+                    if(nextState.equals(LoginState.REGISTER)) {
+                        this.username = username;
+                        getView().switchState(nextState, username);
+                    } else if(nextState.equals(LoginState.PASSWORD)){
+                        getView().showNotExistingUserError();
+                    }
+                    break;
+
+                case USER_VALIDATE_FAILED_PASSWORD:
+                    if(nextState.equals(LoginState.PASSWORD)) {
+                        this.username = username;
+                        getView().switchState(nextState, username);
+                    } else if(nextState.equals(LoginState.REGISTER)){
+                        getView().showUserAlreadyExistsError();
+                    }
+                    break;
             }
         }
+
     }
 
 
     @Override
     public void onPasswordInput(@NonNull String password) {
-        Log.d(TAG, String.format("onPasswordInput(%s)", password));
-        if(password.length() < Configuration.MIN_PASSWORD_LENGTH)
-            getView().showPasswordTooShort();
-        else if(password.length() > Configuration.MAX_PASSWORD_LENGTH)
-            getView().showPasswordTooLong();
-        else {
-            addDisposable(getRepository().isValidUser(username, password)
-                    .compose(applySchedulers())
-                    .subscribe(u -> login(u, username, password), this::showNetworkError));
-        }
+        addDisposable(getRepository().isValidUser(username, password)
+                .compose(applySchedulers())
+                .subscribe(u -> login(u, username, password), this::showNetworkError));
     }
 
-    private void login(boolean validLogin, String username, String password) {
-        if(validLogin) {
-            getRepository().setLocalUser(username, password);
-            getView().loginNow(username, password);
-        } else {
-            getView().showWrongPasswordError();
+    private void login(ServerReplyType replyType, String username, String password) {
+        switch(replyType) {
+            case USER_VALIDATE_OK:
+            case USER_REGISTER_OK:
+                getRepository().setLocalUser(username, password);
+                getView().loginNow(username, password);
+                break;
+
+            case USER_VALIDATE_FAILED_SHORT:
+                getView().showPasswordTooShort();
+                break;
+
+            case USER_VALIDATE_FAILED_USERNAME:
+                getView().showUserAlreadyExistsError();
+                break;
+
+            case USER_VALIDATE_FAILED_PASSWORD:
+            default:
+                getView().showWrongPasswordError();
+                break;
+
         }
     }
 

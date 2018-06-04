@@ -39,20 +39,20 @@ public class LocalRepository implements IRepository {
     }
 
     @Override
-    public Single<Boolean> isValidUser(@NonNull String username) {
-        return Single.just(getLocalUser().getUsername().equals(username));
+    public Single<ServerReplyType> isValidUser(@NonNull String username) {
+        return Single.just(getLocalUser().getUsername().equals(username) ? ServerReplyType.USER_VALIDATE_OK : ServerReplyType.USER_VALIDATE_FAILED_USERNAME);
     }
 
     @Override
-    public Single<Boolean> isValidUser(@NonNull String username, @NonNull String password) {
+    public Single<ServerReplyType> isValidUser(@NonNull String username, @NonNull String password) {
         boolean matchingName = getLocalUser().getUsername().equals(username);
         boolean matchingPassword = getLocalUser().getPassword().equals(password);
-        return Single.just(matchingName && matchingPassword);
+        return Single.just(matchingName && matchingPassword ? ServerReplyType.USER_VALIDATE_OK : ServerReplyType.USER_VALIDATE_FAILED_PASSWORD);
     }
 
     @Override
-    public Single<Boolean> registerNewUser(@NonNull String username, @NonNull String password) {
-        return Single.just(false);
+    public Single<ServerReplyType> registerNewUser(@NonNull String username, @NonNull String password) {
+        return Single.just(ServerReplyType.USER_REGISTER_OK);
     }
 
     @Override

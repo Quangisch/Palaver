@@ -12,7 +12,6 @@ public interface FriendsContract {
         void showWrongOldPassword();
         void showWrongPasswordRepeat();
         void showPasswordTooShort();
-        void showPasswordTooLong();
         void showChangedPassword();
 
         void onSwipeRefreshEnd();

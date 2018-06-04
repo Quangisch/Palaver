@@ -18,6 +18,8 @@ import android.view.View;
 
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import de.web.ngthi.palaver.PalaverApplication;
 import de.web.ngthi.palaver.R;
 import de.web.ngthi.palaver.mvp.contract.FriendsContract;
@@ -37,7 +39,9 @@ public class FriendsActivity extends BaseActivity<FriendsContract.Presenter>
     public PalaverApplication application;
     private RecyclerView.Adapter friendsAdapter;
     private ChangePasswordDialogFragment changeDialog;
-    private SwipeRefreshLayout swipeLayout;
+    @BindView(R.id.recyclerview_friends) RecyclerView friendsRecycler;
+    @BindView(R.id.swiperefresh_friends) SwipeRefreshLayout swipeLayout;
+    @BindView(R.id.toolbar_friends) Toolbar toolbar;
 
     public FriendsActivity() {
         Log.d(TAG, "==============constructor==============");
@@ -48,19 +52,16 @@ public class FriendsActivity extends BaseActivity<FriendsContract.Presenter>
         setTheme(R.style.AppTheme_NoActionBar);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_friends);
-        setViewGroup(findViewById(R.id.linearlayout_login));
-        setProgressBar(findViewById(R.id.progressbar_friends));
+        ButterKnife.bind(this);
 
         application = (PalaverApplication) getApplication();
         setPresenter(new FriendsPresenter(this, application.getRepository(), application.getLocalUsername(), application.getLocalPassword()));
-        Toolbar toolbar = findViewById(R.id.toolbar_friends);
         toolbar.setTitle(R.string.app_name);
         setSupportActionBar(toolbar);
 
         //RecyclerView
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         friendsAdapter = new FriendsListAdapter(getPresenter());
-        RecyclerView friendsRecycler = findViewById(R.id.recyclerview_friends);
         friendsRecycler.setAdapter(friendsAdapter);
         friendsRecycler.setLayoutManager(layoutManager);
 
@@ -68,7 +69,6 @@ public class FriendsActivity extends BaseActivity<FriendsContract.Presenter>
                 layoutManager.getOrientation());
         friendsRecycler.addItemDecoration(dividerItemDecoration);
 
-        swipeLayout = findViewById(R.id.swiperefresh_friends);
         swipeLayout.setOnRefreshListener(() -> {
             Log.d(TAG, "swipe refresh");
             swipeLayout.setRefreshing(true);
@@ -166,11 +166,6 @@ public class FriendsActivity extends BaseActivity<FriendsContract.Presenter>
     @Override
     public void showPasswordTooShort() {
         mackSnack(R.string.global_error_passwordShort);
-    }
-
-    @Override
-    public void showPasswordTooLong() {
-        mackSnack(R.string.global_error_passwordLong);
     }
 
     @Override

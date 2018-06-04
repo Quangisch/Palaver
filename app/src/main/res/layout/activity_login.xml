@@ -10,7 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:id="@+id/linearlayout_login"
+        android:id="@+id/layout_inner"
         tools:context=".mvp.view.login.LoginActivity">
 
         <include android:id="@+id/toolbar_login" layout="@layout/toolbar"/>
@@ -37,7 +37,7 @@
 
     <ProgressBar
         style="?android:attr/progressBarStyleLarge"
-        android:id="@+id/progressbar_login"
+        android:id="@+id/progressbar"
         android:indeterminate="true"
         android:layout_gravity="center"
         android:layout_height="wrap_content"

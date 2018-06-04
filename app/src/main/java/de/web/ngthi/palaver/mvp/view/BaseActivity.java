@@ -6,23 +6,16 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import butterknife.BindView;
 import de.web.ngthi.palaver.R;
 import de.web.ngthi.palaver.mvp.contract.BaseContract;
 
-public abstract class BaseActivity<P extends BaseContract.Presenter<BaseContract.View>> extends AppCompatActivity implements BaseContract.View {
+public abstract class BaseActivity<P extends BaseContract.Presenter> extends AppCompatActivity implements BaseContract.View {
 
     private P presenter;
-    private ProgressBar progressBar;
-    private ViewGroup viewGroup;
+    @BindView(R.id.progressbar) ProgressBar progressBar;
+    @BindView(R.id.layout_inner) ViewGroup viewGroup;
     private boolean loading;
-
-    protected void setProgressBar(ProgressBar progressBar) {
-        this.progressBar = progressBar;
-    }
-
-    protected void setViewGroup(ViewGroup viewGroup) {
-        this.viewGroup = viewGroup;
-    }
 
     public void startLoading() {
         if(!loading) {
@@ -62,6 +55,7 @@ public abstract class BaseActivity<P extends BaseContract.Presenter<BaseContract
         Toast.makeText(this, R.string.error_network_message, Toast.LENGTH_LONG).show();
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public void onRestart() {
         presenter.subscribe(this);
