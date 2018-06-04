@@ -1,6 +1,7 @@
 package de.web.ngthi.palaver.mvp.view.login;
 
 import android.app.Fragment;
+import android.support.design.widget.Snackbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -15,7 +16,6 @@ abstract class LoginBaseFragment extends Fragment implements View.OnClickListene
     private View view;
     private EditText primaryField;
     private Button primaryButton;
-    private TextView errorField;
 
     @Override
     public void onStart() {
@@ -23,7 +23,6 @@ abstract class LoginBaseFragment extends Fragment implements View.OnClickListene
 
         primaryField = view.findViewById(R.id.edittext_login_primary);
         primaryButton = view.findViewById(R.id.button_login_primary);
-        errorField = view.findViewById(R.id.textview_login_error);
 
         primaryButton.setOnClickListener(this);
     }
@@ -37,15 +36,13 @@ abstract class LoginBaseFragment extends Fragment implements View.OnClickListene
         super.onPause();
 
         clearPrimaryString();
-        clearErrorField();
     }
 
-    public void setErrorField(String errorMessage) {
-        errorField.setText(errorMessage);
+    public void makeSnack(int errorResID) {
+        makeSnack(getString(errorResID));
     }
-
-    public void clearErrorField() {
-        errorField.setText("");
+    public void makeSnack(String errorMessage) {
+        Snackbar.make(view, errorMessage, Snackbar.LENGTH_LONG).show();
     }
 
     public String getPrimaryString() {

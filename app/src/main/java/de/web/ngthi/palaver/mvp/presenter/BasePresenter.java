@@ -5,9 +5,14 @@ import android.util.Log;
 
 import de.web.ngthi.palaver.mvp.contract.BaseContract;
 import de.web.ngthi.palaver.repository.IRepository;
+import io.reactivex.Single;
+import io.reactivex.SingleSource;
+import io.reactivex.SingleTransformer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.plugins.RxJavaPlugins;
+import io.reactivex.schedulers.Schedulers;
 
 public abstract class BasePresenter<V extends BaseContract.View> implements BaseContract.Presenter<V> {
 
@@ -74,6 +79,29 @@ public abstract class BasePresenter<V extends BaseContract.View> implements Base
     public void dispose() {
         onStop();
         unsubscribe();
+    }
+
+    protected <T> SingleTransformer<T, T> applySchedulers() {
+        return new SingleTransformer<T, T>() {
+            @Override
+            public SingleSource<T> apply(Single<T> observable) {
+                return observable
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .compose(applyLoader());
+            }
+        };
+    }
+
+    protected <T> SingleTransformer<T, T> applyLoader() {
+        return new SingleTransformer<T, T>() {
+            @Override
+            public SingleSource<T> apply(Single<T> observable) {
+                return observable
+                        .doOnSubscribe(d -> getView().startLoading())
+                        .doAfterTerminate(() -> getView().endLoading());
+            }
+        };
     }
 
 }

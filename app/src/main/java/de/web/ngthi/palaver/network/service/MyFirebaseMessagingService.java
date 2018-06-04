@@ -18,6 +18,7 @@ import com.google.firebase.messaging.RemoteMessage;
 
 import de.web.ngthi.palaver.R;
 import de.web.ngthi.palaver.mvp.view.friends.FriendsActivity;
+import de.web.ngthi.palaver.mvp.view.message.MessageActivity;
 
 public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
@@ -46,18 +47,19 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 remoteMessage.getMessageId()));
 
 
-        Intent intent = new Intent(this, FriendsActivity.class);
+        String sender = remoteMessage.getData().get("sender");
+        String messagePreview = remoteMessage.getData().get("preview");
 
-        String messageFrom = "Peter32"; //TODO remoteMessage.getFrom() ?
-        intent.putExtra(getString(R.string.intent_friend_message), messageFrom);
+        Intent intent = new Intent(this, MessageActivity.class);
+        intent.putExtra(getString(R.string.intent_friend_message), sender);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_ONE_SHOT);
 
         Uri soundUri= RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, CHANNEL_ID)
                 .setSmallIcon(R.drawable.palaver_icon)
-                .setContentTitle(remoteMessage.getData().get("title"))
-                .setContentText(remoteMessage.getData().get("message"))
+                .setContentTitle(sender)
+                .setContentText(messagePreview)
                 .setAutoCancel(true)
                 .setSound(soundUri)
                 .setContentIntent(pendingIntent);

@@ -34,5 +34,15 @@
             android:orientation="vertical"
             android:layout_weight="10"/>
     </LinearLayout>
+
+    <ProgressBar
+        style="?android:attr/progressBarStyleLarge"
+        android:id="@+id/progressbar_login"
+        android:indeterminate="true"
+        android:layout_gravity="center"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:visibility="gone"/>
+
 </android.support.design.widget.CoordinatorLayout>
 

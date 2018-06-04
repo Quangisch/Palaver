@@ -4,9 +4,7 @@ import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.Snackbar;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -26,13 +24,13 @@ import de.web.ngthi.palaver.PalaverApplication;
 import de.web.ngthi.palaver.R;
 import de.web.ngthi.palaver.mvp.contract.MessageContract;
 import de.web.ngthi.palaver.mvp.presenter.MessagePresenter;
+import de.web.ngthi.palaver.mvp.view.BaseActivity;
 import de.web.ngthi.palaver.mvp.view.friends.FriendsActivity;
 
-public class MessageActivity extends AppCompatActivity implements MessageContract.View, View.OnClickListener {
+public class MessageActivity extends BaseActivity<MessageContract.Presenter> implements MessageContract.View, View.OnClickListener {
 
     private final String TAG = MessageActivity.class.getSimpleName();
 
-    public MessageContract.Presenter presenter;
     private Button sendButton;
     private EditText messageField;
     private RecyclerView.Adapter mMessageAdapter;
@@ -49,10 +47,12 @@ public class MessageActivity extends AppCompatActivity implements MessageContrac
         setTheme(R.style.AppTheme_NoActionBar);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_message);
+        setViewGroup(findViewById(R.id.coordinatorlayout_message));
+        setProgressBar(findViewById(R.id.progressbar_message));
 
-        PalaverApplication application = (PalaverApplication) getApplication();
         String friendName = getIntent().getStringExtra(getString(R.string.intent_friend_message));
-        presenter = new MessagePresenter(this, application.getRepository(), friendName);
+        PalaverApplication application = (PalaverApplication) getApplication();
+        setPresenter(new MessagePresenter(this, application.getRepository(), friendName));
 
         Toolbar toolbar = findViewById(R.id.toolbar_message);
         toolbar.setTitle(friendName);
@@ -66,7 +66,7 @@ public class MessageActivity extends AppCompatActivity implements MessageContrac
         sendButton = findViewById(R.id.button_message_send);
         sendButton.setOnClickListener(this);
 
-        mMessageAdapter = new MessageListAdapter(presenter);
+        mMessageAdapter = new MessageListAdapter(getPresenter());
         mMessageRecycler = findViewById(R.id.recyclerview_message);
         mMessageRecycler.setAdapter(mMessageAdapter);
         mMessageRecycler.addOnLayoutChangeListener((v, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom) -> {
@@ -79,7 +79,7 @@ public class MessageActivity extends AppCompatActivity implements MessageContrac
         swipeLayout.setOnRefreshListener(() -> {
             Log.d(TAG, "refresh swipe");
             swipeLayout.setRefreshing(true);
-            presenter.onSwipeRefreshStart();
+            getPresenter().onSwipeRefreshStart();
         });
     }
 
@@ -96,8 +96,8 @@ public class MessageActivity extends AppCompatActivity implements MessageContrac
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
             case R.id.action_message_filter:
-                if(presenter.hasOffsetFilter()) {
-                    presenter.onRemoveFilterOffset();
+                if(getPresenter().hasOffsetFilter()) {
+                    getPresenter().onRemoveFilterOffset();
                     item.setTitle(getString(R.string.action_message_filter_deactivated));
                 } else {
                     showDateTimePicker();
@@ -111,34 +111,19 @@ public class MessageActivity extends AppCompatActivity implements MessageContrac
     }
 
     @Override
-    public void onDestroy() {
-        onStop();
-        super.onDestroy();
-    }
-
-    @Override
-    public void onStop() {
-        presenter.dispose();
-        super.onStop();
-    }
-
-    @Override
-    public void onRestart() {
-        presenter.subscribe(this);
-        notifyDataSetChanged();
-        super.onRestart();
-    }
-
-    @Override
     public void onBackPressed() {
-        presenter.onStop();
-        new BackListener().onClick(null);
+        if(isLoading())
+            endLoading();
+        else {
+            getPresenter().onStop();
+            new BackListener().onClick(null);
+        }
     }
 
     @Override
     public void onClick(View v) {
         if(v == sendButton) {
-            presenter.onMessageSend(messageField.getText().toString());
+            getPresenter().onMessageSend(messageField.getText().toString());
             messageField.setText("");
         }
     }
@@ -150,7 +135,7 @@ public class MessageActivity extends AppCompatActivity implements MessageContrac
     }
 
     private void scrollDown() {
-        int lastMessageIndex = Math.max(presenter.getRepositoriesRowsCount() - 1, 0);
+        int lastMessageIndex = Math.max(getPresenter().getRepositoriesRowsCount() - 1, 0);
         mMessageRecycler.smoothScrollToPosition(lastMessageIndex);
     }
 
@@ -159,17 +144,6 @@ public class MessageActivity extends AppCompatActivity implements MessageContrac
         if(swipeLayout != null)
             swipeLayout.setRefreshing(false);
     }
-
-    private void makeSnack(int resId) {
-        Snackbar.make(mMessageRecycler, getString(resId), Snackbar.LENGTH_LONG).show();
-    }
-
-    @Override
-    public void showNetworkError() {
-        onSwipeRefreshEnd();
-        makeSnack(R.string.error_network_message);
-    }
-
     private void showDateTimePicker() {
         final Calendar currentCalendar = Calendar.getInstance();
         new DatePickerDialog(
@@ -187,9 +161,9 @@ public class MessageActivity extends AppCompatActivity implements MessageContrac
                     this,
                     (TimePicker view, int hourOfDay,int minute) -> {
                         Log.d(TAG, String.format("showDateTimePicker: %d, %d, %d %d:%d", year, monthOfYear, dayOfMonth, hourOfDay, minute));
-                        presenter.onAddFilterOffset(year, monthOfYear, dayOfMonth, hourOfDay, minute);
+                        getPresenter().onAddFilterOffset(year, monthOfYear, dayOfMonth, hourOfDay, minute);
                         menu.findItem(R.id.action_message_filter)
-                                .setTitle(getString(R.string.action_message_filter_activated) + ": " + presenter.getOffsetString());},
+                                .setTitle(getString(R.string.action_message_filter_activated) + ": " + getPresenter().getOffsetString());},
                     currentCalendar.get(Calendar.HOUR_OF_DAY),
                     currentCalendar.get(Calendar.MINUTE),
                     true)

@@ -10,10 +10,10 @@ import java.util.List;
 import java.util.Map;
 
 import de.web.ngthi.palaver.Configuration;
-import de.web.ngthi.palaver.network.dto.ServerReplyType;
 import de.web.ngthi.palaver.mvp.contract.FriendsContract;
 import de.web.ngthi.palaver.mvp.model.Message;
 import de.web.ngthi.palaver.mvp.model.User;
+import de.web.ngthi.palaver.network.dto.ServerReplyType;
 import de.web.ngthi.palaver.repository.IRepository;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
@@ -33,17 +33,20 @@ public class FriendsPresenter extends BasePresenter<FriendsContract.View> implem
         addDisposable(getRepository().refreshToken(FirebaseInstanceId.getInstance().getToken())
                 .subscribeOn(Schedulers.computation())
                 .observeOn(AndroidSchedulers.mainThread())
+                .compose(applyLoader())
                 .subscribe(this::logToken, this::showNetworkError));
         updateDataList();
     }
+
+
+
     private void logToken(ServerReplyType reply) {
         Log.d(TAG, reply.toString());
     }
 
     private void updateDataList() {
         addDisposable(getRepository().getFriendList()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
+                .compose(applySchedulers())
                 .subscribe(this::updateDataList, this::showNetworkError));
     }
 
@@ -52,8 +55,7 @@ public class FriendsPresenter extends BasePresenter<FriendsContract.View> implem
 
         for(User friend : friends) {
             addDisposable(getRepository().getMessagesFrom(friend.getUsername())
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
+                    .compose(applySchedulers())
                     .subscribe(m -> updateDataMap(friend, m), this::showNetworkError));
         }
 
@@ -101,8 +103,7 @@ public class FriendsPresenter extends BasePresenter<FriendsContract.View> implem
     @Override
     public void onAddFriend(String friend) {
         addDisposable(getRepository().addFriend(friend)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
+                .compose(applySchedulers())
                 .subscribe(this::addFriend, this::showNetworkError));
     }
 
@@ -121,8 +122,7 @@ public class FriendsPresenter extends BasePresenter<FriendsContract.View> implem
     public void onRemoveFriend(List<String> friends) {
         for(String friend : friends) {
             addDisposable(getRepository().removeFriend(friend)
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
+                    .compose(applySchedulers())
                     .subscribe(this::removeFriend, this::showNetworkError));
         }
     }
@@ -149,8 +149,7 @@ public class FriendsPresenter extends BasePresenter<FriendsContract.View> implem
     @Override
     public void onChangePassword(String username, String oldPassword, String newPassword, String newPasswordRepeat) {
         addDisposable(getRepository().isValidUser(username, oldPassword)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
+                .compose(applySchedulers())
                 .subscribe(u -> checkOldPassword(u, newPassword, newPasswordRepeat), this::showNetworkError));
     }
 
@@ -170,8 +169,7 @@ public class FriendsPresenter extends BasePresenter<FriendsContract.View> implem
                     getView().showPasswordTooLong();
                 else {
                     addDisposable(getRepository().changePassword(newPassword)
-                            .subscribeOn(Schedulers.io())
-                            .observeOn(AndroidSchedulers.mainThread())
+                            .compose(applySchedulers())
                             .subscribe(u -> getView().showChangedPassword(), this::showNetworkError));
                 }
             } else {

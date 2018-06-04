@@ -9,7 +9,8 @@ public interface BaseContract {
     interface View {
         void onDestroy();
         void onStop();
-
+        void startLoading();
+        void endLoading();
         void showNetworkError();
     }
 

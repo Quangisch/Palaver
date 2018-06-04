@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -23,10 +22,11 @@ import de.web.ngthi.palaver.PalaverApplication;
 import de.web.ngthi.palaver.R;
 import de.web.ngthi.palaver.mvp.contract.FriendsContract;
 import de.web.ngthi.palaver.mvp.presenter.FriendsPresenter;
+import de.web.ngthi.palaver.mvp.view.BaseActivity;
 import de.web.ngthi.palaver.mvp.view.login.LoginActivity;
 import de.web.ngthi.palaver.mvp.view.message.MessageActivity;
 
-public class FriendsActivity extends AppCompatActivity
+public class FriendsActivity extends BaseActivity<FriendsContract.Presenter>
         implements FriendsContract.View,
         AddFriendDialogFragment.InputListener,
         RemoveFriendsDialogFragment.InputListener,
@@ -35,7 +35,6 @@ public class FriendsActivity extends AppCompatActivity
     private static final String TAG = FriendsActivity.class.getSimpleName();
 
     public PalaverApplication application;
-    private FriendsContract.Presenter presenter;
     private RecyclerView.Adapter friendsAdapter;
     private ChangePasswordDialogFragment changeDialog;
     private SwipeRefreshLayout swipeLayout;
@@ -49,18 +48,18 @@ public class FriendsActivity extends AppCompatActivity
         setTheme(R.style.AppTheme_NoActionBar);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_friends);
+        setViewGroup(findViewById(R.id.linearlayout_login));
+        setProgressBar(findViewById(R.id.progressbar_friends));
+
         application = (PalaverApplication) getApplication();
-
-
-        presenter = new FriendsPresenter(this, application.getRepository(), application.getLocalUsername(), application.getLocalPassword());
-
+        setPresenter(new FriendsPresenter(this, application.getRepository(), application.getLocalUsername(), application.getLocalPassword()));
         Toolbar toolbar = findViewById(R.id.toolbar_friends);
         toolbar.setTitle(R.string.app_name);
         setSupportActionBar(toolbar);
 
         //RecyclerView
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
-        friendsAdapter = new FriendsListAdapter(presenter);
+        friendsAdapter = new FriendsListAdapter(getPresenter());
         RecyclerView friendsRecycler = findViewById(R.id.recyclerview_friends);
         friendsRecycler.setAdapter(friendsAdapter);
         friendsRecycler.setLayoutManager(layoutManager);
@@ -73,7 +72,7 @@ public class FriendsActivity extends AppCompatActivity
         swipeLayout.setOnRefreshListener(() -> {
             Log.d(TAG, "swipe refresh");
             swipeLayout.setRefreshing(true);
-            presenter.onSwipeRefreshStart();
+            getPresenter().onSwipeRefreshStart();
         });
     }
 
@@ -117,30 +116,7 @@ public class FriendsActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    public void onDestroy() {
-        onStop();
-        super.onDestroy();
-    }
 
-    @Override
-    public void onStop() {
-        presenter.dispose();
-        super.onStop();
-    }
-
-    @Override
-    public void onRestart() {
-        presenter.subscribe(this);
-        notifyDataSetChanged();
-        super.onRestart();
-    }
-
-    @Override
-    public void onBackPressed() {
-        presenter.onStop();
-        super.onBackPressed();
-    }
 
     @Override
     public void onFriendClick(String friend) {
@@ -203,25 +179,19 @@ public class FriendsActivity extends AppCompatActivity
         changeDialog.dismiss();
     }
 
-
-    @Override
-    public void showNetworkError() {
-        mackSnack(R.string.error_network_message);
-    }
-
     @Override
     public void onAddDialogPositiveButton(String friend) {
-        presenter.onAddFriend(friend);
+        getPresenter().onAddFriend(friend);
     }
 
     @Override
     public void onRemoveDialogPositiveButton(List<String> selectedFriends) {
-        presenter.onRemoveFriend(selectedFriends);
+        getPresenter().onRemoveFriend(selectedFriends);
     }
 
     @Override
     public void onChangeDialogPositiveButton(String oldPassword, String newPassword, String newPasswordRepeat) {
-        presenter.onChangePassword(application.getLocalUsername(), oldPassword, newPassword, newPasswordRepeat);
+        getPresenter().onChangePassword(application.getLocalUsername(), oldPassword, newPassword, newPasswordRepeat);
     }
 
     @Override
@@ -231,7 +201,7 @@ public class FriendsActivity extends AppCompatActivity
 
     @Override
     public String[] getFriends() {
-        return presenter.getFriends();
+        return getPresenter().getFriends();
     }
 
 }

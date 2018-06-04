@@ -4,8 +4,6 @@ import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.design.widget.Snackbar;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.widget.TextView;
@@ -14,9 +12,10 @@ import de.web.ngthi.palaver.PalaverApplication;
 import de.web.ngthi.palaver.R;
 import de.web.ngthi.palaver.mvp.contract.LoginContract;
 import de.web.ngthi.palaver.mvp.presenter.LoginPresenter;
+import de.web.ngthi.palaver.mvp.view.BaseActivity;
 import de.web.ngthi.palaver.mvp.view.friends.FriendsActivity;
 
-public class LoginActivity extends AppCompatActivity implements LoginContract.View,
+public class LoginActivity extends BaseActivity<LoginContract.Presenter> implements LoginContract.View,
         LoginPasswordFragment.PasswordInputListener,
         LoginRegisterFragment.RegisterInputListener,
         LoginUserFragment.UserInputListener{
@@ -24,7 +23,6 @@ public class LoginActivity extends AppCompatActivity implements LoginContract.Vi
     private static final String TAG = LoginActivity.class.getSimpleName();
 
     public PalaverApplication application;
-    private LoginContract.Presenter presenter;
 
     private TextView header;
     private LoginState state;
@@ -42,9 +40,11 @@ public class LoginActivity extends AppCompatActivity implements LoginContract.Vi
         setTheme(R.style.AppTheme_NoActionBar);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        setViewGroup(findViewById(R.id.linearlayout_login));
+        setProgressBar(findViewById(R.id.progressbar_login));
+
         application = (PalaverApplication) getApplication();
-
-
+        setPresenter(new LoginPresenter(this, application.getRepository()));
         Toolbar toolbar = findViewById(R.id.toolbar_login);
         toolbar.setTitle(R.string.app_name);
         setSupportActionBar(toolbar);
@@ -53,28 +53,10 @@ public class LoginActivity extends AppCompatActivity implements LoginContract.Vi
         userFragment = new LoginUserFragment();
         registerFragment = new LoginRegisterFragment();
         passwordFragment = new LoginPasswordFragment();
-        presenter = new LoginPresenter(this, application.getRepository());
 
         switchState(LoginState.USERNAME, "");
     }
 
-    @Override
-    public void onDestroy() {
-        onStop();
-        super.onDestroy();
-    }
-
-    @Override
-    public void onStop() {
-        presenter.dispose();
-        super.onStop();
-    }
-
-    @Override
-    public void onRestart() {
-        presenter.subscribe(this);
-        super.onRestart();
-    }
 
     @Override
     public void switchState(LoginState newState, @NonNull String username) {
@@ -105,12 +87,19 @@ public class LoginActivity extends AppCompatActivity implements LoginContract.Vi
 
     @Override
     public void onBackPressed() {
-        if(state != LoginState.USERNAME) {
+        if(isLoading()) {
+            endLoading();
+        }else if(state != LoginState.USERNAME) {
             userFragment = new LoginUserFragment();
             switchState(LoginState.USERNAME, "");
         } else {
             super.onBackPressed();
         }
+    }
+
+    @Override
+    protected void notifyDataSetChanged() {
+        //nothing
     }
 
     @Override
@@ -121,75 +110,65 @@ public class LoginActivity extends AppCompatActivity implements LoginContract.Vi
         startActivity(intent);
     }
 
-    private void makeSnack(int resId) {
-        Log.d(TAG, "make Snack: "+ getString(resId));
-        Snackbar.make(findViewById(R.id.linearlayout_login), resId, Snackbar.LENGTH_SHORT);
-    }
-
     @Override
     public void showPasswordTooShort() {
-        makeSnack(R.string.global_error_passwordShort);
+        currentFragment.makeSnack(R.string.global_error_passwordShort);
     }
 
     @Override
     public void showPasswordTooLong() {
-        makeSnack(R.string.global_error_passwordLong);
+        currentFragment.makeSnack(R.string.global_error_passwordLong);
     }
 
     @Override
     public void showUsernameTooShort() {
-        makeSnack(R.string.global_error_usernameShort);
+        currentFragment.makeSnack(R.string.global_error_usernameShort);
     }
 
     @Override
     public void showUsernameTooLong() {
-        makeSnack(R.string.global_error_usernameLong);
+        currentFragment.makeSnack(R.string.global_error_usernameLong);
     }
 
     @Override
     public void onPasswordInput(String password) {
-        presenter.onPasswordInput(password);
+        getPresenter().onPasswordInput(password);
     }
 
     @Override
     public void onRegisterInput(String password, String passwordRepeat) {
-        presenter.onRegisterInput(password, passwordRepeat);
+        getPresenter().onRegisterInput(password, passwordRepeat);
     }
 
     @Override
     public void onLoginInput(String username) {
-        presenter.onUsernameInput(username, LoginState.PASSWORD);
+        getPresenter().onUsernameInput(username, LoginState.PASSWORD);
     }
 
     @Override
     public void onRegisterInput(String username) {
-        presenter.onUsernameInput(username, LoginState.REGISTER);
+        getPresenter().onUsernameInput(username, LoginState.REGISTER);
     }
 
 
     @Override
     public void showPasswordRepeatError() {
-        currentFragment.setErrorField(getString(R.string.login_error_wrongPasswordRepeat));
+        currentFragment.makeSnack(getString(R.string.login_error_wrongPasswordRepeat));
     }
 
     @Override
     public void showUserAlreadyExistsError() {
-        currentFragment.setErrorField(getString(R.string.login_error_userAlreadyExsists));
+        currentFragment.makeSnack(getString(R.string.login_error_userAlreadyExsists));
     }
 
     @Override
     public void showNotExistingUserError() {
-        currentFragment.setErrorField(getString(R.string.login_error_unknownUser));
-    }
-
-    @Override
-    public void showNetworkError() {
-        currentFragment.setErrorField(getString(R.string.error_network_message));
+        currentFragment.makeSnack(getString(R.string.login_error_unknownUser));
     }
 
     @Override
     public void showWrongPasswordError() {
-        currentFragment.setErrorField(getString(R.string.login_error_wrongPassword));
+        currentFragment.makeSnack(getString(R.string.login_error_wrongPassword));
     }
 
 }

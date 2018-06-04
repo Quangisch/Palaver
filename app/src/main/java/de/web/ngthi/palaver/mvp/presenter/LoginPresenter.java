@@ -7,8 +7,6 @@ import de.web.ngthi.palaver.Configuration;
 import de.web.ngthi.palaver.mvp.contract.LoginContract;
 import de.web.ngthi.palaver.mvp.view.login.LoginState;
 import de.web.ngthi.palaver.repository.IRepository;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.schedulers.Schedulers;
 
 public class LoginPresenter extends BasePresenter<LoginContract.View> implements LoginContract.Presenter {
 
@@ -29,8 +27,7 @@ public class LoginPresenter extends BasePresenter<LoginContract.View> implements
             getView().showUsernameTooLong();
         else {
             addDisposable(getRepository().isValidUser(username)
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
+                    .compose(applySchedulers())
                     .subscribe(u -> updateState(u, username, nextStateRequest)));
         }
     }
@@ -64,8 +61,7 @@ public class LoginPresenter extends BasePresenter<LoginContract.View> implements
             getView().showPasswordTooLong();
         else {
             addDisposable(getRepository().isValidUser(username, password)
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
+                    .compose(applySchedulers())
                     .subscribe(u -> login(u, username, password), this::showNetworkError));
         }
     }
@@ -86,8 +82,7 @@ public class LoginPresenter extends BasePresenter<LoginContract.View> implements
             getView().showPasswordRepeatError();
         else {
             addDisposable(getRepository().registerNewUser(username, password)
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
+                    .compose(applySchedulers())
                     .subscribe(u -> login(u, username, password), this::showNetworkError));
         }
     }

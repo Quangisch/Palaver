@@ -37,14 +37,12 @@ public class MessagePresenter extends BasePresenter<MessageContract.View> implem
         if(offset == null) {
             Log.d(TAG, "updateList without offset");
             addDisposable(getRepository().getMessagesFrom(friend)
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
+                    .compose(applySchedulers())
                     .subscribe(this::updateDataList, this::showNetworkError));
         } else {
             Log.d(TAG, "updateList with offset: " + offset.toString());
             addDisposable(getRepository().getMessageFromOffset(friend, offset.toString())
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
+                    .compose(applySchedulers())
                     .subscribe(this::updateDataList, this::showNetworkError));
         }
     }
@@ -92,9 +90,8 @@ public class MessagePresenter extends BasePresenter<MessageContract.View> implem
         messages.add(new Message(null, new User(friend), message, null, Message.Status.PENDING));
         getView().notifyDataSetChanged();
         addDisposable(getRepository().sendMessage(friend, message)
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(this::messageSend, this::showNetworkError));
+                .compose(applySchedulers())
+                .subscribe(this::messageSend, this::showNetworkError));
     }
 
     private void messageSend(ServerReplyType type) {
