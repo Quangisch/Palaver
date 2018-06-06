@@ -65,9 +65,12 @@ public abstract class BaseActivity<P extends BaseContract.Presenter> extends App
 
     @Override
     public void onBackPressed() {
-        presenter.onStop();
-        endLoading();
-        super.onBackPressed();
+        if(isLoading()) {
+            endLoading();
+        } else {
+            presenter.onStop();
+            super.onBackPressed();
+        }
     }
 
     protected boolean isLoading() {

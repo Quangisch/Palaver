@@ -147,9 +147,15 @@ public class FriendsPresenter extends BasePresenter<FriendsContract.View> implem
 
     @Override
     public void onChangePassword(String username, String oldPassword, String newPassword, String newPasswordRepeat) {
-        addDisposable(getRepository().isValidUser(username, oldPassword)
-                .compose(applySchedulers())
-                .subscribe(u -> checkOldPassword(u, newPassword, newPasswordRepeat), this::showNetworkError));
+        Log.d(getClass().getSimpleName(), String.format("onChangePassword(username:%s, oldpassword:%s, newPassword:%s, newPasswordRepeat:%s)",
+                username, oldPassword, newPassword, newPasswordRepeat));
+        if(!newPassword.equals(newPasswordRepeat))
+            getView().showWrongPasswordRepeat();
+        else {
+            addDisposable(getRepository().changePassword(username, oldPassword, newPassword)
+                    .compose(applySchedulers())
+                    .subscribe(u -> changePassword(u, oldPassword, newPassword), this::showNetworkError));
+        }
     }
 
     @Override
@@ -157,29 +163,13 @@ public class FriendsPresenter extends BasePresenter<FriendsContract.View> implem
         updateDataList();
     }
 
-    private void checkOldPassword(ServerReplyType replyType, String newPassword, String newPasswordRepeat) {
-        Log.d(getClass().getSimpleName(), String.format("checkOldPassword(%b, %s, %s)", replyType, newPassword, newPasswordRepeat));
+    private void changePassword(ServerReplyType replyType, String oldPassword, String newPassword) {
         switch(replyType) {
-            default:
+            case USER_VALIDATE_FAILED_PASSWORD:
             case USER_PASSWORD_FAILED:
                 getView().showWrongOldPassword();
                 break;
-
-            case USER_PASSWORD_OK:
-                if(!newPassword.equals(newPasswordRepeat)) {
-                    getView().showWrongPasswordRepeat();
-                } else {
-                    addDisposable(getRepository().changePassword(newPassword)
-                            .compose(applySchedulers())
-                            .subscribe(this::checkNewPassword, this::showNetworkError));
-                }
-                break;
-        }
-    }
-
-    private void checkNewPassword(ServerReplyType replyType) {
-        switch(replyType) {
-            case USER_VALIDATE_FAILED_SHORT:
+            case USER_VALIDATE_FAILED_SHORT: //server doesn't check min length when changing pw
                 getView().showPasswordTooShort();
                 break;
             case USER_PASSWORD_OK:
@@ -187,6 +177,4 @@ public class FriendsPresenter extends BasePresenter<FriendsContract.View> implem
                 break;
         }
     }
-
-
 }

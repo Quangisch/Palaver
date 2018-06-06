@@ -8,9 +8,9 @@ import java.util.List;
 import javax.inject.Inject;
 
 import dagger.Module;
-import de.web.ngthi.palaver.network.dto.ServerReplyType;
 import de.web.ngthi.palaver.mvp.model.Message;
 import de.web.ngthi.palaver.mvp.model.User;
+import de.web.ngthi.palaver.network.dto.ServerReplyType;
 import io.reactivex.Single;
 
 @Module
@@ -55,15 +55,15 @@ public class DataRepository implements IRepository {
     }
 
     @Override
-    public Single<ServerReplyType> registerNewUser(@NonNull String username, @NonNull String password) {
-        Log.d(TAG, String.format("registerNewUser(%s, %s)", username, password));
-        return getDefaultRepository().registerNewUser(username, password);
+    public Single<ServerReplyType> registerNewUser(@NonNull String oldPassword, @NonNull String password) {
+        Log.d(TAG, String.format("registerNewUser(%s, %s)", oldPassword, password));
+        return getDefaultRepository().registerNewUser(oldPassword, password);
     }
 
     @Override
-    public Single<ServerReplyType> changePassword(@NonNull String newPassword) {
-        Log.d(TAG, String.format("changePassword(%s)", newPassword));
-        return getDefaultRepository().changePassword(newPassword);
+    public Single<ServerReplyType> changePassword(@NonNull String username, @NonNull String oldPassword, @NonNull String newPassword) {
+        Log.d(TAG, String.format("changePassword(%s, %s, %s)", username, oldPassword, newPassword));
+        return getDefaultRepository().changePassword(username, oldPassword, newPassword);
     }
 
     @Override

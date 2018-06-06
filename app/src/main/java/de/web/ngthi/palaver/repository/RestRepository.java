@@ -77,8 +77,12 @@ public class RestRepository implements IRepository {
     }
 
     @Override
-    public Single<ServerReplyType> changePassword(@NonNull String newPassword) {
-        ServerRequest request = localUser().newPassword(newPassword).build();
+    public Single<ServerReplyType> changePassword(@NonNull String username, @NonNull String oldPassword, @NonNull String newPassword) {
+        ServerRequest request = new ServerRequest.Builder()
+                .username(username)
+                .password(oldPassword)
+                .newPassword(newPassword)
+                .build();
         return Single.fromCallable(() -> ServerReplyType.getType(userService.changePassword(request).blockingGet()));
     }
 

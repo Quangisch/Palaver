@@ -51,12 +51,12 @@ public class LocalRepository implements IRepository {
     }
 
     @Override
-    public Single<ServerReplyType> registerNewUser(@NonNull String username, @NonNull String password) {
+    public Single<ServerReplyType> registerNewUser(@NonNull String oldPassword, @NonNull String password) {
         return Single.just(ServerReplyType.USER_REGISTER_OK);
     }
 
     @Override
-    public Single<ServerReplyType> changePassword(@NonNull String newPassword) {
+    public Single<ServerReplyType> changePassword(@NonNull String username, @NonNull String oldPassword, @NonNull String newPassword) {
         return Single.just(ServerReplyType.USER_PASSWORD_OK);
     }
 
