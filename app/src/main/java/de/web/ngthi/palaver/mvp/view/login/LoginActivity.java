@@ -26,7 +26,6 @@ public class LoginActivity extends BaseActivity<LoginContract.Presenter> impleme
 
     public PalaverApplication application;
 
-    @BindView(R.id.toolbar_login) Toolbar toolbar;
     @BindView(R.id.textview_loginactivity_header) TextView header;
     private LoginState state;
     private LoginBaseFragment currentFragment;
@@ -41,19 +40,19 @@ public class LoginActivity extends BaseActivity<LoginContract.Presenter> impleme
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         setTheme(R.style.AppTheme_NoActionBar);
-        super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        ButterKnife.bind(this);
+        super.onCreate(savedInstanceState);
 
+        ButterKnife.bind(this);
+        //TODO dependencyInjection
         application = (PalaverApplication) getApplication();
         setPresenter(new LoginPresenter(this, application.getRepository()));
-
-        toolbar.setTitle(R.string.app_name);
-        setSupportActionBar(toolbar);
-
         userFragment = new LoginUserFragment();
         registerFragment = new LoginRegisterFragment();
         passwordFragment = new LoginPasswordFragment();
+
+
+        getToolbar().setTitle(R.string.app_name);
 
         switchState(LoginState.USERNAME, "");
     }
@@ -112,16 +111,6 @@ public class LoginActivity extends BaseActivity<LoginContract.Presenter> impleme
     }
 
     @Override
-    public void showPasswordTooShort() {
-        currentFragment.makeSnack(R.string.global_error_passwordShort);
-    }
-
-    @Override
-    public void showUsernameTooShort() {
-        currentFragment.makeSnack(R.string.global_error_usernameShort);
-    }
-
-    @Override
     public void onPasswordInput(String password) {
         getPresenter().onPasswordInput(password);
     }
@@ -141,25 +130,34 @@ public class LoginActivity extends BaseActivity<LoginContract.Presenter> impleme
         getPresenter().onUsernameInput(username, LoginState.REGISTER);
     }
 
+    @Override
+    public void showPasswordTooShort() {
+        makeSnack(R.string.global_error_passwordShort);
+    }
+
+    @Override
+    public void showUsernameTooShort() {
+        makeSnack(R.string.global_error_usernameShort);
+    }
 
     @Override
     public void showPasswordRepeatError() {
-        currentFragment.makeSnack(getString(R.string.login_error_wrongPasswordRepeat));
+        makeSnack(R.string.login_error_wrongPasswordRepeat);
     }
 
     @Override
     public void showUserAlreadyExistsError() {
-        currentFragment.makeSnack(getString(R.string.login_error_userAlreadyExsists));
+        makeSnack(R.string.login_error_userAlreadyExsists);
     }
 
     @Override
     public void showNotExistingUserError() {
-        currentFragment.makeSnack(getString(R.string.login_error_unknownUser));
+        makeSnack(R.string.login_error_unknownUser);
     }
 
     @Override
     public void showWrongPasswordError() {
-        currentFragment.makeSnack(getString(R.string.login_error_wrongPassword));
+        makeSnack(R.string.login_error_wrongPassword);
     }
 
 }

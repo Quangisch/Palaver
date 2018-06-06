@@ -12,7 +12,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -22,6 +21,7 @@ import java.util.Calendar;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import de.web.ngthi.palaver.PalaverApplication;
 import de.web.ngthi.palaver.R;
 import de.web.ngthi.palaver.mvp.contract.MessageContract;
@@ -29,7 +29,7 @@ import de.web.ngthi.palaver.mvp.presenter.MessagePresenter;
 import de.web.ngthi.palaver.mvp.view.BaseActivity;
 import de.web.ngthi.palaver.mvp.view.friends.FriendsActivity;
 
-public class MessageActivity extends BaseActivity<MessageContract.Presenter> implements MessageContract.View, View.OnClickListener {
+public class MessageActivity extends BaseActivity<MessageContract.Presenter> implements MessageContract.View {
 
     private final String TAG = MessageActivity.class.getSimpleName();
 
@@ -37,7 +37,6 @@ public class MessageActivity extends BaseActivity<MessageContract.Presenter> imp
     @BindView(R.id.edittext_message_sendtext) EditText messageField;
     @BindView(R.id.recyclerview_message) RecyclerView mMessageRecycler;
     @BindView(R.id.swiperefresh_message) SwipeRefreshLayout swipeLayout;
-    @BindView(R.id.toolbar_message) Toolbar toolbar;
 
     private RecyclerView.Adapter mMessageAdapter;
     private Menu menu;
@@ -57,14 +56,11 @@ public class MessageActivity extends BaseActivity<MessageContract.Presenter> imp
         PalaverApplication application = (PalaverApplication) getApplication();
         setPresenter(new MessagePresenter(this, application.getRepository(), friendName));
 
-        toolbar.setTitle(friendName);
-        toolbar.setNavigationOnClickListener(new BackListener());
-        setSupportActionBar(toolbar);
+        getToolbar().setTitle(friendName);
+        getToolbar().setNavigationOnClickListener(view -> onClickBack());
         if(getSupportActionBar() != null)
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-
-        sendButton.setOnClickListener(this);
 
         mMessageAdapter = new MessageListAdapter(getPresenter());
         mMessageRecycler.setAdapter(mMessageAdapter);
@@ -114,15 +110,7 @@ public class MessageActivity extends BaseActivity<MessageContract.Presenter> imp
             endLoading();
         else {
             getPresenter().onStop();
-            new BackListener().onClick(null);
-        }
-    }
-
-    @Override
-    public void onClick(View v) {
-        if(v == sendButton) {
-            getPresenter().onMessageSend(messageField.getText().toString());
-            messageField.setText("");
+            onClickBack();
         }
     }
 
@@ -168,13 +156,17 @@ public class MessageActivity extends BaseActivity<MessageContract.Presenter> imp
                 .show();
     }
 
-    private class BackListener implements View.OnClickListener {
-        @Override
-        public void onClick(View v) {
-            Intent intent = new Intent(MessageActivity.this, FriendsActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            startActivity(intent);
-        }
+    @SuppressWarnings("unused")
+    @OnClick(R.id.button_message_send)
+    public void onClickSend() {
+        getPresenter().onMessageSend(messageField.getText().toString());
+        messageField.setText("");
     }
 
+    @OnClick()
+    public void onClickBack() {
+        Intent intent = new Intent(MessageActivity.this, FriendsActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
+    }
 }

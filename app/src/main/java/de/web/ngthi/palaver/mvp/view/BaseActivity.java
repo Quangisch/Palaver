@@ -1,6 +1,9 @@
 package de.web.ngthi.palaver.mvp.view;
 
+import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
@@ -13,28 +16,14 @@ import de.web.ngthi.palaver.mvp.contract.BaseContract;
 public abstract class BaseActivity<P extends BaseContract.Presenter> extends AppCompatActivity implements BaseContract.View {
 
     private P presenter;
+    @BindView(R.id.toolbar) Toolbar toolbar;
     @BindView(R.id.progressbar) ProgressBar progressBar;
     @BindView(R.id.layout_inner) ViewGroup viewGroup;
     private boolean loading;
 
-    public void startLoading() {
-        if(!loading) {
-            loading = true;
-            if(progressBar != null)
-                progressBar.setVisibility(View.VISIBLE);
-            if(viewGroup != null)
-                viewGroup.setVisibility(View.GONE);
-        }
-    }
-
-    public void endLoading() {
-        if(loading) {
-            loading = false;
-            if(progressBar != null)
-                progressBar.setVisibility(View.GONE);
-            if(viewGroup != null)
-                viewGroup.setVisibility(View.VISIBLE);
-        }
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setSupportActionBar(toolbar);
     }
 
     @Override
@@ -73,6 +62,25 @@ public abstract class BaseActivity<P extends BaseContract.Presenter> extends App
         }
     }
 
+    public void makeSnack(int resId) {
+        Snackbar.make(viewGroup, resId, Snackbar.LENGTH_SHORT).show();
+    }
+
+    public void startLoading() {
+        if(!loading) {
+            loading = true;
+            progressBar.setVisibility(View.VISIBLE);
+
+        }
+    }
+
+    public void endLoading() {
+        if(loading) {
+            loading = false;
+            progressBar.setVisibility(View.GONE);
+        }
+    }
+
     protected boolean isLoading() {
         return loading;
     }
@@ -85,5 +93,9 @@ public abstract class BaseActivity<P extends BaseContract.Presenter> extends App
 
     public void setPresenter(P presenter) {
         this.presenter = presenter;
+    }
+
+    public Toolbar getToolbar() {
+        return toolbar;
     }
 }

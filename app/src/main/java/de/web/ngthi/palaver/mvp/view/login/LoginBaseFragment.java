@@ -38,13 +38,6 @@ abstract class LoginBaseFragment extends Fragment implements View.OnClickListene
         clearPrimaryString();
     }
 
-    public void makeSnack(int errorResID) {
-        makeSnack(getString(errorResID));
-    }
-    public void makeSnack(String errorMessage) {
-        Snackbar.make(view, errorMessage, Snackbar.LENGTH_LONG).show();
-    }
-
     public String getPrimaryString() {
         return primaryField.getText().toString();
     }

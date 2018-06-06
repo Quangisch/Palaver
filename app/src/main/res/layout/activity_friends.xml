@@ -1,45 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout
+
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/coordinatorlayout_friends"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:id="@+id/layout_inner">
 
-    <LinearLayout
+    <include layout="@layout/header"/>
+
+    <android.support.v4.widget.SwipeRefreshLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/swiperefresh_friends"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:id="@+id/layout_inner">
+        android:layout_height="match_parent">
 
-        <include
-            android:id="@+id/toolbar_friends"
-            layout="@layout/toolbar"/>
-
-        <android.support.v4.widget.SwipeRefreshLayout
-            xmlns:android="http://schemas.android.com/apk/res/android"
-            android:id="@+id/swiperefresh_friends"
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recyclerview_friends"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content"
+            android:padding="@dimen/border"
+            android:clipToPadding="false"/>
 
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/recyclerview_friends"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="@dimen/border"
-                android:clipToPadding="false"/>
-
-        </android.support.v4.widget.SwipeRefreshLayout>
-    </LinearLayout>
-
-
-    <ProgressBar
-        style="?android:attr/progressBarStyleLarge"
-        android:id="@+id/progressbar"
-        android:indeterminate="true"
-        android:layout_gravity="center"
-        android:layout_height="wrap_content"
-        android:layout_width="wrap_content"
-        android:visibility="gone"/>
-
-</android.support.design.widget.CoordinatorLayout>
+    </android.support.v4.widget.SwipeRefreshLayout>
+</LinearLayout>

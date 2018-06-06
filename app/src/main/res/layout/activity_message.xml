@@ -1,90 +1,73 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout
+<android.support.constraint.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/coordinatorlayout_message">
+    android:id="@+id/layout_inner">
 
-    <android.support.constraint.ConstraintLayout
+    <include android:id="@+id/header_message"
+        layout="@layout/header"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"/>
+
+
+    <android.support.v4.widget.SwipeRefreshLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/swiperefresh_message"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/layout_inner">
+        android:layout_height="0dp"
+        app:layout_constraintTop_toBottomOf="@id/header_message"
+        app:layout_constraintBottom_toTopOf="@id/border_message"
+        app:layout_constraintLeft_toLeftOf="parent">
 
-        <include android:id="@+id/toolbar_message"
-            layout="@layout/toolbar"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"/>
-
-
-        <android.support.v4.widget.SwipeRefreshLayout
-            xmlns:android="http://schemas.android.com/apk/res/android"
-            android:id="@+id/swiperefresh_message"
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recyclerview_message"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            app:layout_constraintTop_toBottomOf="@id/toolbar_message"
-            app:layout_constraintBottom_toTopOf="@id/border_message"
-            app:layout_constraintLeft_toLeftOf="parent">
-
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/recyclerview_message"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@color/colorMessagesBackground"/>
-        </android.support.v4.widget.SwipeRefreshLayout>
+            android:layout_height="match_parent"
+            android:background="@color/colorMessagesBackground"/>
+    </android.support.v4.widget.SwipeRefreshLayout>
 
 
 
 
-        <View
-            android:id="@+id/border_message"
-            android:layout_width="0dp"
-            android:layout_height="@dimen/border"
-            android:background="@color/colorBorder"
-            android:layout_marginBottom="0dp"
-            app:layout_constraintBottom_toTopOf="@id/layout_send"
-            app:layout_constraintLeft_toLeftOf="parent"/>
+    <View
+        android:id="@+id/border_message"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/border"
+        android:background="@color/colorBorder"
+        android:layout_marginBottom="0dp"
+        app:layout_constraintBottom_toTopOf="@id/layout_send"
+        app:layout_constraintLeft_toLeftOf="parent"/>
 
-        <LinearLayout
-            android:id="@+id/layout_send"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:minHeight="@dimen/singleLine"
-            android:layout_gravity="bottom"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent">
-
-            <EditText
-                android:id="@+id/edittext_message_sendtext"
-                android:hint="@string/message_hint_sendText"
-                android:maxLines="5"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:layout_marginLeft="@dimen/small_margin"
-                android:layout_marginRight="@dimen/small_margin"
-                android:layout_gravity="center"
-                android:inputType="text"/>
-
-            <Button
-                android:id="@+id/button_message_send"
-                android:text="@string/message_button_send"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="?attr/selectableItemBackground"/>
-        </LinearLayout>
-
-    </android.support.constraint.ConstraintLayout>
-
-    <ProgressBar
-        style="?android:attr/progressBarStyleLarge"
-        android:id="@+id/progressbar"
-        android:indeterminate="true"
-        android:layout_gravity="center"
+    <LinearLayout
+        android:id="@+id/layout_send"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_width="wrap_content"
-        android:visibility="gone"/>
+        android:orientation="horizontal"
+        android:minHeight="@dimen/singleLine"
+        android:layout_gravity="bottom"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent">
 
-</android.support.design.widget.CoordinatorLayout>
+        <EditText
+            android:id="@+id/edittext_message_sendtext"
+            android:hint="@string/message_hint_sendText"
+            android:maxLines="5"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginLeft="@dimen/small_margin"
+            android:layout_marginRight="@dimen/small_margin"
+            android:layout_gravity="center"
+            android:inputType="text"/>
 
+        <Button
+            android:id="@+id/button_message_send"
+            android:text="@string/message_button_send"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="?attr/selectableItemBackground"/>
+    </LinearLayout>
+
+</android.support.constraint.ConstraintLayout>

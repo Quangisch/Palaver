@@ -3,7 +3,6 @@ package de.web.ngthi.palaver.mvp.view.friends;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.Snackbar;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.DividerItemDecoration;
@@ -14,7 +13,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
 
 import java.util.List;
 
@@ -41,7 +39,7 @@ public class FriendsActivity extends BaseActivity<FriendsContract.Presenter>
     private ChangePasswordDialogFragment changeDialog;
     @BindView(R.id.recyclerview_friends) RecyclerView friendsRecycler;
     @BindView(R.id.swiperefresh_friends) SwipeRefreshLayout swipeLayout;
-    @BindView(R.id.toolbar_friends) Toolbar toolbar;
+
 
     public FriendsActivity() {
         Log.d(TAG, "==============constructor==============");
@@ -50,14 +48,15 @@ public class FriendsActivity extends BaseActivity<FriendsContract.Presenter>
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         setTheme(R.style.AppTheme_NoActionBar);
-        super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_friends);
-        ButterKnife.bind(this);
+        super.onCreate(savedInstanceState);
 
+        ButterKnife.bind(this);
+        //TODO dependencyInjection
         application = (PalaverApplication) getApplication();
         setPresenter(new FriendsPresenter(this, application.getRepository(), application.getLocalUsername(), application.getLocalPassword()));
-        toolbar.setTitle(R.string.app_name);
-        setSupportActionBar(toolbar);
+
+        getToolbar().setTitle(R.string.app_name);
 
         //RecyclerView
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
@@ -136,41 +135,34 @@ public class FriendsActivity extends BaseActivity<FriendsContract.Presenter>
         friendsAdapter.notifyDataSetChanged();
     }
 
-    private void mackSnack(int resId) {
-        View view = findViewById(R.id.coordinatorlayout_friends);
-        if(changeDialog != null && changeDialog.getView() != null)
-            view = changeDialog.getView();
-        Snackbar.make(view, resId, Snackbar.LENGTH_SHORT).show();
-    }
-
     @Override
     public void showUnknownFriendError() {
-        mackSnack(R.string.friends_error_unknownFriend);
+        makeSnack(R.string.friends_error_unknownFriend);
     }
 
     @Override
     public void showDuplicateFriendError() {
-        mackSnack(R.string.friends_error_duplicateFriend);
+        makeSnack(R.string.friends_error_duplicateFriend);
     }
 
     @Override
     public void showWrongOldPassword() {
-        mackSnack(R.string.friends_error_wrongOldPassword);
+        makeSnack(R.string.friends_error_wrongOldPassword);
     }
 
     @Override
     public void showWrongPasswordRepeat() {
-        mackSnack(R.string.friends_error_wrongPasswordRepeat);
+        makeSnack(R.string.friends_error_wrongPasswordRepeat);
     }
 
     @Override
     public void showPasswordTooShort() {
-        mackSnack(R.string.global_error_passwordShort);
+        makeSnack(R.string.global_error_passwordShort);
     }
 
     @Override
     public void showChangedPassword() {
-        mackSnack(R.string.friends_snack_changedPassword);
+        makeSnack(R.string.friends_snack_changedPassword);
         changeDialog.dismiss();
     }
 
