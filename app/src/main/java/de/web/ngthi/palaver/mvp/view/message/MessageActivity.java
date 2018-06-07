@@ -47,14 +47,11 @@ public class MessageActivity extends BaseActivity<MessageContract.Presenter> imp
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        setTheme(R.style.AppTheme_NoActionBar);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_message);
-        ButterKnife.bind(this);
 
         String friendName = getIntent().getStringExtra(getString(R.string.intent_friend_message));
-        PalaverApplication application = (PalaverApplication) getApplication();
-        setPresenter(new MessagePresenter(this, application.getRepository(), friendName));
+        setPresenter(new MessagePresenter(this, getPalaverApplication().getRepository(), friendName));
 
         getToolbar().setTitle(friendName);
         getToolbar().setNavigationOnClickListener(view -> onClickBack());

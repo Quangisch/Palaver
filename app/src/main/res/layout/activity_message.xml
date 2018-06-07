@@ -4,13 +4,14 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/layout_inner">
+    android:id="@+id/layout_inner"
+    android:background="@color/colorMessagesBackground">
 
-    <include android:id="@+id/header_message"
+    <include
+        android:id="@+id/header_message"
         layout="@layout/header"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"/>
-
 
     <android.support.v4.widget.SwipeRefreshLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
@@ -27,9 +28,6 @@
             android:layout_height="match_parent"
             android:background="@color/colorMessagesBackground"/>
     </android.support.v4.widget.SwipeRefreshLayout>
-
-
-
 
     <View
         android:id="@+id/border_message"

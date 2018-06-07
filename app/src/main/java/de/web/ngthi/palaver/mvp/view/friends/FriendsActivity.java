@@ -8,7 +8,6 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -17,8 +16,6 @@ import android.view.MenuItem;
 import java.util.List;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
-import de.web.ngthi.palaver.PalaverApplication;
 import de.web.ngthi.palaver.R;
 import de.web.ngthi.palaver.mvp.contract.FriendsContract;
 import de.web.ngthi.palaver.mvp.presenter.FriendsPresenter;
@@ -34,12 +31,12 @@ public class FriendsActivity extends BaseActivity<FriendsContract.Presenter>
 
     private static final String TAG = FriendsActivity.class.getSimpleName();
 
-    public PalaverApplication application;
-    private RecyclerView.Adapter friendsAdapter;
-    private ChangePasswordDialogFragment changeDialog;
+
     @BindView(R.id.recyclerview_friends) RecyclerView friendsRecycler;
     @BindView(R.id.swiperefresh_friends) SwipeRefreshLayout swipeLayout;
 
+    private RecyclerView.Adapter friendsAdapter;
+    private ChangePasswordDialogFragment changeDialog;
 
     public FriendsActivity() {
         Log.d(TAG, "==============constructor==============");
@@ -47,14 +44,12 @@ public class FriendsActivity extends BaseActivity<FriendsContract.Presenter>
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        setTheme(R.style.AppTheme_NoActionBar);
-        setContentView(R.layout.activity_friends);
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_friends);
 
-        ButterKnife.bind(this);
         //TODO dependencyInjection
-        application = (PalaverApplication) getApplication();
-        setPresenter(new FriendsPresenter(this, application.getRepository(), application.getLocalUsername(), application.getLocalPassword()));
+        setPresenter(new FriendsPresenter(this, getPalaverApplication().getRepository(),
+                getPalaverApplication().getLocalUsername(), getPalaverApplication().getLocalPassword()));
 
         getToolbar().setTitle(R.string.app_name);
 
@@ -103,7 +98,7 @@ public class FriendsActivity extends BaseActivity<FriendsContract.Presenter>
                         .setMessage(R.string.friends_text_logOut)
                         .setNegativeButton(R.string.friends_button_cancel, (DialogInterface dialog, int which) -> {})
                         .setPositiveButton(R.string.friends_button_logOut, (DialogInterface dialog, int which) -> {
-                            application.clearLocalUserData();
+                            getPalaverApplication().clearLocalUserData();
                             Intent intent = new Intent(this, LoginActivity.class);
                             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                             intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
@@ -178,12 +173,12 @@ public class FriendsActivity extends BaseActivity<FriendsContract.Presenter>
 
     @Override
     public void onChangeDialogPositiveButton(String oldPassword, String newPassword, String newPasswordRepeat) {
-        getPresenter().onChangePassword(application.getLocalUsername(), oldPassword, newPassword, newPasswordRepeat);
+        getPresenter().onChangePassword(getPalaverApplication().getLocalUsername(), oldPassword, newPassword, newPasswordRepeat);
     }
 
     @Override
     public String getUsername() {
-        return application.getLocalUsername();
+        return getPalaverApplication().getLocalUsername();
     }
 
     @Override

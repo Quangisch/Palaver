@@ -4,13 +4,10 @@ import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.widget.TextView;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
-import de.web.ngthi.palaver.PalaverApplication;
 import de.web.ngthi.palaver.R;
 import de.web.ngthi.palaver.mvp.contract.LoginContract;
 import de.web.ngthi.palaver.mvp.presenter.LoginPresenter;
@@ -24,11 +21,8 @@ public class LoginActivity extends BaseActivity<LoginContract.Presenter> impleme
 
     private static final String TAG = LoginActivity.class.getSimpleName();
 
-    public PalaverApplication application;
-
     @BindView(R.id.textview_loginactivity_header) TextView header;
     private LoginState state;
-    private LoginBaseFragment currentFragment;
     private LoginBaseFragment userFragment;
     private LoginBaseFragment registerFragment;
     private LoginBaseFragment passwordFragment;
@@ -39,14 +33,11 @@ public class LoginActivity extends BaseActivity<LoginContract.Presenter> impleme
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        setTheme(R.style.AppTheme_NoActionBar);
-        setContentView(R.layout.activity_login);
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_login);
 
-        ButterKnife.bind(this);
         //TODO dependencyInjection
-        application = (PalaverApplication) getApplication();
-        setPresenter(new LoginPresenter(this, application.getRepository()));
+        setPresenter(new LoginPresenter(this, getPalaverApplication().getRepository()));
         userFragment = new LoginUserFragment();
         registerFragment = new LoginRegisterFragment();
         passwordFragment = new LoginPasswordFragment();
@@ -66,16 +57,13 @@ public class LoginActivity extends BaseActivity<LoginContract.Presenter> impleme
         switch(newState){
             case PASSWORD:
                 transaction = getFragmentManager().beginTransaction().replace(R.id.fragment_container, passwordFragment);
-                currentFragment = passwordFragment;
                 break;
             case REGISTER:
                 transaction = getFragmentManager().beginTransaction().replace(R.id.fragment_container, registerFragment);
-                currentFragment = registerFragment;
                 break;
             case USERNAME:
             default:
                 transaction = getFragmentManager().beginTransaction().replace(R.id.fragment_container, userFragment);
-                currentFragment = userFragment;
                 break;
         }
         transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE).commit();
@@ -104,7 +92,7 @@ public class LoginActivity extends BaseActivity<LoginContract.Presenter> impleme
 
     @Override
     public void loginNow(@NonNull String username, @NonNull String password) {
-        application.saveLocalUserData(username, password);
+        getPalaverApplication().saveLocalUserData(username, password);
 
         Intent intent = new Intent(this, FriendsActivity.class);
         startActivity(intent);

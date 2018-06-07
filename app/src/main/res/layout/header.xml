@@ -12,7 +12,6 @@
         android:layout_height="@dimen/app_bar_height"
         app:layout_collapseMode="pin"
         android:background="?attr/colorPrimary"
-        android:elevation="4dp"
         android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
         app:titleTextColor="@color/colorTitle"
         app:subtitleTextColor="@color/colorTitle"
@@ -23,8 +22,8 @@
         android:id="@+id/progressbar"
         android:indeterminate="true"
         android:layout_gravity="center"
-        android:layout_height="wrap_content"
         android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:visibility="gone"/>
 
 </LinearLayout>
