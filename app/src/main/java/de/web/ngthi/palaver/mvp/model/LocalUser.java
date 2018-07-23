@@ -19,7 +19,6 @@ public class LocalUser extends User {
         this.password = password;
         this.contacts = new HashMap<>();
     }
-
     public String getPassword() {
         return password;
     }

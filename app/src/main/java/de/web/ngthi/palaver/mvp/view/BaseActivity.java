@@ -1,8 +1,10 @@
 package de.web.ngthi.palaver.mvp.view;
 
+import android.content.BroadcastReceiver;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MotionEvent;
@@ -16,6 +18,7 @@ import butterknife.ButterKnife;
 import de.web.ngthi.palaver.PalaverApplication;
 import de.web.ngthi.palaver.R;
 import de.web.ngthi.palaver.mvp.contract.BaseContract;
+import de.web.ngthi.palaver.network.service.ActivityNotificationReceiver;
 
 public abstract class BaseActivity<P extends BaseContract.Presenter> extends AppCompatActivity implements BaseContract.View {
 
@@ -26,6 +29,7 @@ public abstract class BaseActivity<P extends BaseContract.Presenter> extends App
     private PalaverApplication application;
     private P presenter;
     private boolean loading;
+    private BroadcastReceiver currentActivityReceiver;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -74,6 +78,20 @@ public abstract class BaseActivity<P extends BaseContract.Presenter> extends App
             presenter.onStop();
             super.onBackPressed();
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        currentActivityReceiver = new ActivityNotificationReceiver(this);
+        LocalBroadcastManager.getInstance(this).registerReceiver(currentActivityReceiver, ActivityNotificationReceiver.CURRENT_ACTIVITY_RECEIVER_FILTER);
+    }
+
+    @Override
+    protected void onPause() {
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(currentActivityReceiver);
+        currentActivityReceiver = null;
+        super.onPause();
     }
 
     public void makeSnack(int resId) {

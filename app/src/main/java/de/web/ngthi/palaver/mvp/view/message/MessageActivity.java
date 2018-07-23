@@ -2,8 +2,10 @@ package de.web.ngthi.palaver.mvp.view.message;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.content.BroadcastReceiver;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -28,6 +30,7 @@ import de.web.ngthi.palaver.mvp.contract.MessageContract;
 import de.web.ngthi.palaver.mvp.presenter.MessagePresenter;
 import de.web.ngthi.palaver.mvp.view.BaseActivity;
 import de.web.ngthi.palaver.mvp.view.friends.FriendsActivity;
+import de.web.ngthi.palaver.network.service.ActivityNotificationReceiver;
 
 public class MessageActivity extends BaseActivity<MessageContract.Presenter> implements MessageContract.View {
 

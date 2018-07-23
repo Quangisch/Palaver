@@ -177,4 +177,9 @@ public class FriendsPresenter extends BasePresenter<FriendsContract.View> implem
                 break;
         }
     }
+
+    @Override
+    public void onReceiveBroadcastNotification() {
+        updateDataList();
+    }
 }

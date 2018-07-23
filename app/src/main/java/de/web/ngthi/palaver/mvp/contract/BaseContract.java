@@ -22,5 +22,6 @@ public interface BaseContract {
         void unsubscribe();
         void addDisposable(Disposable disposable);
         void dispose();
+        void onReceiveBroadcastNotification();
     }
 }

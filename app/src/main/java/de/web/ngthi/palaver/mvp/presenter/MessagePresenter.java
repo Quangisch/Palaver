@@ -140,4 +140,9 @@ public class MessagePresenter extends BasePresenter<MessageContract.View> implem
             return LocalizedDateTime.getDateTime(offset);
         return "";
     }
+
+    @Override
+    public void onReceiveBroadcastNotification() {
+        updateDataList();
+    }
 }

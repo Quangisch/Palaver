@@ -11,11 +11,13 @@ import android.net.Uri;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.NotificationCompat;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
+import de.web.ngthi.palaver.PalaverApplication;
 import de.web.ngthi.palaver.R;
 import de.web.ngthi.palaver.mvp.view.message.MessageActivity;
 
@@ -45,20 +47,27 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 remoteMessage.getCollapseKey(),
                 remoteMessage.getMessageId()));
 
+        LocalBroadcastManager.getInstance(PalaverApplication.getInstance()).sendBroadcast(new Intent(ActivityNotificationReceiver.CURRENT_ACTIVITY_ACTION));
 
         String sender = remoteMessage.getData().get("sender");
-        String messagePreview = remoteMessage.getData().get("preview");
+        String message = remoteMessage.getData().get("preview");
 
+        if(sender != null && !sender.equals(PalaverApplication.getInstance().getLocalUsername())) {
+            buildPushMessage(sender, message);
+        }
+    }
+
+    private void buildPushMessage(String sender, String message) {
         Intent intent = new Intent(this, MessageActivity.class);
         intent.putExtra(getString(R.string.intent_friend_message), sender);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_ONE_SHOT);
 
-        Uri soundUri= RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+        Uri soundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, CHANNEL_ID)
                 .setSmallIcon(R.drawable.palaver_icon)
                 .setContentTitle(sender)
-                .setContentText(messagePreview)
+                .setContentText(message)
                 .setAutoCancel(true)
                 .setSound(soundUri)
                 .setContentIntent(pendingIntent);
